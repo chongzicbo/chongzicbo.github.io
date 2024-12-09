@@ -16,15 +16,15 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="author" content="John Doe">
+  <meta name="author" content="程博">
   <meta name="keywords" content="">
   
     <meta property="og:type" content="website">
 <meta property="og:title" content="ChengBO">
-<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:url" content="https://chongzicbo.github.io/index.html">
 <meta property="og:site_name" content="ChengBO">
 <meta property="og:locale" content="en_US">
-<meta property="article:author" content="John Doe">
+<meta property="article:author" content="程博">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -61,7 +61,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -116,18 +116,6 @@
           
           
           
-            <li class="nav-item">
-              <a class="nav-link" href="/archives/" target="_self">
-                <i class="iconfont icon-archive-fill"></i>
-                <span>Archives</span>
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -135,14 +123,6 @@
                 <span>人工智能</span>
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                
-                  
-                  
-                  
-                  <a class="dropdown-item" href="/categories/computer-vision" target="_self">
-                    
-                    <span>计算机视觉</span>
-                  </a>
                 
                   
                   
@@ -155,12 +135,52 @@
                   
                   
                   
+                  <a class="dropdown-item" href="/categories/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
                   <a class="dropdown-item" href="/categories/asr" target="_self">
                     
                     <span>语音识别</span>
                   </a>
                 
               </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>文章分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
             </li>
           
         
@@ -255,15 +275,85 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/12/07/computer-vision/CV008-%E8%AF%84%E4%BC%B0%20YOLO%20%EF%BC%88You%20Only%20Look%20Once%EF%BC%89%20%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%BC%94%E5%8F%98%EF%BC%9AYOLO11%20%E5%8F%8A%E5%85%B6%E5%89%8D%E8%BA%AB%E7%9A%84%E5%85%A8%E9%9D%A2%E5%9F%BA%E5%87%86%E7%A0%94%E7%A9%B6/" target="_self">
-          YOLO模型的全面综述
+        <a href="/2024/12/09/multi-modal/OCR/%E5%A4%9A%E6%A8%A1%E6%80%81003%EF%BC%9AOCR%E7%AE%97%E6%B3%95%E3%80%81%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0/" target="_self">
+          OCR算法、模型综述
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/12/07/computer-vision/CV008-%E8%AF%84%E4%BC%B0%20YOLO%20%EF%BC%88You%20Only%20Look%20Once%EF%BC%89%20%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%BC%94%E5%8F%98%EF%BC%9AYOLO11%20%E5%8F%8A%E5%85%B6%E5%89%8D%E8%BA%AB%E7%9A%84%E5%85%A8%E9%9D%A2%E5%9F%BA%E5%87%86%E7%A0%94%E7%A9%B6/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/12/09/multi-modal/OCR/%E5%A4%9A%E6%A8%A1%E6%80%81003%EF%BC%9AOCR%E7%AE%97%E6%B3%95%E3%80%81%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0/" target="_self">
         <div>
-          摘要本研究对YOLO （You Only Look Once） 的各个版本进行了全面的基准测试分析，从 YOLOv3 到最新的算法。它代表了首次全面评估 YOLO11 性能的研究，YOLO11 是 YOLO 系列的最新成员。它评估了它们在三个不同数据集上的性能：交通标志（具有不同的对象大小）、非洲野生动物（具有不同的纵横比，每个图像至少有一个对象实例）以及船舶和船只（具有单个类别的小型对象），确保
+          1. 引言1.1 什么是OCROCR俗称光学字符识别，英文全称是Optical Charater Recognition（简称OCR）,它是利用光学技术和计算机技术把印刷在或者写在图纸上的文字以文本形式提取出来，并转换成一种计算机能够接受、人又可以理解的格式。OCR技术是实现文字快速录入的一项关键技术。在信息社会时代，每天会产生大量的票据、表单、证件数据，这些数据要电子化，需要利用OCR技术进行提
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-12-09 15:48" pubdate>
+              2024-12-09
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/multi-modal/" class="category-chain-item">multi-modal</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/multi-modal/OCR/" class="category-chain-item">OCR</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/">#多模态</a>
+            
+              <a href="/tags/OCR/">#OCR</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/12/07/computer-vision/CV007-YOLO11%E8%AF%A6%E8%A7%A3/" target="_self">
+          YOLO11 详解
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/12/07/computer-vision/CV007-YOLO11%E8%AF%A6%E8%A7%A3/" target="_self">
+        <div>
+          2024 年是 YOLO 模型的一年。在 2023 年发布 Ultralytics YOLOv8 之后， YOLOv9 和 YOLOv10也在2024年发布了。但等等，这还不是结束！Ultralytics YOLO11 终于来了，在激动人心的 YOLO Vision 2024 （YV24） 活动中亮相。  YOLO11 系列是 YOLO 系列中最先进的 （SOTA）、最轻、最高效的型号，性能优于其
         </div>
       </a>
 
@@ -318,15 +408,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2024/12/07/computer-vision/CV007-YOLO11%E8%AF%A6%E8%A7%A3/" target="_self">
-          YOLO11 详解
+        <a href="/2024/12/07/computer-vision/CV008-%E8%AF%84%E4%BC%B0%20YOLO%20%EF%BC%88You%20Only%20Look%20Once%EF%BC%89%20%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%BC%94%E5%8F%98%EF%BC%9AYOLO11%20%E5%8F%8A%E5%85%B6%E5%89%8D%E8%BA%AB%E7%9A%84%E5%85%A8%E9%9D%A2%E5%9F%BA%E5%87%86%E7%A0%94%E7%A9%B6/" target="_self">
+          YOLO模型的全面综述
         </a>
       </h2>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/12/07/computer-vision/CV007-YOLO11%E8%AF%A6%E8%A7%A3/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/12/07/computer-vision/CV008-%E8%AF%84%E4%BC%B0%20YOLO%20%EF%BC%88You%20Only%20Look%20Once%EF%BC%89%20%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%BC%94%E5%8F%98%EF%BC%9AYOLO11%20%E5%8F%8A%E5%85%B6%E5%89%8D%E8%BA%AB%E7%9A%84%E5%85%A8%E9%9D%A2%E5%9F%BA%E5%87%86%E7%A0%94%E7%A9%B6/" target="_self">
         <div>
-          2024 年是 YOLO 模型的一年。在 2023 年发布 Ultralytics YOLOv8 之后， YOLOv9 和 YOLOv10也在2024年发布了。但等等，这还不是结束！Ultralytics YOLO11 终于来了，在激动人心的 YOLO Vision 2024 （YV24） 活动中亮相。  YOLO11 系列是 YOLO 系列中最先进的 （SOTA）、最轻、最高效的型号，性能优于其
+          摘要本研究对YOLO （You Only Look Once） 的各个版本进行了全面的基准测试分析，从 YOLOv3 到最新的算法。它代表了首次全面评估 YOLO11 性能的研究，YOLO11 是 YOLO 系列的最新成员。它评估了它们在三个不同数据集上的性能：交通标志（具有不同的对象大小）、非洲野生动物（具有不同的纵横比，每个图像至少有一个对象实例）以及船舶和船只（具有单个类别的小型对象），确保
         </div>
       </a>
 
