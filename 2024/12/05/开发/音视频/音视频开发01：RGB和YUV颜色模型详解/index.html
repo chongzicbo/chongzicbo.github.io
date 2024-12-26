@@ -19,20 +19,19 @@
   <meta name="author" content="程博">
   <meta name="keywords" content="">
   
-    <meta name="description" content="C++ 中的 static 关键字：深入理解与应用一、引言C++ 语言以其强大的功能和灵活性著称，能够满足从底层系统编程到高层应用开发的广泛需求。在 C++ 中，static 关键字是一个非常重要且常用的关键字，它具有多种用途，能够帮助开发者更好地管理内存、控制作用域以及实现一些特定的编程模式。本文将详细探讨 static 关键字在 C++ 中的多种用途，并通过代码示例帮助读者深入理解其应用。 二">
+    <meta name="description" content="1. RGB颜色模型RGB（Red, Green, Blue）颜色模型是一种加色模型，通过混合不同强度的红、绿、蓝三种基本颜色来生成各种颜色。RGB模型广泛应用于显示器、电视、摄像机等设备中。 1.1 基本概念 红色（Red）：表示红色光的强度。 绿色（Green）：表示绿色光的强度。 蓝色（Blue）：表示蓝色光的强度。  1.2 颜色表示 每个颜色通道（R、G、B）通常使用8位（0-255）或">
 <meta property="og:type" content="article">
-<meta property="og:title" content="C++ 中的 static 关键字：深入理解与应用">
-<meta property="og:url" content="https://chongzicbo.github.io/2024/12/16/%E5%BC%80%E5%8F%91/cpp/C++%E5%9F%BA%E7%A1%80%EF%BC%9AC++%20%E4%B8%AD%E7%9A%84%20static%20%E5%85%B3%E9%94%AE%E5%AD%97%EF%BC%9A%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E4%B8%8E%E5%BA%94%E7%94%A8/index.html">
+<meta property="og:title" content="音视频开发01：RGB和YUV颜色模型详解">
+<meta property="og:url" content="https://chongzicbo.github.io/2024/12/05/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91/%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%9101%EF%BC%9ARGB%E5%92%8CYUV%E9%A2%9C%E8%89%B2%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/index.html">
 <meta property="og:site_name" content="程博仕">
-<meta property="og:description" content="C++ 中的 static 关键字：深入理解与应用一、引言C++ 语言以其强大的功能和灵活性著称，能够满足从底层系统编程到高层应用开发的广泛需求。在 C++ 中，static 关键字是一个非常重要且常用的关键字，它具有多种用途，能够帮助开发者更好地管理内存、控制作用域以及实现一些特定的编程模式。本文将详细探讨 static 关键字在 C++ 中的多种用途，并通过代码示例帮助读者深入理解其应用。 二">
+<meta property="og:description" content="1. RGB颜色模型RGB（Red, Green, Blue）颜色模型是一种加色模型，通过混合不同强度的红、绿、蓝三种基本颜色来生成各种颜色。RGB模型广泛应用于显示器、电视、摄像机等设备中。 1.1 基本概念 红色（Red）：表示红色光的强度。 绿色（Green）：表示绿色光的强度。 蓝色（Blue）：表示蓝色光的强度。  1.2 颜色表示 每个颜色通道（R、G、B）通常使用8位（0-255）或">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
-<meta property="article:published_time" content="2024-12-16T04:00:00.000Z">
-<meta property="article:modified_time" content="2024-12-26T06:37:41.944Z">
+<meta property="article:published_time" content="2024-12-05T03:37:00.000Z">
+<meta property="article:modified_time" content="2024-12-26T07:41:17.402Z">
 <meta property="article:author" content="程博">
-<meta property="article:tag" content="c++">
-<meta property="article:tag" content="cpp">
-<meta property="article:tag" content="c++基础">
+<meta property="article:tag" content="音视频开发">
+<meta property="article:tag" content="音视频基础">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
   
@@ -40,7 +39,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>C++ 中的 static 关键字：深入理解与应用 - 程博仕</title>
+  <title>音视频开发01：RGB和YUV颜色模型详解 - 程博仕</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -334,7 +333,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="C++ 中的 static 关键字：深入理解与应用"></span>
+            <span id="subtitle" data-typed-text="音视频开发01：RGB和YUV颜色模型详解"></span>
           
         </div>
 
@@ -350,8 +349,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-12-16 12:00" pubdate>
-          December 16, 2024 pm
+        <time datetime="2024-12-05 11:37" pubdate>
+          December 5, 2024 am
         </time>
       </span>
     
@@ -362,7 +361,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.8k words
+          2.4k words
         
       </span>
     
@@ -373,7 +372,7 @@
         
         
         
-          15 mins
+          21 mins
         
       </span>
     
@@ -432,7 +431,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">C++ 中的 static 关键字：深入理解与应用</h1>
+            <h1 id="seo-header">音视频开发01：RGB和YUV颜色模型详解</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
@@ -445,83 +444,394 @@
             
               <div class="markdown-body">
                 
-                <h1 id="C-中的-static-关键字：深入理解与应用"><a href="#C-中的-static-关键字：深入理解与应用" class="headerlink" title="C++ 中的 static 关键字：深入理解与应用"></a>C++ 中的 static 关键字：深入理解与应用</h1><h2 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h2><p>C++ 语言以其强大的功能和灵活性著称，能够满足从底层系统编程到高层应用开发的广泛需求。在 C++ 中，<code>static</code> 关键字是一个非常重要且常用的关键字，它具有多种用途，能够帮助开发者更好地管理内存、控制作用域以及实现一些特定的编程模式。本文将详细探讨 <code>static</code> 关键字在 C++ 中的多种用途，并通过代码示例帮助读者深入理解其应用。</p>
-<h2 id="二、static-关键字的基本概念"><a href="#二、static-关键字的基本概念" class="headerlink" title="二、static 关键字的基本概念"></a>二、static 关键字的基本概念</h2><h3 id="1-基本含义"><a href="#1-基本含义" class="headerlink" title="1. 基本含义"></a>1. 基本含义</h3><p><code>static</code> 关键字在 C++ 中有两个基本含义：<strong>静态存储期</strong>和<strong>内部链接性</strong>。</p>
-<ul>
-<li><strong>静态存储期</strong>：静态存储期的变量在程序的整个运行期间都存在，不会在作用域结束时被销毁。</li>
-<li><strong>内部链接性</strong>：具有内部链接性的变量或函数只能在声明它的文件内部访问，不能被其他文件访问。</li>
+                <h1 id="1-RGB颜色模型"><a href="#1-RGB颜色模型" class="headerlink" title="1. RGB颜色模型"></a>1. RGB颜色模型</h1><p>RGB（Red, Green, Blue）颜色模型是一种加色模型，通过混合不同强度的红、绿、蓝三种基本颜色来生成各种颜色。RGB模型广泛应用于显示器、电视、摄像机等设备中。</p>
+<h3 id="1-1-基本概念"><a href="#1-1-基本概念" class="headerlink" title="1.1 基本概念"></a>1.1 基本概念</h3><ul>
+<li><strong>红色（Red）</strong>：表示红色光的强度。</li>
+<li><strong>绿色（Green）</strong>：表示绿色光的强度。</li>
+<li><strong>蓝色（Blue）</strong>：表示蓝色光的强度。</li>
 </ul>
-<h3 id="2-static-与非-static-变量-函数的对比"><a href="#2-static-与非-static-变量-函数的对比" class="headerlink" title="2. static 与非 static 变量&#x2F;函数的对比"></a>2. static 与非 static 变量&#x2F;函数的对比</h3><table>
+<h3 id="1-2-颜色表示"><a href="#1-2-颜色表示" class="headerlink" title="1.2 颜色表示"></a>1.2 颜色表示</h3><ul>
+<li>每个颜色通道（R、G、B）通常使用8位（0-255）或16位（0-65535）来表示强度。</li>
+<li>例如，纯红色表示为 <code>(255, 0, 0)</code>，纯绿色为 <code>(0, 255, 0)</code>，纯蓝色为 <code>(0, 0, 255)</code>。</li>
+<li>白色为 <code>(255, 255, 255)</code>，黑色为 <code>(0, 0, 0)</code>。</li>
+</ul>
+<h3 id="1-3-优点"><a href="#1-3-优点" class="headerlink" title="1.3 优点"></a>1.3 优点</h3><ul>
+<li><strong>直观</strong>：RGB模型直接对应显示器的发光原理，易于理解和实现。</li>
+<li><strong>广泛应用</strong>：适用于大多数显示设备和图像处理软件。</li>
+</ul>
+<h3 id="1-4-缺点"><a href="#1-4-缺点" class="headerlink" title="1.4 缺点"></a>1.4 缺点</h3><ul>
+<li><strong>空间不均匀</strong>：人眼对不同颜色的敏感度不同，RGB模型在颜色空间上不够均匀。</li>
+<li><strong>不适合传输</strong>：RGB数据量大，不适合直接用于视频传输和存储。</li>
+</ul>
+<h1 id="2-YUV颜色模型"><a href="#2-YUV颜色模型" class="headerlink" title="2.YUV颜色模型"></a>2.YUV颜色模型</h1><p>YUV颜色模型是一种用于视频压缩和传输的颜色模型，它将亮度（Y）和色度（U、V）分开表示。YUV模型广泛应用于电视广播、视频编码等领域。</p>
+<h3 id="2-1-基本概念"><a href="#2-1-基本概念" class="headerlink" title="2.1 基本概念"></a>2.1 基本概念</h3><ul>
+<li><strong>Y（Luminance）</strong>：表示亮度信息，即图像的灰度值。</li>
+<li><strong>U（Chrominance）</strong>：表示蓝色和亮度之间的差异。</li>
+<li><strong>V（Chrominance）</strong>：表示红色和亮度之间的差异。</li>
+</ul>
+<h3 id="2-2-颜色表示"><a href="#2-2-颜色表示" class="headerlink" title="2.2  颜色表示"></a>2.2  颜色表示</h3><ul>
+<li>YUV模型中，Y通常使用8位（0-255）表示亮度。</li>
+<li>U和V通常使用8位（-128到127）表示色度。</li>
+<li>例如，YUV值 <code>(128, 0, 0)</code> 表示中等亮度的灰色，没有颜色偏差。</li>
+</ul>
+<h3 id="2-3-优点"><a href="#2-3-优点" class="headerlink" title="2.3 优点"></a>2.3 优点</h3><ul>
+<li><strong>压缩效率高</strong>：YUV模型将亮度和色度分开，可以进行色度子采样（如4:2:0、4:2:2），减少数据量。</li>
+<li><strong>适合传输</strong>：YUV模型适合用于视频压缩和传输，如MPEG、H.264等标准。</li>
+</ul>
+<h3 id="2-4-缺点"><a href="#2-4-缺点" class="headerlink" title="2.4 缺点"></a>2.4 缺点</h3><ul>
+<li><strong>不直观</strong>：YUV模型不如RGB模型直观，需要转换才能在显示器上显示。</li>
+<li><strong>转换复杂</strong>：从RGB到YUV的转换涉及复杂的数学运算。</li>
+</ul>
+<h1 id="3-YUV相比RGB的优势"><a href="#3-YUV相比RGB的优势" class="headerlink" title="3. YUV相比RGB的优势"></a>3. YUV相比RGB的优势</h1><p>YUV颜色模型相对于RGB颜色模型具有以下几个显著的优势，特别是在视频处理和传输领域：</p>
+<h3 id="3-1-压缩效率高"><a href="#3-1-压缩效率高" class="headerlink" title="3.1 压缩效率高"></a>3.1 压缩效率高</h3><ul>
+<li><strong>色度子采样</strong>：YUV模型将亮度和色度信息分开表示，可以对色度信息进行子采样（如4:2:0、4:2:2），从而减少数据量。人眼对亮度的变化更为敏感，对色度的变化相对不敏感，因此可以减少色度信息的采样率而不显著影响视觉质量。</li>
+<li><strong>数据量减少</strong>：通过色度子采样，YUV模型可以显著减少视频数据的存储和传输需求，提高压缩效率。</li>
+</ul>
+<h3 id="3-2-适合视频传输"><a href="#3-2-适合视频传输" class="headerlink" title="3.2 适合视频传输"></a>3.2 适合视频传输</h3><ul>
+<li><strong>带宽优化</strong>：在视频传输中，YUV模型通过减少色度信息的带宽占用，可以更有效地利用有限的带宽资源。</li>
+<li><strong>兼容性</strong>：YUV模型广泛应用于电视广播和视频编码标准（如MPEG、H.264等），具有良好的兼容性和广泛的应用基础。</li>
+</ul>
+<h3 id="3-3-视觉感知优化"><a href="#3-3-视觉感知优化" class="headerlink" title="3.3 视觉感知优化"></a>3.3 视觉感知优化</h3><ul>
+<li><strong>亮度优先</strong>：YUV模型将亮度信息（Y）单独表示，更符合人眼对亮度的敏感性。在视频处理中，可以优先保证亮度信息的准确性，从而提高视觉质量。</li>
+<li><strong>色度调整</strong>：通过调整色度信息（U、V），可以在不影响亮度的情况下进行颜色校正和调整，更适合视频后期处理。</li>
+</ul>
+<h3 id="3-4-历史和标准支持"><a href="#3-4-历史和标准支持" class="headerlink" title="3.4 历史和标准支持"></a>3.4 历史和标准支持</h3><ul>
+<li><strong>历史悠久</strong>：YUV模型起源于模拟电视系统（如PAL和NTSC），经过多年的发展和优化，已经成为视频处理和传输的标准模型。</li>
+<li><strong>标准支持</strong>：YUV模型被广泛应用于各种视频编码标准和传输协议中，具有强大的标准支持和生态系统。</li>
+</ul>
+<h3 id="3-5-计算复杂度"><a href="#3-5-计算复杂度" class="headerlink" title="3.5 计算复杂度"></a>3.5 计算复杂度</h3><ul>
+<li><strong>转换简单</strong>：虽然从RGB到YUV的转换涉及一定的数学运算，但在视频处理中，这种转换通常是批量进行的，计算复杂度相对可控。</li>
+<li><strong>硬件支持</strong>：现代视频处理硬件（如GPU、专用视频处理器）通常支持YUV模型的处理和转换，具有较高的计算效率。</li>
+</ul>
+<h3 id="3-6-总结"><a href="#3-6-总结" class="headerlink" title="3.6 总结"></a>3.6 总结</h3><p>YUV模型在视频处理和传输中具有显著的优势，特别是在压缩效率、带宽优化、视觉感知优化和标准支持方面。尽管RGB模型在显示器和图像处理中更为直观和直接，但在视频领域，YUV模型因其高效的数据压缩和传输特性而成为主流选择。</p>
+<h1 id="4-RGB与YUV的转换"><a href="#4-RGB与YUV的转换" class="headerlink" title="4. RGB与YUV的转换"></a>4. RGB与YUV的转换</h1><h3 id="4-1-RGB到YUV的转换公式"><a href="#4-1-RGB到YUV的转换公式" class="headerlink" title="4.1 RGB到YUV的转换公式"></a>4.1 RGB到YUV的转换公式</h3><ul>
+<li><strong>Y</strong> &#x3D; 0.299R + 0.587G + 0.114B</li>
+<li><strong>U</strong> &#x3D; 0.492(B - Y)</li>
+<li><strong>V</strong> &#x3D; 0.877(R - Y)</li>
+</ul>
+<h3 id="4-2-YUV到RGB的转换公式"><a href="#4-2-YUV到RGB的转换公式" class="headerlink" title="4.2 YUV到RGB的转换公式"></a>4.2 YUV到RGB的转换公式</h3><ul>
+<li><strong>R</strong> &#x3D; Y + 1.140V</li>
+<li><strong>G</strong> &#x3D; Y - 0.395U - 0.581V</li>
+<li><strong>B</strong> &#x3D; Y + 2.032U</li>
+</ul>
+<h3 id="4-3-总结"><a href="#4-3-总结" class="headerlink" title="4.3 总结"></a>4.3 总结</h3><ul>
+<li><strong>RGB模型</strong>：适用于显示器和图像处理，直观但不适合传输。</li>
+<li><strong>YUV模型</strong>：适用于视频压缩和传输，压缩效率高但不够直观。</li>
+</ul>
+<p>在实际应用中，通常根据需求选择合适的颜色模型，并在不同模型之间进行转换。</p>
+<h1 id="5-YUV的采样方式"><a href="#5-YUV的采样方式" class="headerlink" title="5. YUV的采样方式"></a>5. YUV的采样方式</h1><p>下面我们通过具体的例子来解释YUV的各种采样方式，以便更好地理解它们的工作原理和效果。</p>
+<h3 id="5-1-4-4-4-采样"><a href="#5-1-4-4-4-采样" class="headerlink" title="5.1  4:4:4 采样"></a>5.1  4:4:4 采样</h3><p><strong>例子</strong>：假设有一个4x2像素的图像，每个像素的Y、U、V分量都进行采样。</p>
+<table>
 <thead>
 <tr>
-<th>特性</th>
-<th>非 static 变量&#x2F;函数</th>
-<th>static 变量&#x2F;函数</th>
+<th>像素</th>
+<th>Y</th>
+<th>U</th>
+<th>V</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><strong>存储位置</strong></td>
-<td>栈或堆</td>
-<td>静态存储区</td>
+<td>1</td>
+<td>Y1</td>
+<td>U1</td>
+<td>V1</td>
 </tr>
 <tr>
-<td><strong>生命周期</strong></td>
-<td>作用域结束时销毁</td>
-<td>程序运行期间一直存在</td>
+<td>2</td>
+<td>Y2</td>
+<td>U2</td>
+<td>V2</td>
 </tr>
 <tr>
-<td><strong>作用域</strong></td>
-<td>局部作用域或全局作用域</td>
-<td>局部作用域或文件内部作用域</td>
+<td>3</td>
+<td>Y3</td>
+<td>U3</td>
+<td>V3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Y4</td>
+<td>U4</td>
+<td>V4</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Y5</td>
+<td>U5</td>
+<td>V5</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Y6</td>
+<td>U6</td>
+<td>V6</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Y7</td>
+<td>U7</td>
+<td>V7</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Y8</td>
+<td>U8</td>
+<td>V8</td>
 </tr>
 </tbody></table>
-<h2 id="三、static-关键字在不同场景下的应用"><a href="#三、static-关键字在不同场景下的应用" class="headerlink" title="三、static 关键字在不同场景下的应用"></a>三、static 关键字在不同场景下的应用</h2><h3 id="1-静态局部变量"><a href="#1-静态局部变量" class="headerlink" title="1. 静态局部变量"></a>1. 静态局部变量</h3><h4 id="定义和语法"><a href="#定义和语法" class="headerlink" title="定义和语法"></a>定义和语法</h4><p>静态局部变量是在局部作用域中使用 <code>static</code> 关键字声明的变量。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">exampleFunction</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-type">static</span> <span class="hljs-type">int</span> count = <span class="hljs-number">0</span>;  <span class="hljs-comment">// 静态局部变量</span><br>    count++;<br>    std::cout &lt;&lt; <span class="hljs-string">&quot;Count: &quot;</span> &lt;&lt; count &lt;&lt; std::endl;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<h4 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h4><ul>
-<li><strong>只初始化一次</strong>：静态局部变量在第一次进入该作用域时进行初始化，之后不再初始化。</li>
-<li><strong>生命周期贯穿整个程序运行期间</strong>：即使函数执行结束，静态局部变量的值仍然保留。</li>
-<li><strong>作用域仅限于声明它的局部作用域</strong>：静态局部变量只能在声明它的函数内部访问。</li>
+<p><strong>解释</strong>：每个像素都有完整的Y、U、V信息，没有进行任何压缩。这种采样方式提供了最高质量的图像，但数据量最大。</p>
+<h3 id="5-2-4-2-2-采样"><a href="#5-2-4-2-2-采样" class="headerlink" title="5.2  4:2:2 采样"></a>5.2  4:2:2 采样</h3><p><strong>例子</strong>：假设有一个4x2像素的图像，每两个像素共享一个U和V分量。</p>
+<table>
+<thead>
+<tr>
+<th>像素</th>
+<th>Y</th>
+<th>U</th>
+<th>V</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Y1</td>
+<td>U1</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Y2</td>
+<td></td>
+<td>V2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Y3</td>
+<td>U3</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Y4</td>
+<td></td>
+<td>V4</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Y5</td>
+<td>U5</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Y6</td>
+<td></td>
+<td>V6</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Y7</td>
+<td>U7</td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>Y8</td>
+<td></td>
+<td>V8</td>
+</tr>
+</tbody></table>
+<p><strong>解释</strong>：每两个像素中，第一个像素采样Y、U，第二个像素采样Y、V。这种采样方式减少了U和V分量的数据量，但仍然保留了较高的图像质量。</p>
+<h3 id="5-3-4-2-0-采样"><a href="#5-3-4-2-0-采样" class="headerlink" title="5.3  4:2:0 采样"></a>5.3  4:2:0 采样</h3><p><strong>例子</strong>：假设有一个4x2像素的图像，每四个像素共享一个U和V分量。</p>
+<table>
+<thead>
+<tr>
+<th>像素</th>
+<th>Y</th>
+<th>U</th>
+<th>V</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Y1</td>
+<td>U1</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Y2</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Y3</td>
+<td></td>
+<td>V3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Y4</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Y5</td>
+<td>U5</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Y6</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Y7</td>
+<td></td>
+<td>V7</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Y8</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>解释</strong>：每四个像素中，第一个像素采样Y、U，第三个像素采样Y、V，其他像素只采样Y。这种采样方式显著减少了U和V分量的数据量，适用于对数据量要求较高的场景，如数字电视、DVD和流媒体。</p>
+<h3 id="5-4-4-1-1-采样"><a href="#5-4-4-1-1-采样" class="headerlink" title="5.4  4:1:1 采样"></a>5.4  4:1:1 采样</h3><p><strong>例子</strong>：假设有一个4x2像素的图像，每四个像素共享一个U和V分量。</p>
+<table>
+<thead>
+<tr>
+<th>像素</th>
+<th>Y</th>
+<th>U</th>
+<th>V</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Y1</td>
+<td>U1</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Y2</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Y3</td>
+<td></td>
+<td>V3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Y4</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Y5</td>
+<td>U5</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Y6</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Y7</td>
+<td></td>
+<td>V7</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Y8</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>解释</strong>：每四个像素中，第一个像素采样Y、U，第三个像素采样Y、V，其他像素只采样Y。这种采样方式与4:2:0类似，但较少使用，主要在一些旧的视频编码标准中。</p>
+<h3 id="5-5-总结"><a href="#5-5-总结" class="headerlink" title="5.5 总结"></a>5.5 总结</h3><p>通过这些例子，我们可以看到不同YUV采样方式对数据量的影响和图像质量的权衡。4:4:4采样提供最高质量，但数据量最大；4:2:2采样在质量和数据量之间取得平衡；4:2:0采样在保证视觉质量的前提下，最大限度地减少数据量，广泛应用于数字电视、DVD和流媒体等领域。</p>
+<h1 id="6-举例说明YUV和RGB的存储差异"><a href="#6-举例说明YUV和RGB的存储差异" class="headerlink" title="6.举例说明YUV和RGB的存储差异"></a>6.举例说明YUV和RGB的存储差异</h1><p>我们来比较一下RGB和YUV各个采样方式在存储方面的差异。假设我们有一个4x2像素的图像，每个像素的RGB值用8位表示（0-255）。</p>
+<h3 id="6-1-RGB存储"><a href="#6-1-RGB存储" class="headerlink" title="6.1 RGB存储"></a>6.1 RGB存储</h3><p>每个像素有3个分量（R、G、B），每个分量占用8位。</p>
+<p><strong>总存储量</strong>：</p>
+<ul>
+<li>每个像素：3字节（24位）</li>
+<li>4x2像素图像：4 * 2 * 3 &#x3D; 24字节</li>
 </ul>
-<h4 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h4><ul>
-<li><strong>实现单例模式</strong>：静态局部变量可以用于实现线程安全的单例模式。</li>
-<li><strong>保存函数调用之间的状态</strong>：静态局部变量可以用于保存函数调用之间的状态信息。</li>
+<h3 id="6-2-YUV存储"><a href="#6-2-YUV存储" class="headerlink" title="6.2 YUV存储"></a>6.2 YUV存储</h3><h4 id="6-2-1-YUV-4-4-4-采样"><a href="#6-2-1-YUV-4-4-4-采样" class="headerlink" title="6.2.1 YUV 4:4:4 采样"></a>6.2.1 YUV 4:4:4 采样</h4><p>每个像素有3个分量（Y、U、V），每个分量占用8位。</p>
+<p><strong>总存储量</strong>：</p>
+<ul>
+<li>每个像素：3字节（24位）</li>
+<li>4x2像素图像：4 * 2 * 3 &#x3D; 24字节</li>
 </ul>
-<h4 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">exampleFunction</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-type">static</span> <span class="hljs-type">int</span> count = <span class="hljs-number">0</span>;  <span class="hljs-comment">// 静态局部变量，只初始化一次</span><br>    count++;<br>    std::cout &lt;&lt; <span class="hljs-string">&quot;Count: &quot;</span> &lt;&lt; count &lt;&lt; std::endl;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">exampleFunction</span>();  <span class="hljs-comment">// 输出: Count: 1</span><br>    <span class="hljs-built_in">exampleFunction</span>();  <span class="hljs-comment">// 输出: Count: 2</span><br>    <span class="hljs-built_in">exampleFunction</span>();  <span class="hljs-comment">// 输出: Count: 3</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<h3 id="2-静态全局变量和静态函数"><a href="#2-静态全局变量和静态函数" class="headerlink" title="2. 静态全局变量和静态函数"></a>2. 静态全局变量和静态函数</h3><h4 id="定义和语法-1"><a href="#定义和语法-1" class="headerlink" title="定义和语法"></a>定义和语法</h4><p>静态全局变量和静态函数是在全局作用域中使用 <code>static</code> 关键字声明的变量或函数。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-type">static</span> <span class="hljs-type">int</span> globalVar = <span class="hljs-number">10</span>;  <span class="hljs-comment">// 静态全局变量</span><br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">staticFunction</span><span class="hljs-params">()</span> </span>&#123;<br>    std::cout &lt;&lt; <span class="hljs-string">&quot;This is a static function.&quot;</span> &lt;&lt; std::endl;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<h4 id="特性-1"><a href="#特性-1" class="headerlink" title="特性"></a>特性</h4><ul>
-<li><strong>限制作用域</strong>：静态全局变量和静态函数的作用域仅限于声明它的文件内部。</li>
-<li><strong>避免命名冲突</strong>：静态全局变量和静态函数可以避免与其他文件中的同名变量或函数发生冲突。</li>
+<p><strong>比较</strong>：</p>
+<ul>
+<li>RGB和YUV 4:4:4采样的存储量相同，都是24字节。</li>
 </ul>
-<h4 id="应用场景-1"><a href="#应用场景-1" class="headerlink" title="应用场景"></a>应用场景</h4><ul>
-<li><strong>实现文件级别的私有变量和函数</strong>：静态全局变量和静态函数可以用于实现文件内部的私有变量和函数。</li>
-<li><strong>组织代码</strong>：静态全局变量和静态函数可以用于组织代码，提高代码的可读性和可维护性。</li>
+<h4 id="6-2-2-YUV-4-2-2-采样"><a href="#6-2-2-YUV-4-2-2-采样" class="headerlink" title="6.2.2 YUV 4:2:2 采样"></a>6.2.2 YUV 4:2:2 采样</h4><p>每两个像素共享一个U和V分量。</p>
+<p><strong>总存储量</strong>：</p>
+<ul>
+<li>Y分量：4 * 2 &#x3D; 8字节</li>
+<li>U分量：4 * 2 &#x2F; 2 &#x3D; 4字节</li>
+<li>V分量：4 * 2 &#x2F; 2 &#x3D; 4字节</li>
+<li>总存储量：8 + 4 + 4 &#x3D; 16字节</li>
 </ul>
-<h4 id="代码示例-1"><a href="#代码示例-1" class="headerlink" title="代码示例"></a>代码示例</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// file1.cpp</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><br><span class="hljs-type">static</span> <span class="hljs-type">int</span> globalVar = <span class="hljs-number">10</span>;  <span class="hljs-comment">// 静态全局变量，仅在 file1.cpp 中可见</span><br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">staticFunction</span><span class="hljs-params">()</span> </span>&#123;  <span class="hljs-comment">// 静态函数，仅在 file1.cpp 中可见</span><br>    std::cout &lt;&lt; <span class="hljs-string">&quot;GlobalVar: &quot;</span> &lt;&lt; globalVar &lt;&lt; std::endl;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">callStaticFunction</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">staticFunction</span>();  <span class="hljs-comment">// 调用静态函数</span><br>&#125;<br><br><span class="hljs-comment">// main.cpp</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><br><span class="hljs-function"><span class="hljs-keyword">extern</span> <span class="hljs-type">void</span> <span class="hljs-title">callStaticFunction</span><span class="hljs-params">()</span></span>;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">callStaticFunction</span>();  <span class="hljs-comment">// 输出: GlobalVar: 10</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<h3 id="3-静态成员变量和静态成员函数"><a href="#3-静态成员变量和静态成员函数" class="headerlink" title="3. 静态成员变量和静态成员函数"></a>3. 静态成员变量和静态成员函数</h3><h4 id="定义和语法-2"><a href="#定义和语法-2" class="headerlink" title="定义和语法"></a>定义和语法</h4><p>静态成员变量和静态成员函数是在类中使用 <code>static</code> 关键字声明的成员变量或成员函数。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-type">static</span> <span class="hljs-type">int</span> staticVar;  <span class="hljs-comment">// 静态成员变量</span><br><br>    <span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">staticFunction</span><span class="hljs-params">()</span> </span>&#123;  <span class="hljs-comment">// 静态成员函数</span><br>        std::cout &lt;&lt; <span class="hljs-string">&quot;StaticVar: &quot;</span> &lt;&lt; staticVar &lt;&lt; std::endl;<br>    &#125;<br>&#125;;<br><br><span class="hljs-type">int</span> MyClass::staticVar = <span class="hljs-number">20</span>;  <span class="hljs-comment">// 静态成员变量的初始化</span><br></code></pre></td></tr></table></figure>
-
-<h4 id="特性-2"><a href="#特性-2" class="headerlink" title="特性"></a>特性</h4><ul>
-<li><strong>属于类本身</strong>：静态成员变量和静态成员函数属于类本身，而非类的实例，所有对象共享同一个静态成员变量。</li>
-<li><strong>只能访问静态成员</strong>：静态成员函数只能访问静态成员变量和静态成员函数，不能访问非静态成员变量和非静态成员函数。</li>
-<li><strong>必须在类外初始化</strong>：静态成员变量必须在类外进行初始化。</li>
+<p><strong>比较</strong>：</p>
+<ul>
+<li>YUV 4:2:2采样的存储量比RGB少8字节（16字节 vs 24字节）。</li>
 </ul>
-<h4 id="应用场景-2"><a href="#应用场景-2" class="headerlink" title="应用场景"></a>应用场景</h4><ul>
-<li><strong>实现类级别的计数器、共享资源等</strong>：静态成员变量可以用于实现类级别的计数器或共享资源。</li>
-<li><strong>提供与对象无关的类级别接口</strong>：静态成员函数可以用于提供与对象无关的类级别接口。</li>
+<h4 id="6-2-3-YUV-4-2-0-采样"><a href="#6-2-3-YUV-4-2-0-采样" class="headerlink" title="6.2.3 YUV 4:2:0 采样"></a>6.2.3 YUV 4:2:0 采样</h4><p>每四个像素共享一个U和V分量。</p>
+<p><strong>总存储量</strong>：</p>
+<ul>
+<li>Y分量：4 * 2 &#x3D; 8字节</li>
+<li>U分量：4 * 2 &#x2F; 4 &#x3D; 2字节</li>
+<li>V分量：4 * 2 &#x2F; 4 &#x3D; 2字节</li>
+<li>总存储量：8 + 2 + 2 &#x3D; 12字节</li>
 </ul>
-<h4 id="代码示例-2"><a href="#代码示例-2" class="headerlink" title="代码示例"></a>代码示例</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span> &#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-type">static</span> <span class="hljs-type">int</span> staticVar;  <span class="hljs-comment">// 静态成员变量</span><br><br>    <span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">staticFunction</span><span class="hljs-params">()</span> </span>&#123;  <span class="hljs-comment">// 静态成员函数</span><br>        std::cout &lt;&lt; <span class="hljs-string">&quot;StaticVar: &quot;</span> &lt;&lt; staticVar &lt;&lt; std::endl;<br>    &#125;<br>&#125;;<br><br><span class="hljs-type">int</span> MyClass::staticVar = <span class="hljs-number">20</span>;  <span class="hljs-comment">// 静态成员变量的初始化</span><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;<br>    MyClass::<span class="hljs-built_in">staticFunction</span>();  <span class="hljs-comment">// 输出: StaticVar: 20</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<h2 id="四、static-关键字的注意事项"><a href="#四、static-关键字的注意事项" class="headerlink" title="四、static 关键字的注意事项"></a>四、static 关键字的注意事项</h2><h3 id="1-静态局部变量的初始化顺序问题"><a href="#1-静态局部变量的初始化顺序问题" class="headerlink" title="1. 静态局部变量的初始化顺序问题"></a>1. 静态局部变量的初始化顺序问题</h3><p>静态局部变量的初始化顺序是按照它们在代码中出现的顺序进行的。如果多个静态局部变量之间存在依赖关系，可能会导致未定义行为。</p>
-<h3 id="2-静态成员变量的初始化顺序问题"><a href="#2-静态成员变量的初始化顺序问题" class="headerlink" title="2. 静态成员变量的初始化顺序问题"></a>2. 静态成员变量的初始化顺序问题</h3><p>静态成员变量的初始化顺序是按照它们在类中声明的顺序进行的。如果多个静态成员变量之间存在依赖关系，可能会导致未定义行为。</p>
-<h3 id="3-静态成员函数不能访问非静态成员变量和非静态成员函数的原因"><a href="#3-静态成员函数不能访问非静态成员变量和非静态成员函数的原因" class="headerlink" title="3. 静态成员函数不能访问非静态成员变量和非静态成员函数的原因"></a>3. 静态成员函数不能访问非静态成员变量和非静态成员函数的原因</h3><p>静态成员函数没有 <code>this</code> 指针，因此无法访问非静态成员变量和非静态成员函数。</p>
-<h3 id="4-避免滥用-static-关键字"><a href="#4-避免滥用-static-关键字" class="headerlink" title="4. 避免滥用 static 关键字"></a>4. 避免滥用 static 关键字</h3><p>滥用 <code>static</code> 关键字可能会导致代码的可读性和可维护性下降。因此，在使用 <code>static</code> 关键字时，应谨慎考虑其适用场景。</p>
-<h2 id="五、总结"><a href="#五、总结" class="headerlink" title="五、总结"></a>五、总结</h2><p>本文详细探讨了 <code>static</code> 关键字在 C++ 中的多种用途，包括静态局部变量、静态全局变量和静态函数、静态成员变量和静态成员函数。通过代码示例，我们深入理解了 <code>static</code> 关键字的工作原理和应用场景。</p>
-<p>理解 <code>static</code> 关键字的重要性不言而喻，它能够帮助我们更好地管理内存、控制作用域以及实现一些特定的编程模式。在实际编程中，合理使用 <code>static</code> 关键字可以提高代码的可读性和可维护性。</p>
+<p><strong>比较</strong>：</p>
+<ul>
+<li>YUV 4:2:0采样的存储量比RGB少12字节（12字节 vs 24字节）。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><table>
+<thead>
+<tr>
+<th>采样方式</th>
+<th>存储量（字节）</th>
+<th>与RGB相比的差异</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RGB</td>
+<td>24</td>
+<td>0</td>
+</tr>
+<tr>
+<td>YUV 4:4:4</td>
+<td>24</td>
+<td>0</td>
+</tr>
+<tr>
+<td>YUV 4:2:2</td>
+<td>16</td>
+<td>-8</td>
+</tr>
+<tr>
+<td>YUV 4:2:0</td>
+<td>12</td>
+<td>-12</td>
+</tr>
+</tbody></table>
+<p>通过这个例子，我们可以清楚地看到YUV采样方式在存储方面的优势。YUV 4:4:4采样与RGB存储量相同，而YUV 4:2:2和YUV 4:2:0采样分别比RGB减少了8字节和12字节的存储量。这种存储量的减少在处理大尺寸图像或视频时尤为显著，有助于提高数据传输和存储的效率。</p>
 <p>文章合集：<a target="_blank" rel="noopener" href="https://github.com/chongzicbo/ReadWriteThink/tree/main">chongzicbo&#x2F;ReadWriteThink: 博学而笃志，切问而近思 (github.com)</a></p>
 <p>个人博客：<a href="https://chongzicbo.github.io/">程博仕</a></p>
 <p>微信公众号：</p>
@@ -549,8 +859,15 @@
   
     <span>></span>
     
-  <a href="/categories/%E5%BC%80%E5%8F%91/cpp/" class="category-chain-item">cpp</a>
+  <a href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91/" class="category-chain-item">音视频</a>
   
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91/%E5%9F%BA%E7%A1%80/" class="category-chain-item">基础</a>
+  
+  
+
   
 
   
@@ -566,11 +883,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/c/" class="print-no-link">#c++</a>
+        <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/" class="print-no-link">#音视频开发</a>
       
-        <a href="/tags/cpp/" class="print-no-link">#cpp</a>
-      
-        <a href="/tags/c-%E5%9F%BA%E7%A1%80/" class="print-no-link">#c++基础</a>
+        <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80/" class="print-no-link">#音视频基础</a>
       
     </div>
   
@@ -582,8 +897,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>C++ 中的 static 关键字：深入理解与应用</div>
-      <div>https://chongzicbo.github.io/2024/12/16/开发/cpp/C++基础：C++ 中的 static 关键字：深入理解与应用/</div>
+      <div>音视频开发01：RGB和YUV颜色模型详解</div>
+      <div>https://chongzicbo.github.io/2024/12/05/开发/音视频/音视频开发01：RGB和YUV颜色模型详解/</div>
     </div>
     <div class="license-meta">
       
@@ -595,7 +910,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>December 16, 2024</div>
+          <div>December 5, 2024</div>
         </div>
       
       
@@ -627,21 +942,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/12/17/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/OCR/%E5%A4%9A%E6%A8%A1%E6%80%81003%EF%BC%9AOCR%E7%AE%97%E6%B3%95%E3%80%81%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0/" title="OCR算法、模型综述">
+                      <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV007-YOLO11%E8%AF%A6%E8%A7%A3/" title="YOLO11 详解">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">OCR算法、模型综述</span>
+                        <span class="hidden-mobile">YOLO11 详解</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
-                    
-                      <a href="/2024/12/15/%E5%BC%80%E5%8F%91/Python/Python-003%EF%BC%9APython%20%E6%97%A5%E5%BF%97%E5%A4%84%E7%90%86%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%EF%BC%9A%E4%BD%BF%E7%94%A8logging%E6%A8%A1%E5%9D%97%E6%9E%84%E5%BB%BA%E9%AB%98%E6%95%88%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F/" title="Python 日志处理最佳实践：使用logging模块构建高效日志系统">
-                        <span class="hidden-mobile">Python 日志处理最佳实践：使用logging模块构建高效日志系统</span>
-                        <span class="visible-mobile">Next</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
                     
                   </article>
                 </div>
@@ -697,17 +1006,17 @@
     
     
     <div class="category-sub row nomargin-x">
-      <a class="category-subitem 
+      <a class="category-subitem collapsed
           list-group-item category-item-action col-10 col-md-11 col-xm-11" title="cpp"
         id="heading-2c5f2cba9af7f92986d3de1e753f3faa" role="tab" data-toggle="collapse" href="#collapse-2c5f2cba9af7f92986d3de1e753f3faa"
-        aria-expanded="true"
+        aria-expanded="false"
       >
         cpp
         <span class="list-group-count">(3)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
-      <div class="category-collapse collapse show" id="collapse-2c5f2cba9af7f92986d3de1e753f3faa"
+      <div class="category-collapse collapse " id="collapse-2c5f2cba9af7f92986d3de1e753f3faa"
            role="tabpanel" aria-labelledby="heading-2c5f2cba9af7f92986d3de1e753f3faa">
         
         
@@ -719,7 +1028,7 @@
       
         <a href="/2024/12/16/%E5%BC%80%E5%8F%91/cpp/C++%E5%9F%BA%E7%A1%80%EF%BC%9AC++%20%E4%B8%AD%E7%9A%84%20static%20%E5%85%B3%E9%94%AE%E5%AD%97%EF%BC%9A%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E4%B8%8E%E5%BA%94%E7%94%A8/" title="C++ 中的 static 关键字：深入理解与应用"
            class="list-group-item list-group-item-action
-           active">
+           ">
           <span class="category-post">C++ 中的 static 关键字：深入理解与应用</span>
         </a>
       
@@ -816,17 +1125,17 @@
     
     
     <div class="category-sub row nomargin-x">
-      <a class="category-subitem collapsed
+      <a class="category-subitem 
           list-group-item category-item-action col-10 col-md-11 col-xm-11" title="音视频"
         id="heading-6729afc51f5ac49a828812fa0eb0c82f" role="tab" data-toggle="collapse" href="#collapse-6729afc51f5ac49a828812fa0eb0c82f"
-        aria-expanded="false"
+        aria-expanded="true"
       >
         音视频
         <span class="list-group-count">(3)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
-      <div class="category-collapse collapse " id="collapse-6729afc51f5ac49a828812fa0eb0c82f"
+      <div class="category-collapse collapse show" id="collapse-6729afc51f5ac49a828812fa0eb0c82f"
            role="tabpanel" aria-labelledby="heading-6729afc51f5ac49a828812fa0eb0c82f">
         
         
@@ -843,17 +1152,17 @@
     
     
     <div class="category-sub row nomargin-x">
-      <a class="category-subitem collapsed
+      <a class="category-subitem 
           list-group-item category-item-action col-10 col-md-11 col-xm-11" title="基础"
         id="heading-0796ba76b4b553687e5ffaeb78512ccb" role="tab" data-toggle="collapse" href="#collapse-0796ba76b4b553687e5ffaeb78512ccb"
-        aria-expanded="false"
+        aria-expanded="true"
       >
         基础
         <span class="list-group-count">(3)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
-      <div class="category-collapse collapse " id="collapse-0796ba76b4b553687e5ffaeb78512ccb"
+      <div class="category-collapse collapse show" id="collapse-0796ba76b4b553687e5ffaeb78512ccb"
            role="tabpanel" aria-labelledby="heading-0796ba76b4b553687e5ffaeb78512ccb">
         
         
@@ -865,7 +1174,7 @@
       
         <a href="/2024/12/05/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91/%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%9101%EF%BC%9ARGB%E5%92%8CYUV%E9%A2%9C%E8%89%B2%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/" title="音视频开发01：RGB和YUV颜色模型详解"
            class="list-group-item list-group-item-action
-           ">
+           active">
           <span class="category-post">音视频开发01：RGB和YUV颜色模型详解</span>
         </a>
       
