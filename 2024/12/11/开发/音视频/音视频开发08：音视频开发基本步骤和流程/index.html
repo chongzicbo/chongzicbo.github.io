@@ -1,0 +1,929 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/daxiong.jpg">
+  <link rel="icon" href="/img/daxiong.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="程博">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="音视频开发的基本步骤音视频开发是一个涉及多个技术领域的复杂过程，其基本步骤涵盖了从数据采集到最终播放展示的各个环节。 一、数据采集 数据采集是音视频开发的起始点，它解决的是数据从哪里来的问题。这一环节涉及到对声音和图像从现实世界转换为数字信号的操作。  设备选择：首先要选择合适的音视频采集设备。对于音频采集，麦克风是常见的设备；对于视频采集，摄像头则是常用的选择。不同的设备适用于不同的场景，例如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="音视频开发08：音视频开发基本步骤和流程">
+<meta property="og:url" content="https://chongzicbo.github.io/2024/12/11/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91/%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%9108%EF%BC%9A%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E5%9F%BA%E6%9C%AC%E6%AD%A5%E9%AA%A4%E5%92%8C%E6%B5%81%E7%A8%8B/index.html">
+<meta property="og:site_name" content="程博仕">
+<meta property="og:description" content="音视频开发的基本步骤音视频开发是一个涉及多个技术领域的复杂过程，其基本步骤涵盖了从数据采集到最终播放展示的各个环节。 一、数据采集 数据采集是音视频开发的起始点，它解决的是数据从哪里来的问题。这一环节涉及到对声音和图像从现实世界转换为数字信号的操作。  设备选择：首先要选择合适的音视频采集设备。对于音频采集，麦克风是常见的设备；对于视频采集，摄像头则是常用的选择。不同的设备适用于不同的场景，例如">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241205155843570.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
+<meta property="article:published_time" content="2024-12-11T04:00:00.000Z">
+<meta property="article:modified_time" content="2024-12-26T06:22:45.505Z">
+<meta property="article:author" content="程博">
+<meta property="article:tag" content="音视频开发">
+<meta property="article:tag" content="音视频基础">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241205155843570.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>音视频开发08：音视频开发基本步骤和流程 - 程博仕</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>程博仕</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>人工智能</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/asr" target="_self">
+                    
+                    <span>语音识别</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>开发</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91" target="_self">
+                    
+                    <span>音视频</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/web&#39;" target="_self">
+                    
+                    <span>Web开发</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>文章分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>时间轴</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="音视频开发08：音视频开发基本步骤和流程"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        程博
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-11 12:00" pubdate>
+          December 11, 2024 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.3k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          45 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">音视频开发08：音视频开发基本步骤和流程</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    Last updated on December 26, 2024 pm
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241205155843570.png" srcset="/img/loading.gif" lazyload alt="image-20241205155843570"></p>
+<h1 id="音视频开发的基本步骤"><a href="#音视频开发的基本步骤" class="headerlink" title="音视频开发的基本步骤"></a>音视频开发的基本步骤</h1><p>音视频开发是一个涉及多个技术领域的复杂过程，其基本步骤涵盖了从数据采集到最终播放展示的各个环节。</p>
+<h3 id="一、数据采集"><a href="#一、数据采集" class="headerlink" title="一、数据采集"></a><strong>一、数据采集</strong></h3><p> 数据采集是音视频开发的起始点，它解决的是数据从哪里来的问题。这一环节涉及到对声音和图像从现实世界转换为数字信号的操作。</p>
+<ul>
+<li><strong>设备选择</strong>：首先要选择合适的音视频采集设备。对于音频采集，麦克风是常见的设备；对于视频采集，摄像头则是常用的选择。不同的设备适用于不同的场景，例如在视频会议场景下，可能会选择高清摄像头来确保图像的清晰，而在语音通话场景中，会选用能够有效降低背景噪音的麦克风。</li>
+<li><strong>配置采集参数</strong>：针对不同的采集设备和采集场景，需要配置不同的采集参数。对于音频，重要的参数有采样率、位宽、声道数等。采样率指每秒从连续信号中提取并组成离散信号的采样个数，例如人耳能听到的最高频率为20kHz，为了满足人耳的听觉要求，采样率通常为44.1kHz或48kHz；位宽涉及到振幅量化，常见的有8位、16位、32位；声道数有单声道、双声道等。对于视频，图像传输格式、图像格式、传输通道、分辨率、采样频率等是关键参数。分辨率如常见的720P（1280×720）、1080P（1920×1080）等，帧率也是一个重要参数，它代表单位时间内帧的数量，单位是fps，像24&#x2F;25fps是一般电影的帧率，30&#x2F;60fps是游戏常见的帧率，30帧可以接受，60帧会感觉更加流畅逼真，85fps以上人眼基本无法察觉出差异，更高帧率在视频里意义不大。</li>
+<li><strong>开启采集设备</strong>：通过相应的API或SDK来开启采集设备。例如在Android系统中，视频采集可以使用Camera类，音频采集可以用AudioRecord来开启采集设备。在开启设备后，就可以进行数据的采集了。</li>
+<li><strong>采集音频和视频数据</strong>：采集设备获取音频信号并将其转换为数字信号，对于视频则是获取图像的数字信号。在采集过程中，可能会面临一些问题，如音频采集时可能会遇到噪音、回声等干扰，视频采集可能会存在延时敏感、图像质量受环境光影响等问题。同时，采集到的数据可能需要进行一些初步的处理，如音频的降噪、视频的格式转换等，以便后续的操作。例如在音频采集流程中，采集端将音频模拟信号转换为数字信号后，进入音频处理模块，会有音频增益、噪声抑制、混音等操作。</li>
+</ul>
+<h3 id="二、数据处理"><a href="#二、数据处理" class="headerlink" title="二、数据处理"></a><strong>二、数据处理</strong></h3><p>数据处理是对采集或获取的音视频数据进行加工，以实现特定的应用需求。</p>
+<ul>
+<li><strong>解码</strong>：如果采集到的数据是经过编码压缩的，那么首先需要进行解码操作，将其转换为原始的音视频信号。例如对于采用H.264编码的视频数据和AAC编码的音频数据，需要对应的解码器将其还原成原始信号，以便进行后续处理。</li>
+<li><strong>数据处理操作</strong>：这一步包含多种操作。在音频处理方面，有混音、降噪、声音特效等操作。例如混音可以将多个音频源混合成一个音频流；降噪可以减少环境噪音对音频质量的影响；声音特效则可以为音频添加特殊的效果，如回声、变声等。在视频处理方面，常见的有美颜、水印、自定义滤镜、自定义处理等。美颜操作可以通过磨皮、美白等手段来改善视频中的人物形象，磨皮可以采用均值模糊、高斯模糊和中值滤波等技术，同时可能结合人脸和皮肤检测技术；水印可以是播放器水印或者视频内嵌水印；自定义滤镜则可以根据需求创建各种独特的视觉效果。</li>
+<li><strong>编码和压缩</strong>：处理后的音视频数据需要进行编码，以将其转换为压缩的音视频数据流，从而减小数据量，便于存储和传输。对于视频编码，其主要作用是将视频像素数据（如RGB，YUV等）压缩成为视频码流，常见的视频编码标准有H.264、H.265等。H.264具有低码率、高质量、高容错的特点，H.265在码率节省上相比H.264有较大优势，在相同RSNR下分别节省了48.3%和75.8%，但H.264在编码时间上有优势。对于音频编码，常见的编码标准有AAC、MP3等。编码的基本原理包括利用空间冗余（图像相邻像素之间有较强的相关性）、时间冗余（视频序的相邻图像之间内容相似）、编码冗余（不同像素值出现的概率不同）、知识冗余（规性的结构可由先验知识和背景知识得到）等来进行压缩。在编码之后，可能还会进行进一步的压缩操作，以进一步减小数据量，提高传输和存储效率。</li>
+<li><strong>重采样和转码</strong>：重采样主要针对音频数据，改变采样率、位深度等参数，以适应不同的应用需求。例如将44100&#x2F;16&#x2F;2转成48000&#x2F;16&#x2F;2。转码是将音视频数据从一种格式转换为另一种格式，以适应不同的设备和应用环境，如将视频从MKV格式转码为MP4格式，以便在更多设备上播放。</li>
+<li><strong>合成操作</strong>：在一些场景下，需要将多个音视频流进行合成，例如将多个音频轨道、视频轨道合并成一个完整的音视频文件。比如在视频编辑软件中，将不同片段的视频和对应的音频合成一个完整的视频作品。</li>
+</ul>
+<h3 id="三、数据传输"><a href="#三、数据传输" class="headerlink" title="三、数据传输"></a><strong>三、数据传输</strong></h3><p> 数据传输是将采集、处理后的音视频数据流传输到远程设备或服务器的过程。</p>
+<ul>
+<li><strong>建立连接</strong>：通过网络协议建立连接，常见的网络协议有TCP和UDP等。TCP协议是一种可靠的面向连接的协议，适用于对数据准确性要求较高的场景，如文件传输；UDP协议是一种无连接的协议，传输速度快但可靠性相对较低，适用于对实时性要求较高的场景，如视频直播中的部分数据传输。</li>
+<li><strong>数据打包</strong>：将采集、处理后的音视频数据流打包为网络传输的格式，例如RTP、RTMP等协议。RTP（Real - time Transport Protocol）是一种实时传输协议，用于在IP网络上传输实时数据，通常与RTCP（RTP Control Protocol）一起使用，RTCP用于监控服务质量并提供反馈；RTMP（Real - Time Messaging Protocol）是基于TCP的实时消息传输协议，广泛用于直播领域。</li>
+<li><strong>压缩（如果需要）</strong>：在传输之前，可能还会对数据流进行压缩，以减小数据量和网络带宽占用。这一步与前面数据处理中的编码压缩类似，但可能会根据传输网络的情况进行进一步的优化，例如根据网络带宽动态调整压缩率。</li>
+<li><strong>传输数据</strong>：通过网络将打包和压缩后的数据流传输到远程设备或服务器。在传输过程中，需要考虑网络的稳定性、带宽等因素。如果网络带宽不足，可能会导致视频卡顿、音频中断等问题。</li>
+</ul>
+<h3 id="四、数据渲染与播放"><a href="#四、数据渲染与播放" class="headerlink" title="四、数据渲染与播放"></a><strong>四、数据渲染与播放</strong></h3><p>这一环节是将音视频数据流转换为可视化的音视频内容并播放的过程。</p>
+<ul>
+<li><strong>解码（再次解码）</strong>：将接收到的音视频数据流解码为原始的音视频信号。这一步与数据处理中的解码类似，但可能会因为传输过程中的一些情况（如数据丢失、错误等）而需要进行一些特殊的处理，例如纠错、数据恢复等。</li>
+<li><strong>帧缓存</strong>：将解码后的视频帧存储到缓存中，以供后续渲染。缓存的大小和管理方式会影响视频播放的流畅性，如果缓存过小，可能会导致视频播放时频繁卡顿；如果缓存过大，可能会增加内存占用和延迟。</li>
+<li><strong>视频渲染</strong>：通过OpenGL、DirectX等图形库将视频帧渲染到屏幕上，并可以添加相应的特效和滤镜等处理。这些图形库提供了强大的图形处理功能，可以实现视频的缩放、旋转、添加字幕等操作。</li>
+<li><strong>音频渲染</strong>：将音频信号转换为声音，并通过扬声器或耳机播放出来。在播放过程中，需要确保音频的音量、音质等符合要求，并且要与视频保持同步。</li>
+<li><strong>同步操作</strong>：将音视频进行同步，以保证音频和视频的时间戳一致，避免出现卡顿、不同步等问题。音视频同步是一个复杂的过程，需要考虑到采集、传输、处理等各个环节可能引入的时间差，通过调整播放速度、缓冲等方式来实现同步。</li>
+</ul>
+<h1 id="音视频开发流程包含哪些环节"><a href="#音视频开发流程包含哪些环节" class="headerlink" title="音视频开发流程包含哪些环节"></a>音视频开发流程包含哪些环节</h1><p>音视频开发流程包含多个环节，这些环节相互协作，共同完成从原始数据到可播放的音视频内容的转换。</p>
+<h3 id="一、芯片与元件相关环节"><a href="#一、芯片与元件相关环节" class="headerlink" title="一、芯片与元件相关环节"></a><strong>一、芯片与元件相关环节</strong></h3><ul>
+<li><strong>主芯片厂商环节</strong>：主芯片厂商，如海思、TI、安霸、联咏等，在音视频开发流程中处于基础地位。他们的核心在于各自的压缩算法，这些算法以SDK的方式开放给开发者使用。这些压缩算法是音视频编码的关键技术支撑，决定了音视频数据在采集、处理和传输过程中的压缩效率和质量。例如，一个好的视频压缩算法可以在保证视频质量的前提下，将视频数据量大大减小，从而节省存储空间和传输带宽。不同的主芯片厂商可能会有不同的技术优势和应用场景，开发者可以根据项目需求选择合适的芯片厂商的SDK进行开发。</li>
+<li><strong>传感器与分立元件厂商环节</strong>：传感器（senor）厂商、镜头等分立元件厂商也是重要的一环。传感器用于采集视频的原始数据，如摄像头中的图像传感器，它的性能直接影响到采集到的视频图像的质量，包括分辨率、色彩还原度、低光性能等。镜头则影响着视频的视角、焦距等参数。这些分立元件与主芯片相互配合，为后续的视频采集和处理提供基础的硬件条件。例如，一个高质量的镜头可以提供更清晰、更广阔的视野，与高分辨率的传感器相结合，可以采集到高质量的视频数据。</li>
+</ul>
+<h3 id="二、模组开发环节"><a href="#二、模组开发环节" class="headerlink" title="二、模组开发环节"></a><strong>二、模组开发环节</strong></h3><p>模组厂商在音视频开发流程中起着承上启下的作用。他们买来芯片、sensor、镜头等进行一些基础的开发，得出一些视频采集的模组，实现视频的采集、编码、传输。在这个环节中，模组厂商会将各种硬件元件集成在一起，并进行软件层面的开发，以实现视频的采集功能。他们需要对采集到的视频数据进行编码，将原始的视频数据转换为适合存储和传输的格式，例如采用H.264或H.265等视频编码标准进行编码。同时，还要实现视频数据的传输功能，确保编码后的视频数据能够在不同的设备之间进行传输。这个环节的开发成果是视频采集模组，它是整个音视频系统的重要组成部分，为后续的视频服务器和上层应用开发提供了基础的视频数据源。</p>
+<h3 id="三、视频服务器相关环节"><a href="#三、视频服务器相关环节" class="headerlink" title="三、视频服务器相关环节"></a><strong>三、视频服务器相关环节</strong></h3><ul>
+<li><strong>视频服务器厂商环节</strong>：视频服务器厂商，如大拿等，在音视频开发流程中负责让编码后的视频能够通过外网传输。他们先将视频推到服务器上，再通过服务器让多个客户端进行多线程的访问。视频服务器需要具备强大的网络处理能力，能够处理大量的视频流数据。在这个环节中，涉及到网络协议的应用，如采用合适的流媒体传输协议（如RTSP、RTMP、HLS等）将视频数据传输到服务器，并在服务器端进行相应的处理，如视频的存储、转发等操作。服务器还需要提供多线程访问的支持，以满足多个客户端同时访问视频数据的需求。</li>
+<li><strong>网络传输协议环节</strong>：网络传输协议在视频服务器相关环节中至关重要。不同的协议适用于不同的场景。RTSP（Real Time Streaming Protocol）是一种实时流传输协议，常用于视频监控等场景，它允许客户端对视频流进行暂停、快进等操作；RTMP（Real - Time Messaging Protocol）是基于TCP的实时消息传输协议，广泛应用于直播领域；HLS（HTTP Live Streaming）是由Apple公司定义的基于HTTP的流媒体实时传输协议，可实现流媒体的直播和点播，主要用于iOS系统。这些协议在视频数据的传输过程中，负责将视频数据从服务器传输到客户端，并且要保证视频的流畅播放和数据的准确性。</li>
+</ul>
+<h3 id="四、上层应用开发环节"><a href="#四、上层应用开发环节" class="headerlink" title="四、上层应用开发环节"></a><strong>四、上层应用开发环节</strong></h3><ul>
+<li><strong>面向解决方案的方案开发商环节</strong>：面向解决方案的方案开发商买来模组、视频服务器，进行一些更上层的开发，如app，web管理等。他们会将模组采集到的视频数据和视频服务器提供的视频流进行整合，开发出各种应用。例如，他们可以整合模组与服务器，做出手机app，如将摄像头放在幼儿园中，家长就可以通过app对校园内的环境进行查看；也可以开发人脸识别门禁、打卡方案，将传感器接入人脸识别功能，连接数据库制作一套系统。在这个环节中，开发者需要具备多种技术能力，包括前端开发（如开发手机app的界面）、后端开发（如与数据库进行交互、处理业务逻辑）以及对音视频数据的处理能力（如在app中实现视频的播放、暂停、截图等功能）。</li>
+<li><strong>工程商或销售商环节</strong>：工程商或销售商在音视频开发流程中更多地关注项目的实施和销售方面。工程商做工程的，大多不懂技术只懂施工，他们大多关心摄像头装在墙上还是天花板；用什么网线，网线怎么接；多久施工完。例如一个工程商接一个项目，买来解决方案进行某工厂、停车场的监控系统的建设。销售商则将智能家居方案卖给个人或家庭。虽然他们不直接参与音视频技术的开发，但他们在将音视频解决方案推向市场和实际应用场景方面起着重要的作用。</li>
+</ul>
+<h3 id="五、用户端播放环节"><a href="#五、用户端播放环节" class="headerlink" title="五、用户端播放环节"></a><strong>五、用户端播放环节</strong></h3><p>在用户端播放环节，涉及到将接收到的音视频数据进行解码、渲染和播放的过程。这一环节需要播放器软件或设备来实现。播放器需要支持多种音视频格式和编码标准，例如能够解码H.264编码的视频和AAC编码的音频。在播放过程中，要进行音视频的同步操作，以保证音频和视频的时间戳一致，避免出现卡顿、不同步等问题。同时，用户端设备（如手机、电脑、智能电视等）的性能也会影响播放效果，如设备的处理器速度、内存大小、显卡性能等会影响视频的解码速度和渲染质量。</p>
+<h1 id="音视频开发的关键步骤有哪些"><a href="#音视频开发的关键步骤有哪些" class="headerlink" title="音视频开发的关键步骤有哪些"></a>音视频开发的关键步骤有哪些</h1><p>音视频开发的关键步骤是整个开发流程中的核心部分，它们对最终的开发效果和用户体验有着决定性的影响。</p>
+<h3 id="一、编码与解码"><a href="#一、编码与解码" class="headerlink" title="一、编码与解码"></a><strong>一、编码与解码</strong></h3><ul>
+<li><strong>编码的重要性和原理</strong>：编码是音视频开发中不可或缺的关键步骤。其主要目的是为了压缩数据，节省带宽和传输时间。原始的音视频数据量通常非常大，例如一个1080P30帧，32bit色彩时长为1秒的视频文件，如果按每一帧画面进行存储的话，数据大小将会达到:32bit * 30 * 1080 * 1920≈237MB的空间，通过编码可以大大减小这个数据量。视频编码的主要作用是将视频像素数据（RGB，YUV等）压缩成为视频码流，从而降低视频的数据量。编码的基本原理包括空间冗余（图像相邻像素之间有较强的相关性）、时间冗余（视频序的相邻图像之间内容相似）、编码冗余（不同像素值出现的概率不同）、知识冗余（规性的结构可由先验知识和背景知识得到）等。例如，在背景色全部是黑色的情况下，我们实际上没有必要按照视频大小（1124 * 772）存储黑色，我们可以将存储黑色的像素点抽离出来记录，只存储其他像素点的颜色即可。常见的视频编码标准有H.264、H.265等，H.264具有低码率、高质量、高容错的特点，H.265对H.264在码率节省上有较大的优势，在相同RSNR下分别节省了48.3%和75.8%，但H.264在编码时间上有聚到优势，对比VP9和H.265，H.265是vp9的6倍，vp9是H.264的将近40倍。对于音频编码，常见的编码标准有AAC、MP3等。</li>
+<li><strong>解码的作用和实现方式</strong>：解码是编码的逆过程，其作用是将视频&#x2F;音频压缩编码数据，解码成为非压缩的视频&#x2F;音频原始数据。在整个音视频系统中，解码是非常重要也是最复杂的一个环节。解码可以使用软解码和硬解码两种方式。软解码就是利用CPU资源去解压缩数据，采用的方式是FFmpeg解码等。硬解码则是利用专门的硬件（如显卡等）来进行解码，对于iOS平台来说，可以使用VideoToolbox.Framework（该框架只能在iOS8.0及以上系统使用）硬解码视频数据。在播放音视频数据时，播放器端需要根据接收到的编码数据类型选择合适的解码方式进行解码，然后才能将解码后的原始数据进行播放。</li>
+</ul>
+<h3 id="二、数据传输相关步骤"><a href="#二、数据传输相关步骤" class="headerlink" title="二、数据传输相关步骤"></a><strong>二、数据传输相关步骤</strong></h3><ul>
+<li><strong>选择合适的流媒体传输协议</strong>：在音视频开发中，选择合适的流媒体传输协议是关键。不同的协议适用于不同的场景和需求。例如RTMP（Real - Time Messaging Protocol）是目前主流的流媒体传输协议，基于TCP，设计用来进行实时数据通信，广泛用于直播领域，市面上绝大多数直播产品都采用了这个协议；HTTP Live Streaming（HLS）是由Apple公司定义的基于HTTP的流媒体实时传输协议，可实现流媒体的直播和点播，主要用于iOS系统，但它的分段推送的特点，决定了HLS的延迟一般会高于普通的流媒体直播协议；WebRTC（webrealtimecommunication）是一个支持网页浏览器进行实时语音或者视频对话的API，适用于网页端的实时音视频通信。在选择协议时，需要考虑到项目的应用场景（如直播、点播、实时通信等）、目标用户群体（如iOS用户、安卓用户、网页用户等）以及对延迟、带宽等方面</li>
+</ul>
+<p>文章合集：<a target="_blank" rel="noopener" href="https://github.com/chongzicbo/ReadWriteThink">https://github.com/chongzicbo/ReadWriteThink</a></p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg" srcset="/img/loading.gif" lazyload alt="微信公众号"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%BC%80%E5%8F%91/" class="category-chain-item">开发</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91/" class="category-chain-item">音视频</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91/%E5%9F%BA%E7%A1%80/" class="category-chain-item">基础</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/" class="print-no-link">#音视频开发</a>
+      
+        <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80/" class="print-no-link">#音视频基础</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>音视频开发08：音视频开发基本步骤和流程</div>
+      <div>https://chongzicbo.github.io/2024/12/11/开发/音视频/音视频开发08：音视频开发基本步骤和流程/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>程博</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>December 11, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/12/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91/%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%9109%EF%BC%9A%E5%AD%97%E5%B9%95%E4%BB%8B%E7%BB%8D/" title="音视频开发09：SRT、ASS、SAA、VTT字幕介绍">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">音视频开发09：SRT、ASS、SAA、VTT字幕介绍</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/NLP025-huggingface%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E9%9B%86%E5%92%8C%E6%A8%A1%E5%9E%8B%E4%B8%8B%E8%BD%BD%E5%AD%98%E5%82%A8%E7%9B%AE%E5%BD%95/" title="transformers自定义数据集">
+                        <span class="hidden-mobile">transformers自定义数据集</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/chongzicbo" target="_blank" rel="nofollow noopener"><span>Github</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

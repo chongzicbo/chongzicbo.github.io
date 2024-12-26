@@ -1,0 +1,1041 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/daxiong.jpg">
+  <link rel="icon" href="/img/daxiong.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="程博">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. 定义音视频的字幕是指以文本形式显示在屏幕上的内容，这些内容通常代表了音频中的对话、叙述以及其他重要的声音元素。字幕不仅有助于提高视频内容的理解度，而且对于那些有听力障碍或是在静音环境中观看视频的人来说尤为重要。此外，字幕还可以用于翻译不同语言的内容，从而扩大视频的受众范围 2. 字幕的种类根据其功能和使用场景，字幕可以分为几种不同类型：  开放式字幕（硬编码字幕）：这类字幕直接嵌入到视频帧">
+<meta property="og:type" content="article">
+<meta property="og:title" content="音视频开发09：SRT、ASS、SAA、VTT字幕介绍">
+<meta property="og:url" content="https://chongzicbo.github.io/2024/12/12/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91/%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%9109%EF%BC%9A%E5%AD%97%E5%B9%95%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:site_name" content="程博仕">
+<meta property="og:description" content="1. 定义音视频的字幕是指以文本形式显示在屏幕上的内容，这些内容通常代表了音频中的对话、叙述以及其他重要的声音元素。字幕不仅有助于提高视频内容的理解度，而且对于那些有听力障碍或是在静音环境中观看视频的人来说尤为重要。此外，字幕还可以用于翻译不同语言的内容，从而扩大视频的受众范围 2. 字幕的种类根据其功能和使用场景，字幕可以分为几种不同类型：  开放式字幕（硬编码字幕）：这类字幕直接嵌入到视频帧">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241209171329186.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241209172234191.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
+<meta property="article:published_time" content="2024-12-12T04:00:00.000Z">
+<meta property="article:modified_time" content="2024-12-26T06:22:53.090Z">
+<meta property="article:author" content="程博">
+<meta property="article:tag" content="音视频开发">
+<meta property="article:tag" content="音视频基础">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241209171329186.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>音视频开发09：SRT、ASS、SAA、VTT字幕介绍 - 程博仕</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>程博仕</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>人工智能</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/asr" target="_self">
+                    
+                    <span>语音识别</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>开发</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91" target="_self">
+                    
+                    <span>音视频</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/web&#39;" target="_self">
+                    
+                    <span>Web开发</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>文章分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>时间轴</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="音视频开发09：SRT、ASS、SAA、VTT字幕介绍"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        程博
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-12 12:00" pubdate>
+          December 12, 2024 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.4k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          45 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">音视频开发09：SRT、ASS、SAA、VTT字幕介绍</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    Last updated on December 26, 2024 pm
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241209171329186.png" srcset="/img/loading.gif" lazyload alt="image-20241209171329186"></p>
+<h1 id="1-定义"><a href="#1-定义" class="headerlink" title="1. 定义"></a>1. 定义</h1><p>音视频的字幕是指以文本形式显示在屏幕上的内容，这些内容通常代表了音频中的对话、叙述以及其他重要的声音元素。字幕不仅有助于提高视频内容的理解度，而且对于那些有听力障碍或是在静音环境中观看视频的人来说尤为重要。此外，字幕还可以用于翻译不同语言的内容，从而扩大视频的受众范围</p>
+<h1 id="2-字幕的种类"><a href="#2-字幕的种类" class="headerlink" title="2. 字幕的种类"></a>2. 字幕的种类</h1><p>根据其功能和使用场景，字幕可以分为几种不同类型：</p>
+<ul>
+<li><strong>开放式字幕（硬编码字幕）</strong>：这类字幕直接嵌入到视频帧中，成为视频的一部分，无法关闭。它们适用于需要永久性地将字幕信息与视频结合的情况。</li>
+<li><strong>隐藏式字幕（软字幕&#x2F;外挂字幕）</strong>：用户可以选择是否开启这类字幕，并且可以根据需要调整样式。它们通常作为独立文件存在，如SRT、ASS等格式，便于管理和更新。</li>
+<li><strong>实时字幕</strong>：这种字幕是在直播或其他即时活动中生成的，能够快速响应现场发生的口语交流，为观众提供即时的文字反馈</li>
+</ul>
+<h1 id="3-字幕格式"><a href="#3-字幕格式" class="headerlink" title="3. 字幕格式"></a>3. 字幕格式</h1><p>常见的字幕格式包括：</p>
+<ol>
+<li>**SRT (SubRip Text)**：最常见的字幕格式之一，文本文件，每行包含时间码和字幕内容。</li>
+<li>**ASS (Advanced SubStation Alpha)**：功能强大的字幕格式，支持复杂的字幕样式和特效。</li>
+<li>**SSA (SubStation Alpha)**：早期的字幕格式，功能不如ASS强大，较少使用。</li>
+<li>**VTT (WebVTT)**：用于网页视频的字幕格式，类似于SRT<a target="_blank" rel="noopener" href="https://blog.csdn.net/AlvinCasper/article/details/113066446">5</a>。</li>
+</ol>
+<h3 id="3-1-SRT字幕"><a href="#3-1-SRT字幕" class="headerlink" title="3.1 SRT字幕"></a>3.1 SRT字幕</h3><p>SRT（SubRip Text）字幕格式以其简洁性和广泛的兼容性著称，它由纯文本构成，每个字幕段落包括四个主要部分：序号、时间码、字幕文本以及一个空白行来分隔不同的字幕片段。下面我们将通过具体的例子详细介绍SRT字幕文件的结构和使用方法。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241209172234191.png" srcset="/img/loading.gif" lazyload alt="image-20241209172234191"></p>
+<h4 id="SRT-字幕的基本结构"><a href="#SRT-字幕的基本结构" class="headerlink" title="SRT 字幕的基本结构"></a>SRT 字幕的基本结构</h4><h5 id="序号"><a href="#序号" class="headerlink" title="序号"></a>序号</h5><p>每个字幕段都有一个唯一的序号，这个数字从1开始递增，表示字幕出现的顺序。虽然序号本身并不直接影响播放时的显示效果，但在实际应用中，它有助于保持字幕的逻辑顺序正确无误。</p>
+<h5 id="时间码"><a href="#时间码" class="headerlink" title="时间码"></a>时间码</h5><p>紧跟在序号之后的是时间码，它定义了字幕何时出现及消失。时间码遵循<code>hh:mm:ss,mmm --&gt; hh:mm:ss,mmm</code>的格式，其中<code>hh</code>代表小时，<code>mm</code>代表分钟，<code>ss</code>代表秒，而<code>mmm</code>则表示毫秒。例如：</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs dns"><span class="hljs-number">1</span><br><span class="hljs-number">00</span>:<span class="hljs-number">00:29,740</span> --&gt; <span class="hljs-number">00</span>:<span class="hljs-number">00:31,280</span><br>福姬套餐~<br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，字幕“福姬套餐~”将在视频播放到第29秒740毫秒时出现，并持续到第31秒280毫秒后消失。</p>
+<h5 id="字幕文本"><a href="#字幕文本" class="headerlink" title="字幕文本"></a>字幕文本</h5><p>接下来是具体的字幕文本，它可以是一行或多行。对于多语言字幕，不同语言的内容可以通过换行分隔开来。例如，在同一时间段内可以先显示英文再显示中文翻译：</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs dns"><span class="hljs-number">2</span><br><span class="hljs-number">00</span>:<span class="hljs-number">00:31,400</span> --&gt; <span class="hljs-number">00:00:32,240</span><br>炒炸酱面<br></code></pre></td></tr></table></figure>
+
+<p>这里，“炒炸酱面”会在指定的时间范围内显示在屏幕上。</p>
+<h5 id="空白行"><a href="#空白行" class="headerlink" title="空白行"></a>空白行</h5><p>每一组字幕之间必须有一个空行来分隔不同的字幕片段，这标志着上一段字幕的结束和新一段字幕的开始。空白行的存在确保了字幕文件的可读性和结构清晰度。</p>
+<h4 id="样式与格式化示例"><a href="#样式与格式化示例" class="headerlink" title="样式与格式化示例"></a>样式与格式化示例</h4><p>尽管SRT本质上是一个简单的文本文件，但它也支持一些基本的HTML标签来进行格式化，如粗体（<code>&lt;b&gt;</code>）、斜体（<code>&lt;i&gt;</code>）、下划线（<code>&lt;u&gt;</code>）以及字体颜色（<code>&lt;font color=&quot;...&quot;&gt;</code>）。需要注意的是，并非所有的播放器都支持这些样式标记，因此在实际使用时应该考虑目标平台的支持情况。例如：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs xml">3<br>00:00:32,360 --&gt; 00:00:33,300<br><span class="hljs-tag">&lt;<span class="hljs-name">b</span>&gt;</span>炒拉面<span class="hljs-tag">&lt;/<span class="hljs-name">b</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>这段代码会让“炒拉面”以粗体形式显示。</p>
+<h4 id="实际应用中的SRT文件示例"><a href="#实际应用中的SRT文件示例" class="headerlink" title="实际应用中的SRT文件示例"></a>实际应用中的SRT文件示例</h4><p>以下是一个完整的SRT字幕文件示例，摘自电影《阿凡达》的中英双语字幕：</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs ada"><span class="hljs-number">3</span><br><span class="hljs-number">00</span>:<span class="hljs-number">00</span>:<span class="hljs-number">39</span>,<span class="hljs-number">770</span> <span class="hljs-comment">--&gt; 00:00:41,880</span><br>在经历了一场人生巨变之后<br><span class="hljs-keyword">When</span> I was lying there <span class="hljs-keyword">in</span> the VA hospital ...<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs applescript"><span class="hljs-number">4</span><br><span class="hljs-number">00</span>:<span class="hljs-number">00</span>:<span class="hljs-number">42</span>,<span class="hljs-number">550</span> <span class="hljs-comment">--&gt; 00:00:44,690</span><br>我被送进了退伍军人管理局医院 ...<br><span class="hljs-keyword">with</span> a big hole blown <span class="hljs-keyword">through</span> <span class="hljs-keyword">the</span> <span class="hljs-keyword">middle</span> <span class="hljs-keyword">of</span> <span class="hljs-keyword">my</span> life,<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs dns"><span class="hljs-number">5</span><br><span class="hljs-number">00</span>:<span class="hljs-number">00:45,590</span> --&gt; <span class="hljs-number">00:00:48,120</span><br>那段时间我经常会梦到自己在飞翔 ...<br>I started having these dreams of flying.<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs dns"><span class="hljs-number">6</span><br><span class="hljs-number">00</span>:<span class="hljs-number">00:49,740</span> --&gt; <span class="hljs-number">00</span>:<span class="hljs-number">00:51,520</span><br>终获自由<br>I was free.<br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，我们可以看到每一段字幕都有其对应的序号、时间码和文本内容，并且通过空白行分隔开各个字幕段。</p>
+<h4 id="编码方式"><a href="#编码方式" class="headerlink" title="编码方式"></a>编码方式</h4><p>SRT文件默认采用Windows-1252编码，但也可以保存为其他编码格式，如UTF-8或UTF-16，带或不带字节顺序标记（BOM）。为了确保跨平台兼容性，建议尽量使用UTF-8编码。特别是当涉及到非ASCII字符时，正确的编码选择尤为重要，因为错误的编码可能导致乱码问题。</p>
+<h4 id="创建与编辑SRT文件"><a href="#创建与编辑SRT文件" class="headerlink" title="创建与编辑SRT文件"></a>创建与编辑SRT文件</h4><p>创建SRT文件的过程相对直接，用户可以直接用文本编辑器手动编写，也可以借助专门的字幕编辑软件，如Aegisub、Subtitle Edit等。此外，还有在线服务和移动应用程序可以帮助生成或调整现有的SRT文件。对于批量处理或者需要高精度的时间轴同步，还可以考虑利用语音识别技术自动生成初步的SRT文件，然后进行人工校对和完善。</p>
+<p>综上所述，SRT字幕格式凭借其易于理解和操作的特点，成为了视频字幕领域不可或缺的一部分。</p>
+<h3 id="3-2-ASS字幕"><a href="#3-2-ASS字幕" class="headerlink" title="3.2 ASS字幕"></a>3.2 ASS字幕</h3><p>ASS（Advanced SubStation Alpha）是一种比SSA更为高级的字幕格式，它不仅支持基本的文本显示，还允许用户添加复杂的样式、特效以及时间轴控制。ASS 文件通常以 <code>.ass</code> 作为文件扩展名，并且是纯文本文件，这意味着它们可以用任何文本编辑器手工编辑，但必须注意遵循特定的规则以确保正确解析。</p>
+<h4 id="ASS-字幕的基本结构"><a href="#ASS-字幕的基本结构" class="headerlink" title="ASS 字幕的基本结构"></a>ASS 字幕的基本结构</h4><p>一个典型的 ASS 文件由几个部分组成：<code>[Script Info]</code>、<code>[V4+ Styles]</code> 和 <code>[Events]</code>。每个部分都有其独特的功能和用途。</p>
+<h5 id="Script-Info"><a href="#Script-Info" class="headerlink" title="[Script Info]"></a>[Script Info]</h5><p>这部分包含了脚本的头部信息和总体描述。例如：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">[<span class="hljs-keyword">Script </span>Info]<br><span class="hljs-comment">; This is a Sub Station Alpha v4 script.</span><br><span class="hljs-symbol">Title:</span> Neon Genesis Evangelion - Episode <span class="hljs-number">26</span> (neutral Spanish)<br><span class="hljs-keyword">Original </span><span class="hljs-keyword">Script: </span>RoRo<br><span class="hljs-keyword">Script </span>Updated <span class="hljs-keyword">By: </span>version <span class="hljs-number">2</span>.<span class="hljs-number">8</span>.<span class="hljs-number">01</span><br><span class="hljs-keyword">ScriptType: </span>v4.<span class="hljs-number">00</span>+<br><span class="hljs-symbol">Collisions:</span> <span class="hljs-keyword">Normal</span><br><span class="hljs-keyword"></span><span class="hljs-symbol">PlayResY:</span> <span class="hljs-number">600</span><br><span class="hljs-symbol">PlayDepth:</span> <span class="hljs-number">0</span><br><span class="hljs-symbol">Timer:</span> <span class="hljs-number">100</span>,<span class="hljs-number">00</span><br></code></pre></td></tr></table></figure>
+
+<p>这里定义了诸如标题 (<code>Title</code>)、原作者 (<code>Original Script</code>) 等元数据，以及一些技术参数如播放分辨率 (<code>PlayResX</code>, <code>PlayResY</code>) 和颜色深度 (<code>PlayDepth</code>)。<code>Timer</code> 属性用于调整字幕的时间轴速度，不过现代渲染器通常会忽略这一设置。</p>
+<h5 id="V4-Styles"><a href="#V4-Styles" class="headerlink" title="[V4+ Styles]"></a>[V4+ Styles]</h5><p>这是样式定义的部分，其中每一个被脚本使用的样式都应该在此处定义。格式如下：</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs dns">[V4+ Styles]<br>Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding<br>Style: Default,Arial,<span class="hljs-number">20</span>,&amp;H00FFFFFF,&amp;H000000FF,&amp;H<span class="hljs-number">00000000</span>,&amp;H<span class="hljs-number">00000000,0</span>,<span class="hljs-number">0,0,0,100</span>,<span class="hljs-number">100,0,0,1</span>,<span class="hljs-number">0.5,0,2</span>,<span class="hljs-number">10,10,10,1</span><br></code></pre></td></tr></table></figure>
+
+<p>每一项都对应着不同的视觉属性，比如字体名称 (<code>Fontname</code>)、字体大小 (<code>Fontsize</code>)、主要颜色 (<code>PrimaryColour</code>) 等等。<code>Alignment</code> 属性决定了字幕在屏幕上的对齐方式，而 <code>MarginL</code>, <code>MarginR</code>, <code>MarginV</code> 则设定了字幕与屏幕边缘的距离。</p>
+<h5 id="Events"><a href="#Events" class="headerlink" title="[Events]"></a>[Events]</h5><p>这是最重要的部分之一，因为它包含了所有实际出现在屏幕上的内容。每条事件记录了一个具体的字幕或注释，并指定了它的开始时间和结束时间、所使用的样式以及其他可能的效果。例如：</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">[Events]<br><span class="hljs-keyword">Format</span>: Layer, <span class="hljs-keyword">Start</span>, <span class="hljs-keyword">End</span>, Style, <span class="hljs-type">Name</span>, MarginL, MarginR, MarginV, Effect, <span class="hljs-type">Text</span><br>Dialogue: <span class="hljs-number">0</span>,<span class="hljs-number">0</span>:<span class="hljs-number">00</span>:<span class="hljs-number">09.07</span>,<span class="hljs-number">0</span>:<span class="hljs-number">00</span>:<span class="hljs-number">13.14</span>,<span class="hljs-keyword">Default</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,,我的爱从相遇的那一刻起<br>Dialogue: <span class="hljs-number">0</span>,<span class="hljs-number">0</span>:<span class="hljs-number">00</span>:<span class="hljs-number">13.27</span>,<span class="hljs-number">0</span>:<span class="hljs-number">00</span>:<span class="hljs-number">17.41</span>,<span class="hljs-keyword">Default</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,,我的生活一切都被你占据<br></code></pre></td></tr></table></figure>
+
+<p><code>Layer</code> 属性控制字幕的叠放顺序；<code>Start</code> 和 <code>End</code> 分别表示字幕出现和消失的时间点；<code>Style</code> 指向之前定义好的样式；<code>Text</code> 包含了要显示的具体文字。</p>
+<h4 id="样式与格式化示例-1"><a href="#样式与格式化示例-1" class="headerlink" title="样式与格式化示例"></a>样式与格式化示例</h4><p>除了上述基础元素外，ASS 还提供了丰富的内联标签来实现更加精细的排版和动画效果。例如：</p>
+<ul>
+<li><code>\b1</code> 开启粗体，<code>\b0</code> 关闭粗体；</li>
+<li><code>\i1</code> 开启斜体，<code>\i0</code> 关闭斜体；</li>
+<li><code>\u1</code> 开启下划线，<code>\u0</code> 关闭下划线；</li>
+<li><code>\k&lt;time&gt;</code> 用于卡拉 OK 效果，指定高亮移动的速度；</li>
+<li><code>\move(&lt;x1&gt;, &lt;y1&gt;, &lt;x2&gt;, &lt;y2&gt;)</code> 实现字幕从一个位置移动到另一个位置；</li>
+<li><code>\fad(&lt;in-time&gt;, &lt;out-time&gt;)</code> 创建淡入淡出效果。</li>
+</ul>
+<p>以下是一个使用这些标签的例子：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Dialogue</span>: <span class="hljs-number">0</span>,<span class="hljs-number">0</span>:<span class="hljs-number">00</span>:<span class="hljs-number">00</span>.<span class="hljs-number">00</span>,<span class="hljs-number">0</span>:<span class="hljs-number">00</span>:<span class="hljs-number">05</span>.<span class="hljs-number">00</span>,Default,,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,,&#123;\b1\u1\c&amp;HFF0000&amp;&#125;这是一段&#123;\i1&#125;带&#123;\i0&#125;有&#123;\b0\u0&#125;样式的文本。<br><span class="hljs-attribute">Dialogue</span>: <span class="hljs-number">0</span>,<span class="hljs-number">0</span>:<span class="hljs-number">00</span>:<span class="hljs-number">05</span>.<span class="hljs-number">00</span>,<span class="hljs-number">0</span>:<span class="hljs-number">00</span>:<span class="hljs-number">10</span>.<span class="hljs-number">00</span>,Default,,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,,&#123;\move(<span class="hljs-number">100</span>,<span class="hljs-number">100</span>,<span class="hljs-number">500</span>,<span class="hljs-number">100</span>)\fad(<span class="hljs-number">1000</span>,<span class="hljs-number">1000</span>)&#125;这段文字会从左下角滑动到右下角并伴有淡入淡出。<br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中，第一行应用了粗体和下划线，同时将颜色更改为红色，并且中间有一部分为斜体；第二行则设置了从屏幕左侧到右侧的移动路径，并且加入了1秒的淡入淡出过渡。</p>
+<h4 id="实际应用中的ASS文件示例"><a href="#实际应用中的ASS文件示例" class="headerlink" title="实际应用中的ASS文件示例"></a>实际应用中的ASS文件示例</h4><p>考虑到ASS的强大功能，它可以用来创建非常复杂且富有创意的字幕效果，尤其是在动漫领域。下面给出一段来自《命运石之门》的日语台词及其对应的ASS代码：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Dialogue</span>: <span class="hljs-number">0</span>,<span class="hljs-number">0</span>:<span class="hljs-number">01</span>:<span class="hljs-number">23</span>.<span class="hljs-number">45</span>,<span class="hljs-number">0</span>:<span class="hljs-number">01</span>:<span class="hljs-number">27</span>.<span class="hljs-number">67</span>,CustomStyle,,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,,&#123;\an7\b1\c&amp;HFFFF00&amp;\<span class="hljs-number">3</span>c&amp;H0000FF&amp;&#125;OKERU！<br><span class="hljs-attribute">Dialogue</span>: <span class="hljs-number">0</span>,<span class="hljs-number">0</span>:<span class="hljs-number">01</span>:<span class="hljs-number">27</span>.<span class="hljs-number">67</span>,<span class="hljs-number">0</span>:<span class="hljs-number">01</span>:<span class="hljs-number">31</span>.<span class="hljs-number">89</span>,CustomStyle,,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,,&#123;\an8\i1\k50&#125;我们终于可以一起制作游戏了！<br></code></pre></td></tr></table></figure>
+
+<p>这里，“CustomStyle” 是预先定义好的一种样式，而 <code>&#123;&#125;</code> 内的内容则是额外添加的临时样式覆盖。第一句台词位于屏幕顶部中央（<code>an7</code>），并且采用了黄色字体配蓝色边框；第二句则位于顶部右侧（<code>an8</code>），带有卡拉 OK 式的逐字高亮效果（<code>\k50</code> 表示每个字符高亮持续50毫秒）。</p>
+<h4 id="编码方式-1"><a href="#编码方式-1" class="headerlink" title="编码方式"></a>编码方式</h4><p>与SRT类似，ASS也推荐使用UTF-8编码，特别是当涉及到多语言支持时。正确的编码选择对于避免乱码至关重要。此外，由于ASS支持更多样化的字体和颜色配置，因此还需要确保目标设备上安装了相应的字体文件，或者考虑嵌入所需字体以便于跨平台播放。</p>
+<h3 id="3-3-SSA字幕"><a href="#3-3-SSA字幕" class="headerlink" title="3.3 SSA字幕"></a>3.3 SSA字幕</h3><p>在上面我们介绍了ASS字幕，ASS字幕其实是SSA字幕格式的高级版本，在SSA的基础上增加了一些额外的功能。下面用一个例子介绍下ASS和SSA之间的区别和联系。</p>
+<p>假设我们要为一段视频添加带有特效的字幕，这段视频中有一句台词：<strong>“欢迎来到未来世界”。</strong></p>
+<h4 id="SSA-字幕文件示例"><a href="#SSA-字幕文件示例" class="headerlink" title="SSA 字幕文件示例"></a>SSA 字幕文件示例</h4><p>首先，我们看看如何用 SSA 格式创建这段字幕。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">[Script Info]<br>; This is a Sub Station Alpha v4 script.<br>Title: Future World - Episode 1<br>Original Script: Example Author<br>ScriptType: v4.00<br>Collisions: Normal<br>PlayResX: 640<br>PlayResY: 480<br>Timer: 100,00<br><br>[V4 Styles]<br>Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding<br>Style: Default,Arial,20,&amp;H00FFFFFF,&amp;H000000FF,&amp;H00000000,&amp;H00000000,-1,0,1,2,2,2,10,10,10,0,0<br><br>[Events]<br>Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text<br>Dialogue: 0,0:00:05.00,0:00:07.00,Default,,0,0,0,,&#123;\c&amp;HFF0000&amp;&#125;欢迎&#123;\c&amp;H00FF00&amp;&#125;来到&#123;\c&amp;H0000FF&amp;&#125;未来世界！<br></code></pre></td></tr></table></figure>
+
+<p>在这个 SSA 文件中：</p>
+<ul>
+<li><strong>[Script Info]</strong> 部分定义了脚本的基本信息，如标题、原作者等。</li>
+<li><strong>[V4 Styles]</strong> 定义了一种默认样式 <code>Default</code>，指定了字体名称、大小、颜色等属性。</li>
+<li><strong>[Events]</strong> 包含了一个对话事件，它设置了开始时间和结束时间，并使用了内联标签 <code>\c</code> 来改变文本的颜色，以实现多彩效果。</li>
+</ul>
+<h4 id="ASS-字幕文件示例"><a href="#ASS-字幕文件示例" class="headerlink" title="ASS 字幕文件示例"></a>ASS 字幕文件示例</h4><p>接下来，我们将相同的台词转换成 ASS 格式，同时增加一些额外的功能。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">[Script Info]<br>; This is an Advanced Sub Station Alpha v4+ script.<br>Title: Future World - Episode 1<br>ScriptType: v4.00+<br>Collisions: Normal<br>PlayResX: 640<br>PlayResY: 480<br>Timer: 100,00<br><br>[V4+ Styles]<br>Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding<br>Style: Default,Arial,20,&amp;H00FFFFFF,&amp;H000000FF,&amp;H00000000,&amp;H00000000,0,0,0,0,100,100,0,0,1,1,1,2,10,10,10,1<br><br>[Events]<br>Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text<br>Dialogue: 0,0:00:05.00,0:00:07.00,Default,,0,0,0,,&#123;\an8\c&amp;HFF0000&amp;\b1&#125;欢迎&#123;\c&amp;H00FF00&amp;\b0&#125;来到&#123;\c&amp;H0000FF&amp;&#125;未来世界！&#123;\fad(500,500)&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在这个 ASS 文件中：</p>
+<ul>
+<li><strong>[Script Info]</strong> 部分同样提供了脚本信息，但指明这是 v4.00+ 版本。</li>
+<li><strong>[V4+ Styles]</strong> 中增加了更多样式属性，例如 <code>ScaleX</code>, <code>ScaleY</code>, <code>Spacing</code>, <code>Angle</code> 等，允许对文本进行更精细的控制。</li>
+<li><strong>[Events]</strong> 部分不仅实现了与 SSA 相同的多彩效果，还加入了粗体切换 (<code>\b1</code>, <code>\b0</code>) 和淡入淡出效果 (<code>\fad</code>)。</li>
+</ul>
+<h4 id="区别和联系"><a href="#区别和联系" class="headerlink" title="区别和联系"></a>区别和联系</h4><h5 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h5><ol>
+<li><strong>版本</strong>：ASS 是基于 SSA v4.00+ 的改进版本，具有更多的功能和支持。</li>
+<li><strong>样式定义</strong>：ASS 在 <code>[V4+ Styles]</code> 中引入了额外的样式属性，如 <code>ScaleX</code>, <code>ScaleY</code>, <code>Spacing</code>, <code>Angle</code> 等。</li>
+<li><strong>内联标签支持</strong>：ASS 扩展了 SSA 的内联标签功能，新增了如 <code>\t</code> (临时样式覆盖) 等标签，并增强了现有标签的效果，比如卡拉 OK 效果 (<code>\k</code>)。</li>
+<li><strong>高级特效与动画</strong>：ASS 支持更复杂的动画效果，包括路径上的移动 (\move)，旋转，缩放变换等。</li>
+<li><strong>字符编码</strong>：ASS 设计之初就考虑到了更好的国际化支持，对于非拉丁字符集有更好的处理方式。</li>
+</ol>
+<h5 id="联系"><a href="#联系" class="headerlink" title="联系"></a>联系</h5><ul>
+<li><strong>结构相似</strong>：两者都遵循类似的文件结构，包括 <code>[Script Info]</code>, <code>[V4/V4+ Styles]</code>, <code>[Events]</code> 等部分。</li>
+<li><strong>向后兼容</strong>：大多数现代播放器能够解析 SSA 和 ASS 文件，因为 ASS 向后兼容 SSA。</li>
+<li><strong>基本功能一致</strong>：在基础功能上，SSA 和 ASS 提供了相同的核心特性，如设置字体、颜色、对齐方式等。</li>
+</ul>
+<p>综上所述，尽管 SSA 和 ASS 在细节上有许多不同之处，但它们共享很多共同点，特别是对于普通用户来说，两者都能很好地满足日常字幕制作的需求。然而，如果你需要利用更先进的特效或希望确保最佳的跨平台兼容性，那么选择 ASS 可能会是一个更好的决定。</p>
+<h3 id="3-4-VTT字幕"><a href="#3-4-VTT字幕" class="headerlink" title="3.4 VTT字幕"></a>3.4 VTT字幕</h3><p>WebVTT（Web Video Text Tracks）是一种专门为网络视频设计的字幕格式，它被广泛应用于 HTML5 <code>&lt;video&gt;</code> 元素中。WebVTT 文件通常以 <code>.vtt</code> 作为扩展名，并且是纯文本文件，易于编辑和解析。与 SSA&#x2F;ASS 等格式相比，WebVTT 更加简洁，专注于提供基本的字幕功能，如时间戳、文本内容以及简单的样式控制。下面将通过一个具体的例子来详细介绍 WebVTT 的结构和用法。</p>
+<h4 id="WebVTT-文件的基本结构"><a href="#WebVTT-文件的基本结构" class="headerlink" title="WebVTT 文件的基本结构"></a>WebVTT 文件的基本结构</h4><p>每个 WebVTT 文件都必须以 <code>WEBVTT</code> 开头，紧接着是一个空行，然后是各个字幕段落。每个段落由以下几部分组成：</p>
+<ol>
+<li><strong>标识符（可选）</strong>：可以为每个字幕段落指定一个唯一的标识符。</li>
+<li><strong>时间码</strong>：定义了字幕显示的时间范围，格式为 <code>HH:MM:SS.mmm --&gt; HH:MM:SS.mmm</code>，其中 <code>HH</code> 表示小时，<code>MM</code> 表示分钟，<code>SS</code> 表示秒，<code>mmm</code> 表示毫秒。</li>
+<li><strong>设置（可选）</strong>：用于指定字幕的位置、对齐方式等属性。</li>
+<li><strong>文本内容</strong>：即实际要显示的字幕文字，可以包含多行。</li>
+</ol>
+<h5 id="示例：简单对话场景"><a href="#示例：简单对话场景" class="headerlink" title="示例：简单对话场景"></a>示例：简单对话场景</h5><p>假设我们有一段视频，其中一个人说：“欢迎来到未来世界。” 我们可以创建如下的 WebVTT 文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">WEBVTT<br><br>1<br>00:00:05.000 --&gt; 00:00:07.000<br>欢迎来到未来世界。<br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中：</p>
+<ul>
+<li><code>WEBVTT</code> 表明这是一个 WebVTT 文件。</li>
+<li>数字 <code>1</code> 是字幕段落的唯一标识符（可选），有助于管理和引用特定的字幕。</li>
+<li>时间码 <code>00:00:05.000 --&gt; 00:00:07.000</code> 指定了字幕从第 5 秒开始，在第 7 秒结束。</li>
+<li>最后一行是实际要显示的文字内容。</li>
+</ul>
+<h4 id="增强样式的使用"><a href="#增强样式的使用" class="headerlink" title="增强样式的使用"></a>增强样式的使用</h4><p>虽然 WebVTT 主要关注于提供清晰易读的字幕，但它也允许一定程度上的样式定制。例如，你可以使用 HTML 标签或内联 CSS 来改变字体颜色、大小、样式等。此外，WebVTT 还支持一些特殊的标签来实现更复杂的效果。</p>
+<h5 id="示例：带样式的字幕"><a href="#示例：带样式的字幕" class="headerlink" title="示例：带样式的字幕"></a>示例：带样式的字幕</h5><p>考虑同样的台词，但我们想让它更引人注目，比如给“欢迎”两个字加上红色高亮，并让整个句子居中显示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">WEBVTT<br><br>1<br>00:00:05.000 --&gt; 00:00:07.000 line:50% position:50% align:center<br>&lt;c.red&gt;欢迎&lt;/c&gt;来到未来世界。<br></code></pre></td></tr></table></figure>
+
+<p>在这个例子中：</p>
+<ul>
+<li><code>line:50% position:50% align:center</code> 设置了字幕在屏幕上的位置和对齐方式，使它位于屏幕中央。</li>
+<li><code>&lt;c.red&gt;</code> 和 <code>&lt;/c&gt;</code> 是 WebVTT 特有的标记，用来包裹需要应用样式的文本。这里我们将“欢迎”两个字的颜色设置为红色。</li>
+</ul>
+<h4 id="使用-CSS-类进行样式化"><a href="#使用-CSS-类进行样式化" class="headerlink" title="使用 CSS 类进行样式化"></a>使用 CSS 类进行样式化</h4><p>对于更复杂的样式需求，可以结合 CSS 类来进行处理。首先，在 WebVTT 文件中定义类名，然后在网页上关联相应的 CSS 样式规则。</p>
+<h5 id="示例：使用-CSS-类"><a href="#示例：使用-CSS-类" class="headerlink" title="示例：使用 CSS 类"></a>示例：使用 CSS 类</h5><p>继续上面的例子，这次我们将为“欢迎”添加一个自定义的 CSS 类：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">WEBVTT<br><br>1<br>00:00:05.000 --&gt; 00:00:07.000 line:50% position:50% align:center<br>&lt;c.vwelcome&gt;欢迎&lt;/c&gt;来到未来世界。<br></code></pre></td></tr></table></figure>
+
+<p>接着，在网页中的 <code>&lt;style&gt;</code> 标签或者外部样式表里添加如下 CSS 规则：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-pseudo">::cue</span>(<span class="hljs-selector-class">.vwelcome</span>) &#123;<br>    <span class="hljs-attribute">color</span>: red;<br>    <span class="hljs-attribute">font-weight</span>: bold;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这样，当播放器渲染这个 WebVTT 文件时，“欢迎”这两个字不仅会变成红色，还会显得更加粗重。</p>
+<h4 id="WebVTT-的高级特性"><a href="#WebVTT-的高级特性" class="headerlink" title="WebVTT 的高级特性"></a>WebVTT 的高级特性</h4><p>除了上述基本功能外，WebVTT 还支持其他类型的文本轨道，如章节列表、描述性音轨等。这些功能使得 WebVTT 成为了一个非常灵活且强大的工具，适用于各种多媒体应用场景。</p>
+<h5 id="示例：章节列表"><a href="#示例：章节列表" class="headerlink" title="示例：章节列表"></a>示例：章节列表</h5><p>如果想要为视频添加章节导航，可以使用 WebVTT 创建一个章节轨道文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">WEBVTT<br><br>CHAPTERS<br><br>00:00:00.000 --&gt; 00:01:00.000<br>Introduction<br><br>00:01:00.000 --&gt; 00:02:30.000<br>Main Content<br><br>00:02:30.000 --&gt; 00:03:00.000<br>Conclusion<br></code></pre></td></tr></table></figure>
+
+<p>这段代码定义了一个包含三个章节的列表，用户可以通过点击章节标题快速跳转到相应的时间点。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>WebVTT 是一种轻量级但功能丰富的字幕格式，特别适合在网络环境中使用。它的语法简单直观，易于学习和实现，同时提供了足够的灵活性来满足大多数字幕制作的需求。无论是简单的对话字幕还是带有复杂样式的提示信息，WebVTT 都能有效地支持。更重要的是，由于它是 HTML5 标准的一部分，因此可以在所有现代浏览器中无缝工作，确保了良好的兼容性和用户体验。</p>
+<h1 id="4-字幕制作"><a href="#4-字幕制作" class="headerlink" title="4. 字幕制作"></a>4. 字幕制作</h1><h3 id="4-1-字幕的制作工具"><a href="#4-1-字幕的制作工具" class="headerlink" title="4.1 字幕的制作工具"></a>4.1 字幕的制作工具</h3><p>有许多专业的字幕制作软件可以帮助用户轻松制作和编辑字幕，例如：</p>
+<ol>
+<li>**KBuilderTools (小灰熊字幕制作软件)**：支持MV字幕制作，操作简单。</li>
+<li><strong>Sayatoo卡拉字幕精灵</strong>：支持自定义设置字幕的字体、颜色、布局等参数。</li>
+<li><strong>Srt字幕制作帮手</strong>：专门针对SRT字幕的编辑软件，操作简便。</li>
+<li>**字幕大师 (OKVoice)**：采用高精准语音识别技术，支持自动匹配音视频中的语音与字幕。</li>
+<li><strong>Arctime Pro</strong>：专业字幕制作软件，支持多种创新技术，如字幕块绑定、自动分轴等。</li>
+<li><strong>Aegisub</strong>：免费、开源、跨平台的字幕编辑软件，支持多种语言编码。</li>
+</ol>
+<h3 id="4-2-字幕的制作步骤"><a href="#4-2-字幕的制作步骤" class="headerlink" title="4.2 字幕的制作步骤"></a>4.2 字幕的制作步骤</h3><ol>
+<li><strong>导入视频和字幕文件</strong>：使用视频编辑软件导入视频文件和字幕文件，确保字幕文件与视频文件的内容对应。</li>
+<li><strong>调整时间轴</strong>：在视频编辑软件中，调整字幕的出现时间和消失时间，使其与配音的时长和内容一致。</li>
+<li><strong>调整字幕样式</strong>：根据需要，调整字幕的字体、字号、颜色、背景等，以使字幕更加清晰明确。</li>
+<li><strong>预览和调整</strong>：预览整个视频，确保字幕与配音同步显示，并且字幕的内容清晰可读。</li>
+<li><strong>导出视频</strong>：完成字幕的调整后，将视频导出为新的文件，确保字幕和配音同步的效果在最终的视频文件中得以保留。</li>
+</ol>
+<p>文章合集：<a target="_blank" rel="noopener" href="https://github.com/chongzicbo/ReadWriteThink">https://github.com/chongzicbo/ReadWriteThink</a></p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg" srcset="/img/loading.gif" lazyload alt="微信公众号"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%BC%80%E5%8F%91/" class="category-chain-item">开发</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91/" class="category-chain-item">音视频</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91/%E5%9F%BA%E7%A1%80/" class="category-chain-item">基础</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91/" class="print-no-link">#音视频开发</a>
+      
+        <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91%E5%9F%BA%E7%A1%80/" class="print-no-link">#音视频基础</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>音视频开发09：SRT、ASS、SAA、VTT字幕介绍</div>
+      <div>https://chongzicbo.github.io/2024/12/12/开发/音视频/音视频开发09：字幕介绍/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>程博</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>December 12, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/13/%E5%BC%80%E5%8F%91/Python/Python-001%EF%BC%9A%E4%BD%BF%E7%94%A8xml.dom.minidom%E8%A7%A3%E6%9E%90xml%E6%96%87%E4%BB%B6/" title="深入解析 `xml.dom.minidom`：从入门到精通">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">深入解析 `xml.dom.minidom`：从入门到精通</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/11/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91/%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%9108%EF%BC%9A%E9%9F%B3%E8%A7%86%E9%A2%91%E5%BC%80%E5%8F%91%E5%9F%BA%E6%9C%AC%E6%AD%A5%E9%AA%A4%E5%92%8C%E6%B5%81%E7%A8%8B/" title="音视频开发08：音视频开发基本步骤和流程">
+                        <span class="hidden-mobile">音视频开发08：音视频开发基本步骤和流程</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/chongzicbo" target="_blank" rel="nofollow noopener"><span>Github</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
