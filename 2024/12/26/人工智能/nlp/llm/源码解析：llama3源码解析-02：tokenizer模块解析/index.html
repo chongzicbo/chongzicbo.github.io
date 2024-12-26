@@ -79,7 +79,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":21500037,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -90,6 +90,19 @@
   <script  src="/js/color-schema.js" ></script>
   
 
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?21500037";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
   
 
   
@@ -400,6 +413,19 @@
   <div class="row nomargin-x">
     <div class="side-col d-none d-lg-block col-lg-2">
       
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
 
     </div>
 
@@ -929,15 +955,266 @@
 
     <div class="side-col d-none d-lg-block col-lg-2">
       
-  <aside class="sidebar" style="margin-left: -1rem">
-    <div id="toc">
-  <p class="toc-header">
-    <i class="iconfont icon-list"></i>
-    <span>Table of Contents</span>
-  </p>
-  <div class="toc-body" id="toc-body"></div>
-</div>
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
 
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="人工智能"
+        id="heading-f068f0dad74789bee210163c40a4b50d" role="tab" data-toggle="collapse" href="#collapse-f068f0dad74789bee210163c40a4b50d"
+        aria-expanded="true"
+      >
+        人工智能
+        <span class="list-group-count">(8)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-f068f0dad74789bee210163c40a4b50d"
+           role="tabpanel" aria-labelledby="heading-f068f0dad74789bee210163c40a4b50d">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="computer-vision"
+        id="heading-a82f3db817c535a4bae230a7ce1aebdd" role="tab" data-toggle="collapse" href="#collapse-a82f3db817c535a4bae230a7ce1aebdd"
+        aria-expanded="false"
+      >
+        computer-vision
+        <span class="list-group-count">(3)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-a82f3db817c535a4bae230a7ce1aebdd"
+           role="tabpanel" aria-labelledby="heading-a82f3db817c535a4bae230a7ce1aebdd">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV010-YOLO%20V10%E8%AF%A6%E8%A7%A3/" title="YOLO V10 详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">YOLO V10 详解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV007-YOLO11%E8%AF%A6%E8%A7%A3/" title="YOLO11 详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">YOLO11 详解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV008-%E8%AF%84%E4%BC%B0%20YOLO%20%EF%BC%88You%20Only%20Look%20Once%EF%BC%89%20%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%BC%94%E5%8F%98%EF%BC%9AYOLO11%20%E5%8F%8A%E5%85%B6%E5%89%8D%E8%BA%AB%E7%9A%84%E5%85%A8%E9%9D%A2%E5%9F%BA%E5%87%86%E7%A0%94%E7%A9%B6/" title="YOLO模型的全面综述"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">YOLO模型的全面综述</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="multi-modal"
+        id="heading-8bef24fd03b0b8fe8de0c18ea7f6c1fe" role="tab" data-toggle="collapse" href="#collapse-8bef24fd03b0b8fe8de0c18ea7f6c1fe"
+        aria-expanded="false"
+      >
+        multi-modal
+        <span class="list-group-count">(2)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-8bef24fd03b0b8fe8de0c18ea7f6c1fe"
+           role="tabpanel" aria-labelledby="heading-8bef24fd03b0b8fe8de0c18ea7f6c1fe">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/20/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB14%EF%BC%9AMiniCPM%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90/" title="MiniCPM详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">MiniCPM详解</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="OCR"
+        id="heading-f529c51ee65a122778f148485732aee5" role="tab" data-toggle="collapse" href="#collapse-f529c51ee65a122778f148485732aee5"
+        aria-expanded="false"
+      >
+        OCR
+        <span class="list-group-count">(1)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-f529c51ee65a122778f148485732aee5"
+           role="tabpanel" aria-labelledby="heading-f529c51ee65a122778f148485732aee5">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/17/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/OCR/%E5%A4%9A%E6%A8%A1%E6%80%81003%EF%BC%9AOCR%E7%AE%97%E6%B3%95%E3%80%81%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0/" title="OCR算法、模型综述"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">OCR算法、模型综述</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="nlp"
+        id="heading-4c5adbed16b4c9d16698f71cca4218cb" role="tab" data-toggle="collapse" href="#collapse-4c5adbed16b4c9d16698f71cca4218cb"
+        aria-expanded="true"
+      >
+        nlp
+        <span class="list-group-count">(3)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-4c5adbed16b4c9d16698f71cca4218cb"
+           role="tabpanel" aria-labelledby="heading-4c5adbed16b4c9d16698f71cca4218cb">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/NLP025-huggingface%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E9%9B%86%E5%92%8C%E6%A8%A1%E5%9E%8B%E4%B8%8B%E8%BD%BD%E5%AD%98%E5%82%A8%E7%9B%AE%E5%BD%95/" title="transformers自定义数据集"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">transformers自定义数据集</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="llm"
+        id="heading-dae1be85dab3650eb56b87c4e3390387" role="tab" data-toggle="collapse" href="#collapse-dae1be85dab3650eb56b87c4e3390387"
+        aria-expanded="true"
+      >
+        llm
+        <span class="list-group-count">(2)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-dae1be85dab3650eb56b87c4e3390387"
+           role="tabpanel" aria-labelledby="heading-dae1be85dab3650eb56b87c4e3390387">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/26/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-01%EF%BC%9A%E6%95%B4%E4%BD%93%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84%E5%8F%8A%E6%A8%A1%E5%9D%97%E5%8A%9F%E8%83%BD/" title="llama3源码解析-01：整体代码结构及模块功能"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">llama3源码解析-01：整体代码结构及模块功能</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/26/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-02%EF%BC%9Atokenizer%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/" title="llama3源码解析-02：tokenizer模块解析"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">llama3源码解析-02：tokenizer模块解析</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
 
 
   </aside>
@@ -1038,6 +1315,32 @@
        <a href="https://github.com/chongzicbo" target="_blank" rel="nofollow noopener"><span>Github</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
     </div>
   
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        Views: 
+        <span id="busuanzi_value_site_pv"></span>
+        
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        Visitors: 
+        <span id="busuanzi_value_site_uv"></span>
+        
+      </span>
+    
+    
+
+  
+
+</div>
+
   
   
 </div>
