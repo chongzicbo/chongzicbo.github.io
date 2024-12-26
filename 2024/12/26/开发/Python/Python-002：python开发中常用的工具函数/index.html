@@ -1,0 +1,898 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/daxiong.jpg">
+  <link rel="icon" href="/img/daxiong.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="程博">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1.函数执行时间统计装饰器功能：用于统计函数执行的时间，常用于性能优化。 示例代码：123456789101112131415161718192021222324252627282930313233343536from time import perf_counterfrom functools import wrapsfrom typing import Listdef timeit(loop:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python开发中常用工具函数">
+<meta property="og:url" content="https://chongzicbo.github.io/2024/12/26/%E5%BC%80%E5%8F%91/Python/Python-002%EF%BC%9Apython%E5%BC%80%E5%8F%91%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84%E5%B7%A5%E5%85%B7%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="程博仕">
+<meta property="og:description" content="1.函数执行时间统计装饰器功能：用于统计函数执行的时间，常用于性能优化。 示例代码：123456789101112131415161718192021222324252627282930313233343536from time import perf_counterfrom functools import wrapsfrom typing import Listdef timeit(loop:">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-12-26T04:24:42.761Z">
+<meta property="article:modified_time" content="2024-12-26T04:24:42.761Z">
+<meta property="article:author" content="程博">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Python开发中常用工具函数 - 程博仕</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>程博仕</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>人工智能</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/asr" target="_self">
+                    
+                    <span>语音识别</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>开发</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91" target="_self">
+                    
+                    <span>音视频</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/web&#39;" target="_self">
+                    
+                    <span>Web开发</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>文章分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>时间轴</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Python开发中常用工具函数"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        程博
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-26 12:24" pubdate>
+          December 26, 2024 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.5k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          13 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Python开发中常用工具函数</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="1-函数执行时间统计装饰器"><a href="#1-函数执行时间统计装饰器" class="headerlink" title="1.函数执行时间统计装饰器"></a>1.函数执行时间统计装饰器</h2><h3 id="功能："><a href="#功能：" class="headerlink" title="功能："></a>功能：</h3><p>用于统计函数执行的时间，常用于性能优化。</p>
+<h3 id="示例代码："><a href="#示例代码：" class="headerlink" title="示例代码："></a>示例代码：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> time <span class="hljs-keyword">import</span> perf_counter<br><span class="hljs-keyword">from</span> functools <span class="hljs-keyword">import</span> wraps<br><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span><br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">timeit</span>(<span class="hljs-params">loop: <span class="hljs-built_in">int</span> = <span class="hljs-number">1</span></span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    函数执行失败时，重试</span><br><span class="hljs-string"></span><br><span class="hljs-string">    :param loop: 循环执行次数</span><br><span class="hljs-string">    :return:</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br><br>    <span class="hljs-comment"># 校验参数，参数值不正确时使用默认参数</span><br>    <span class="hljs-keyword">if</span> loop &lt; <span class="hljs-number">1</span>:<br>        loop = <span class="hljs-number">1</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">decorator</span>(<span class="hljs-params">func</span>):<br><span class="hljs-meta">        @wraps(<span class="hljs-params">func</span>)</span><br>        <span class="hljs-keyword">def</span> <span class="hljs-title function_">wrapper</span>(<span class="hljs-params">*args, **kwargs</span>):<br>            sum_time: <span class="hljs-built_in">float</span> = <span class="hljs-number">0.0</span><br>            <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(loop):<br>                start_time: <span class="hljs-built_in">float</span> = perf_counter()<br>                ret = func(*args, **kwargs)<br>                end_time: <span class="hljs-built_in">float</span> = perf_counter()<br>                sum_time += end_time - start_time<br><br>            <span class="hljs-built_in">print</span>(<br>                <span class="hljs-string">f&quot;函数(<span class="hljs-subst">&#123;func.__name__&#125;</span>)共执行<span class="hljs-subst">&#123;loop&#125;</span>次，平均执行时间 <span class="hljs-subst">&#123;(sum_time/loop):<span class="hljs-number">.3</span>f&#125;</span> 秒&quot;</span><br>            )<br>            <span class="hljs-keyword">return</span> ret<br><br>        <span class="hljs-keyword">return</span> wrapper<br><br>    <span class="hljs-keyword">return</span> decorator<br><br></code></pre></td></tr></table></figure>
+
+<p>在 Python 开发中，工具函数（Utility Functions）是提高代码效率和可维护性的重要组成部分。这些函数可以帮助我们完成常见的任务，如时间统计、类型检查、字符串处理、文件操作等。以下是一些常用的工具函数及其使用场景。</p>
+<hr>
+<h2 id="2-类型检查装饰器"><a href="#2-类型检查装饰器" class="headerlink" title="2. 类型检查装饰器"></a>2. 类型检查装饰器</h2><h3 id="功能：-1"><a href="#功能：-1" class="headerlink" title="功能："></a>功能：</h3><p>用于检查函数参数的类型是否符合预期。</p>
+<h3 id="示例代码：-1"><a href="#示例代码：-1" class="headerlink" title="示例代码："></a>示例代码：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> functools <span class="hljs-keyword">import</span> wraps<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">type_check</span>(<span class="hljs-params">func</span>):<br><span class="hljs-meta">    @wraps(<span class="hljs-params">func</span>)</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">wrapper</span>(<span class="hljs-params">*args, **kwargs</span>):<br>        sig = inspect.signature(func)<br>        params = sig.parameters<br>        <span class="hljs-keyword">for</span> i, (arg_name, arg_value) <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(<span class="hljs-built_in">zip</span>(params, args)):<br>            param = params[arg_name]<br>            <span class="hljs-keyword">if</span> param.annotation != inspect.Parameter.empty <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">isinstance</span>(arg_value, param.annotation):<br>                <span class="hljs-keyword">raise</span> TypeError(<span class="hljs-string">f&quot;参数 <span class="hljs-subst">&#123;arg_name&#125;</span> 的类型应为 <span class="hljs-subst">&#123;param.annotation&#125;</span>，但传入的是 <span class="hljs-subst">&#123;<span class="hljs-built_in">type</span>(arg_value)&#125;</span>&quot;</span>)<br>        <span class="hljs-keyword">return</span> func(*args, **kwargs)<br>    <span class="hljs-keyword">return</span> wrapper<br><br><span class="hljs-meta">@type_check</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add</span>(<span class="hljs-params">a: <span class="hljs-built_in">int</span>, b: <span class="hljs-built_in">int</span></span>) -&gt; <span class="hljs-built_in">int</span>:<br>    <span class="hljs-keyword">return</span> a + b<br><br><span class="hljs-built_in">print</span>(add(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>))  <span class="hljs-comment"># 正常</span><br><span class="hljs-built_in">print</span>(add(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;2&quot;</span>))  <span class="hljs-comment"># 抛出 TypeError</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-重试装饰器"><a href="#3-重试装饰器" class="headerlink" title="3. 重试装饰器"></a>3. 重试装饰器</h2><h3 id="功能：-2"><a href="#功能：-2" class="headerlink" title="功能："></a>功能：</h3><p>用于在函数执行失败时自动重试。</p>
+<h3 id="示例代码：-2"><a href="#示例代码：-2" class="headerlink" title="示例代码："></a>示例代码：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> functools <span class="hljs-keyword">import</span> wraps<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">retry</span>(<span class="hljs-params">max_retries=<span class="hljs-number">3</span>, delay=<span class="hljs-number">1</span></span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">decorator</span>(<span class="hljs-params">func</span>):<br><span class="hljs-meta">        @wraps(<span class="hljs-params">func</span>)</span><br>        <span class="hljs-keyword">def</span> <span class="hljs-title function_">wrapper</span>(<span class="hljs-params">*args, **kwargs</span>):<br>            retries = <span class="hljs-number">0</span><br>            <span class="hljs-keyword">while</span> retries &lt; max_retries:<br>                <span class="hljs-keyword">try</span>:<br>                    <span class="hljs-keyword">return</span> func(*args, **kwargs)<br>                <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>                    retries += <span class="hljs-number">1</span><br>                    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;重试 <span class="hljs-subst">&#123;retries&#125;</span>/<span class="hljs-subst">&#123;max_retries&#125;</span>: <span class="hljs-subst">&#123;e&#125;</span>&quot;</span>)<br>                    time.sleep(delay)<br>            <span class="hljs-keyword">raise</span> Exception(<span class="hljs-string">f&quot;达到最大重试次数 <span class="hljs-subst">&#123;max_retries&#125;</span>&quot;</span>)<br>        <span class="hljs-keyword">return</span> wrapper<br>    <span class="hljs-keyword">return</span> decorator<br><br><span class="hljs-meta">@retry(<span class="hljs-params">max_retries=<span class="hljs-number">3</span>, delay=<span class="hljs-number">1</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">flaky_function</span>():<br>    <span class="hljs-keyword">if</span> random.randint(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>) == <span class="hljs-number">0</span>:<br>        <span class="hljs-keyword">raise</span> Exception(<span class="hljs-string">&quot;随机失败&quot;</span>)<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;成功&quot;</span><br><br><span class="hljs-built_in">print</span>(flaky_function())<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-批量处理函数"><a href="#4-批量处理函数" class="headerlink" title="4. 批量处理函数"></a>4. 批量处理函数</h2><h3 id="功能：-3"><a href="#功能：-3" class="headerlink" title="功能："></a>功能：</h3><p>用于将一个列表或迭代器分批处理。</p>
+<h3 id="示例代码：-3"><a href="#示例代码：-3" class="headerlink" title="示例代码："></a>示例代码：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">batch_process</span>(<span class="hljs-params">data, batch_size=<span class="hljs-number">10</span></span>):<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(data), batch_size):<br>        <span class="hljs-keyword">yield</span> data[i:i + batch_size]<br><br>data = <span class="hljs-built_in">list</span>(<span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>, <span class="hljs-number">101</span>))<br><span class="hljs-keyword">for</span> batch <span class="hljs-keyword">in</span> batch_process(data, batch_size=<span class="hljs-number">20</span>):<br>    <span class="hljs-built_in">print</span>(batch)<br></code></pre></td></tr></table></figure>
+
+<h3 id="输出："><a href="#输出：" class="headerlink" title="输出："></a>输出：</h3><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">[1, 2, 3, <span class="hljs-string">...</span>, 20]<br>[21, 22, 33, <span class="hljs-string">...</span>, 40]<br><span class="hljs-string">...</span><br>[81, 82, 83, <span class="hljs-string">...</span>, 100]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-文件操作工具函数"><a href="#5-文件操作工具函数" class="headerlink" title="5. 文件操作工具函数"></a>5. 文件操作工具函数</h2><h3 id="功能：-4"><a href="#功能：-4" class="headerlink" title="功能："></a>功能：</h3><p>用于读取、写入和处理文件。</p>
+<h3 id="示例代码：-4"><a href="#示例代码：-4" class="headerlink" title="示例代码："></a>示例代码：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">read_file</span>(<span class="hljs-params">file_path</span>):<br>    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(file_path, <span class="hljs-string">&#x27;r&#x27;</span>, encoding=<span class="hljs-string">&#x27;utf-8&#x27;</span>) <span class="hljs-keyword">as</span> f:<br>        <span class="hljs-keyword">return</span> f.read()<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">write_file</span>(<span class="hljs-params">file_path, content</span>):<br>    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(file_path, <span class="hljs-string">&#x27;w&#x27;</span>, encoding=<span class="hljs-string">&#x27;utf-8&#x27;</span>) <span class="hljs-keyword">as</span> f:<br>        f.write(content)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">append_file</span>(<span class="hljs-params">file_path, content</span>):<br>    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(file_path, <span class="hljs-string">&#x27;a&#x27;</span>, encoding=<span class="hljs-string">&#x27;utf-8&#x27;</span>) <span class="hljs-keyword">as</span> f:<br>        f.write(content)<br><br><span class="hljs-comment"># 示例</span><br>write_file(<span class="hljs-string">&quot;example.txt&quot;</span>, <span class="hljs-string">&quot;Hello, World!\n&quot;</span>)<br>append_file(<span class="hljs-string">&quot;example.txt&quot;</span>, <span class="hljs-string">&quot;This is a new line.\n&quot;</span>)<br><span class="hljs-built_in">print</span>(read_file(<span class="hljs-string">&quot;example.txt&quot;</span>))<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="6-字符串处理工具函数"><a href="#6-字符串处理工具函数" class="headerlink" title="6. 字符串处理工具函数"></a>6. 字符串处理工具函数</h2><h3 id="功能：-5"><a href="#功能：-5" class="headerlink" title="功能："></a>功能：</h3><p>用于字符串的格式化、分割、替换等操作。</p>
+<h3 id="示例代码：-5"><a href="#示例代码：-5" class="headerlink" title="示例代码："></a>示例代码：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">format_string</span>(<span class="hljs-params">template, **kwargs</span>):<br>    <span class="hljs-keyword">return</span> template.<span class="hljs-built_in">format</span>(**kwargs)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">split_string</span>(<span class="hljs-params">text, delimiter=<span class="hljs-string">&quot;,&quot;</span></span>):<br>    <span class="hljs-keyword">return</span> text.split(delimiter)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">replace_string</span>(<span class="hljs-params">text, old, new</span>):<br>    <span class="hljs-keyword">return</span> text.replace(old, new)<br><br><span class="hljs-comment"># 示例</span><br>template = <span class="hljs-string">&quot;My name is &#123;name&#125; and I am &#123;age&#125; years old.&quot;</span><br><span class="hljs-built_in">print</span>(format_string(template, name=<span class="hljs-string">&quot;Alice&quot;</span>, age=<span class="hljs-number">30</span>))<br><br>text = <span class="hljs-string">&quot;apple,banana,cherry&quot;</span><br><span class="hljs-built_in">print</span>(split_string(text))<br><br>text = <span class="hljs-string">&quot;Hello, World!&quot;</span><br><span class="hljs-built_in">print</span>(replace_string(text, <span class="hljs-string">&quot;World&quot;</span>, <span class="hljs-string">&quot;Python&quot;</span>))<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="7-日志记录工具函数"><a href="#7-日志记录工具函数" class="headerlink" title="7. 日志记录工具函数"></a>7. 日志记录工具函数</h2><h3 id="功能：-6"><a href="#功能：-6" class="headerlink" title="功能："></a>功能：</h3><p>用于记录程序的运行日志。</p>
+<h3 id="示例代码：-6"><a href="#示例代码：-6" class="headerlink" title="示例代码："></a>示例代码：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> logging<br><span class="hljs-keyword">from</span> logging.handlers <span class="hljs-keyword">import</span> RotatingFileHandler<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">setup_logger</span>(<span class="hljs-params">module_name, log_dir=<span class="hljs-string">&quot;logs&quot;</span></span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    根据模块名称配置日志记录器，并自动生成日志文件名。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    :param module_name: 模块名称，用于生成日志文件名</span><br><span class="hljs-string">    :param log_dir: 日志文件存储目录，默认为 &quot;logs&quot;</span><br><span class="hljs-string">    :return: 配置好的日志记录器</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-comment"># 创建日志记录器</span><br>    logger = logging.getLogger(module_name)<br>    logger.setLevel(logging.DEBUG)  <span class="hljs-comment"># 设置全局日志级别为 DEBUG</span><br><br>    <span class="hljs-comment"># 配置日志格式化</span><br>    formatter = logging.Formatter(<span class="hljs-string">&quot;%(asctime)s - %(name)s - %(levelname)s - %(message)s&quot;</span>)<br><br>    <span class="hljs-comment"># 配置控制台处理器（输出到终端）</span><br>    console_handler = logging.StreamHandler()<br>    console_handler.setLevel(logging.INFO)  <span class="hljs-comment"># 控制台日志级别为 INFO</span><br>    console_handler.setFormatter(formatter)<br>    logger.addHandler(console_handler)<br><br>    <span class="hljs-comment"># 配置文件处理器（根据模块名称生成日志文件名）</span><br>    log_file = <span class="hljs-string">f&quot;<span class="hljs-subst">&#123;log_dir&#125;</span>/<span class="hljs-subst">&#123;module_name&#125;</span>.log&quot;</span><br>    file_handler = RotatingFileHandler(<br>        log_file,  <span class="hljs-comment"># 日志文件路径</span><br>        maxBytes=<span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>,  <span class="hljs-comment"># 每个日志文件的最大大小（1MB）</span><br>        backupCount=<span class="hljs-number">5</span>  <span class="hljs-comment"># 保留的旧日志文件数量</span><br>    )<br>    file_handler.setLevel(logging.DEBUG)  <span class="hljs-comment"># 文件日志级别为 DEBUG</span><br>    file_handler.setFormatter(formatter)<br>    logger.addHandler(file_handler)<br><br>    <span class="hljs-keyword">return</span> logger<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> loguru <span class="hljs-keyword">import</span> logger<br><span class="hljs-keyword">import</span> sys<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">setup_logger</span>(<span class="hljs-params">module_name, log_dir=<span class="hljs-string">&quot;logs&quot;</span></span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    根据模块名称配置日志记录器，并自动生成日志文件名。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    :param module_name: 模块名称，用于生成日志文件名</span><br><span class="hljs-string">    :param log_dir: 日志文件存储目录，默认为 &quot;logs&quot;</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-comment"># 配置日志格式</span><br>    log_format = (<br>        <span class="hljs-string">&quot;&lt;green&gt;&#123;time:YYYY-MM-DD HH:mm:ss&#125;&lt;/green&gt; | &quot;</span><br>        <span class="hljs-string">&quot;&lt;level&gt;&#123;level: &lt;8&#125;&lt;/level&gt; | &quot;</span><br>        <span class="hljs-string">&quot;&lt;cyan&gt;&#123;name&#125;&lt;/cyan&gt;:&lt;cyan&gt;&#123;function&#125;&lt;/cyan&gt;:&lt;cyan&gt;&#123;line&#125;&lt;/cyan&gt; - &lt;level&gt;&#123;message&#125;&lt;/level&gt;&quot;</span><br>    )<br><br>    <span class="hljs-comment"># 配置控制台日志</span><br>    logger.remove()  <span class="hljs-comment"># 移除默认的日志处理器</span><br>    logger.add(sys.stdout, <span class="hljs-built_in">format</span>=log_format, level=<span class="hljs-string">&quot;INFO&quot;</span>)<br><br>    <span class="hljs-comment"># 配置文件日志（根据模块名称生成日志文件名）</span><br>    log_file = <span class="hljs-string">f&quot;<span class="hljs-subst">&#123;log_dir&#125;</span>/<span class="hljs-subst">&#123;module_name&#125;</span>.log&quot;</span><br>    logger.add(<br>        log_file,  <span class="hljs-comment"># 日志文件路径</span><br>        <span class="hljs-built_in">format</span>=log_format,<br>        level=<span class="hljs-string">&quot;DEBUG&quot;</span>,<br>        rotation=<span class="hljs-string">&quot;10 MB&quot;</span>,  <span class="hljs-comment"># 日志文件轮转大小</span><br>        retention=<span class="hljs-string">&quot;7 days&quot;</span>,  <span class="hljs-comment"># 保留日志文件的时间</span><br>        compression=<span class="hljs-string">&quot;zip&quot;</span>,  <span class="hljs-comment"># 日志文件压缩格式</span><br>    )<br><br>    <span class="hljs-keyword">return</span> logger<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="8-缓存工具函数"><a href="#8-缓存工具函数" class="headerlink" title="8. 缓存工具函数"></a>8. 缓存工具函数</h2><h3 id="功能：-7"><a href="#功能：-7" class="headerlink" title="功能："></a>功能：</h3><p>用于缓存函数的返回值，避免重复计算。</p>
+<h3 id="示例代码：-7"><a href="#示例代码：-7" class="headerlink" title="示例代码："></a>示例代码：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> functools <span class="hljs-keyword">import</span> lru_cache<br><br><span class="hljs-meta">@lru_cache(<span class="hljs-params">maxsize=<span class="hljs-number">128</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">fibonacci</span>(<span class="hljs-params">n</span>):<br>    <span class="hljs-keyword">if</span> n &lt;= <span class="hljs-number">1</span>:<br>        <span class="hljs-keyword">return</span> n<br>    <span class="hljs-keyword">return</span> fibonacci(n - <span class="hljs-number">1</span>) + fibonacci(n - <span class="hljs-number">2</span>)<br><br><span class="hljs-built_in">print</span>(fibonacci(<span class="hljs-number">10</span>))  <span class="hljs-comment"># 计算并缓存</span><br><span class="hljs-built_in">print</span>(fibonacci(<span class="hljs-number">10</span>))  <span class="hljs-comment"># 直接从缓存中获取</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="9-随机数据生成工具函数"><a href="#9-随机数据生成工具函数" class="headerlink" title="9. 随机数据生成工具函数"></a>9. 随机数据生成工具函数</h2><h3 id="功能：-8"><a href="#功能：-8" class="headerlink" title="功能："></a>功能：</h3><p>用于生成随机数据，如随机字符串、随机数等。</p>
+<h3 id="示例代码：-8"><a href="#示例代码：-8" class="headerlink" title="示例代码："></a>示例代码：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> random<br><span class="hljs-keyword">import</span> string<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">random_string</span>(<span class="hljs-params">length=<span class="hljs-number">10</span></span>):<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;&#x27;</span>.join(random.choices(string.ascii_letters + string.digits, k=length))<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">random_number</span>(<span class="hljs-params">start=<span class="hljs-number">1</span>, end=<span class="hljs-number">100</span></span>):<br>    <span class="hljs-keyword">return</span> random.randint(start, end)<br><br><span class="hljs-comment"># 示例</span><br><span class="hljs-built_in">print</span>(random_string(<span class="hljs-number">15</span>))<br><span class="hljs-built_in">print</span>(random_number(<span class="hljs-number">1</span>, <span class="hljs-number">10</span>))<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="10-并发执行工具函数"><a href="#10-并发执行工具函数" class="headerlink" title="10. 并发执行工具函数"></a>10. 并发执行工具函数</h2><h3 id="功能：-9"><a href="#功能：-9" class="headerlink" title="功能："></a>功能：</h3><p>用于并发执行多个任务。</p>
+<h3 id="示例代码：-9"><a href="#示例代码：-9" class="headerlink" title="示例代码："></a>示例代码：</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> concurrent.futures<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">task</span>(<span class="hljs-params">n</span>):<br>    <span class="hljs-keyword">return</span> n * n<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">parallel_execute</span>(<span class="hljs-params">tasks</span>):<br>    <span class="hljs-keyword">with</span> concurrent.futures.ThreadPoolExecutor() <span class="hljs-keyword">as</span> executor:<br>        results = <span class="hljs-built_in">list</span>(executor.<span class="hljs-built_in">map</span>(task, tasks))<br>    <span class="hljs-keyword">return</span> results<br><br><span class="hljs-comment"># 示例</span><br>tasks = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]<br><span class="hljs-built_in">print</span>(parallel_execute(tasks))<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>以上是 Python 中常用的一些工具函数，涵盖了时间统计、类型检查、重试机制、文件操作、字符串处理、日志记录、缓存、随机数据生成和并发执行等多个方面。这些工具函数可以帮助我们提高代码的可读性、可维护性和性能。</p>
+<p>根据具体需求，你可以选择合适的工具函数，或者将它们组合起来，构建更复杂的工具链。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%BC%80%E5%8F%91/" class="category-chain-item">开发</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E5%BC%80%E5%8F%91/python/" class="category-chain-item">python</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/python/" class="print-no-link">#python</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python开发中常用工具函数</div>
+      <div>https://chongzicbo.github.io/2024/12/26/开发/Python/Python-002：python开发中常用的工具函数/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>程博</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>December 26, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/26/%E5%BC%80%E5%8F%91/Python/Python-001%EF%BC%9A%E4%BD%BF%E7%94%A8xml.dom.minidom%E8%A7%A3%E6%9E%90xml%E6%96%87%E4%BB%B6/" title="深入解析 `xml.dom.minidom`：从入门到精通">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">深入解析 `xml.dom.minidom`：从入门到精通</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/26/%E5%BC%80%E5%8F%91/Python/Python-003%EF%BC%9APython%20%E6%97%A5%E5%BF%97%E5%A4%84%E7%90%86%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%EF%BC%9A%E4%BD%BF%E7%94%A8logging%E6%A8%A1%E5%9D%97%E6%9E%84%E5%BB%BA%E9%AB%98%E6%95%88%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F/" title="Python 日志处理最佳实践：使用logging模块构建高效日志系统">
+                        <span class="hidden-mobile">Python 日志处理最佳实践：使用logging模块构建高效日志系统</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/chongzicbo" target="_blank" rel="nofollow noopener"><span>Github</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

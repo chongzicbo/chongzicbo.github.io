@@ -1,0 +1,1010 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/daxiong.jpg">
+  <link rel="icon" href="/img/daxiong.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="程博">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Llama3 是一个基于 Transformer 架构的大规模语言模型，主要用于文本生成和对话任务。以下是 Llama3 项目的整体架构和各个模块的功能总结： 1. 项目架构Llama3 项目主要由三个核心文件组成：  generation.py: 负责模型的加载、文本生成和对话生成的核心逻辑。 model.py: 定义了 Transformer 模型的结构，包括注意力机制、前馈网络、层归一化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="llama3源码解析-01：整体代码结构及模块功能">
+<meta property="og:url" content="https://chongzicbo.github.io/2024/12/26/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-01%EF%BC%9A%E6%95%B4%E4%BD%93%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84%E5%8F%8A%E6%A8%A1%E5%9D%97%E5%8A%9F%E8%83%BD/index.html">
+<meta property="og:site_name" content="程博仕">
+<meta property="og:description" content="Llama3 是一个基于 Transformer 架构的大规模语言模型，主要用于文本生成和对话任务。以下是 Llama3 项目的整体架构和各个模块的功能总结： 1. 项目架构Llama3 项目主要由三个核心文件组成：  generation.py: 负责模型的加载、文本生成和对话生成的核心逻辑。 model.py: 定义了 Transformer 模型的结构，包括注意力机制、前馈网络、层归一化">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/Llama3_Repo.jpeg">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
+<meta property="article:published_time" content="2024-12-26T04:24:42.760Z">
+<meta property="article:modified_time" content="2024-12-26T04:24:42.760Z">
+<meta property="article:author" content="程博">
+<meta property="article:tag" content="nlp">
+<meta property="article:tag" content="llm">
+<meta property="article:tag" content="llama">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/Llama3_Repo.jpeg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>llama3源码解析-01：整体代码结构及模块功能 - 程博仕</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>程博仕</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>人工智能</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/asr" target="_self">
+                    
+                    <span>语音识别</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>开发</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91" target="_self">
+                    
+                    <span>音视频</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/web&#39;" target="_self">
+                    
+                    <span>Web开发</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>文章分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>时间轴</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="llama3源码解析-01：整体代码结构及模块功能"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        程博
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-26 12:24" pubdate>
+          December 26, 2024 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.2k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          19 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">llama3源码解析-01：整体代码结构及模块功能</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <hr>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/Llama3_Repo.jpeg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>Llama3 是一个基于 Transformer 架构的大规模语言模型，主要用于文本生成和对话任务。以下是 Llama3 项目的整体架构和各个模块的功能总结：</p>
+<h2 id="1-项目架构"><a href="#1-项目架构" class="headerlink" title="1. 项目架构"></a>1. <strong>项目架构</strong></h2><p>Llama3 项目主要由三个核心文件组成：</p>
+<ul>
+<li><strong>generation.py</strong>: 负责模型的加载、文本生成和对话生成的核心逻辑。</li>
+<li><strong>model.py</strong>: 定义了 Transformer 模型的结构，包括注意力机制、前馈网络、层归一化等组件。</li>
+<li><strong>tokenizer.py</strong>: 负责文本的编码和解码，使用 Tiktoken 作为分词器。</li>
+</ul>
+<h2 id="2-模块功能"><a href="#2-模块功能" class="headerlink" title="2. 模块功能"></a>2. <strong>模块功能</strong></h2><h3 id="generation-py"><a href="#generation-py" class="headerlink" title="generation.py"></a><strong>generation.py</strong></h3><ul>
+<li><strong>Llama 类</strong>: 这是 Llama3 的核心类，负责模型的加载、文本生成和对话生成。<ul>
+<li><strong>build 方法</strong>: 初始化模型并加载预训练权重。它负责初始化分布式进程组、设置设备、加载模型和分词器。</li>
+<li><strong>generate 方法</strong>: 根据输入的 token 序列生成文本。支持温度调节、top-p 采样、logprobs 计算等功能。</li>
+<li><strong>text_completion 方法</strong>: 对输入的文本提示进行补全，生成文本补全结果。</li>
+<li><strong>chat_completion 方法</strong>: 对输入的对话进行补全，生成助手的回复。</li>
+<li><strong>sample_top_p 函数</strong>: 实现 top-p（nucleus）采样，用于控制生成文本的多样性。</li>
+</ul>
+</li>
+</ul>
+<h3 id="model-py"><a href="#model-py" class="headerlink" title="model.py"></a><strong>model.py</strong></h3><ul>
+<li><strong>ModelArgs 类</strong>: 定义了模型的基本参数，如维度、层数、头数、词汇表大小等。</li>
+<li><strong>RMSNorm 类</strong>: 实现了 RMS（Root Mean Square）归一化，用于替代传统的 LayerNorm。</li>
+<li><strong>precompute_freqs_cis 函数</strong>: 预计算旋转位置编码的频率。</li>
+<li><strong>reshape_for_broadcast 函数</strong>: 调整频率张量的形状以进行广播。</li>
+<li><strong>apply_rotary_emb 函数</strong>: 应用旋转位置编码到查询和键张量上。</li>
+<li><strong>repeat_kv 函数</strong>: 重复键和值张量以匹配头的数量。</li>
+<li><strong>Attention 类</strong>: 实现了多头注意力机制，支持键值缓存。</li>
+<li><strong>FeedForward 类</strong>: 实现了前馈网络，使用 SwiGLU 激活函数。</li>
+<li><strong>TransformerBlock 类</strong>: 组合了注意力机制和前馈网络，构成了 Transformer 的一个基本块。</li>
+<li><strong>Transformer 类</strong>: 整个 Transformer 模型，包含多个 TransformerBlock 层，负责前向传播。</li>
+</ul>
+<h3 id="tokenizer-py"><a href="#tokenizer-py" class="headerlink" title="tokenizer.py"></a><strong>tokenizer.py</strong></h3><ul>
+<li><strong>Tokenizer 类</strong>: 负责文本的编码和解码，使用 Tiktoken 作为分词器。<ul>
+<li><strong>encode 方法</strong>: 将字符串编码为 token ID 序列，支持添加 BOS 和 EOS token。</li>
+<li><strong>decode 方法</strong>: 将 token ID 序列解码为字符串。</li>
+<li><strong>_split_whitespaces_or_nonwhitespaces 方法</strong>: 将字符串分割为不超过最大长度的子串。</li>
+</ul>
+</li>
+<li><strong>ChatFormat 类</strong>: 负责对话格式的编码。<ul>
+<li><strong>encode_header 方法</strong>: 编码消息头（如角色信息）。</li>
+<li><strong>encode_message 方法</strong>: 编码整个消息，包括消息头和内容。</li>
+<li><strong>encode_dialog_prompt 方法</strong>: 编码整个对话，生成模型输入的 token 序列。</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-核心功能和关键技术"><a href="#3-核心功能和关键技术" class="headerlink" title="3. 核心功能和关键技术"></a>3. <strong>核心功能和关键技术</strong></h2><h3 id="3-1-核心功能"><a href="#3-1-核心功能" class="headerlink" title="3.1 核心功能"></a>3.1 核心功能</h3><ul>
+<li><strong>模型加载与初始化</strong>: 通过 <code>Llama.build</code> 方法加载预训练模型和分词器，初始化分布式训练环境。</li>
+<li><strong>文本生成</strong>: 通过 <code>Llama.generate</code> 方法实现文本生成，支持温度调节、top-p 采样、logprobs 计算等功能。</li>
+<li><strong>对话生成</strong>: 通过 <code>Llama.chat_completion</code> 方法生成对话回复，支持多轮对话。</li>
+<li><strong>分词与编码</strong>: 通过 <code>Tokenizer</code> 类实现文本的编码和解码，支持特殊 token 的处理。</li>
+<li><strong>Transformer 模型</strong>: 通过 <code>Transformer</code> 类实现 Transformer 模型的前向传播，支持键值缓存和旋转位置编码。</li>
+</ul>
+<h3 id="3-2-关键技术"><a href="#3-2-关键技术" class="headerlink" title="3.2 关键技术"></a>3.2 <strong>关键技术</strong></h3><ul>
+<li><strong>旋转位置编码</strong>: 使用旋转位置编码（Rotary Position Embedding）来增强模型对位置信息的感知。</li>
+<li><strong>RMSNorm</strong>: 使用 RMSNorm 替代传统的 LayerNorm，减少计算量。</li>
+<li><strong>SwiGLU 激活函数</strong>: 在前馈网络中使用 SwiGLU 激活函数，增强模型的表达能力。</li>
+<li><strong>Top-p 采样</strong>: 使用 top-p 采样来控制生成文本的多样性，避免生成过于随机的文本。</li>
+</ul>
+<h2 id="4-Llama3-模型中数据从输入到输出的整体过程"><a href="#4-Llama3-模型中数据从输入到输出的整体过程" class="headerlink" title="4. Llama3 模型中数据从输入到输出的整体过程"></a>4. <strong>Llama3 模型中数据从输入到输出的整体过程</strong></h2><p>Llama3 模型的数据处理流程从输入文本到生成输出文本，涉及多个步骤和模块的协同工作。以下是数据从输入到输出的整体过程：</p>
+<h3 id="4-1-输入文本的编码"><a href="#4-1-输入文本的编码" class="headerlink" title="4.1 输入文本的编码"></a><strong>4.1 输入文本的编码</strong></h3><ol>
+<li><strong>文本输入</strong>: 用户提供文本输入，可以是单句文本（用于文本补全）或多轮对话（用于对话生成）。</li>
+<li><strong>分词与编码</strong>:<ul>
+<li><strong>Tokenizer 类</strong>: 使用 <code>Tokenizer.encode</code> 方法将输入文本转换为 token ID 序列。该方法会根据配置决定是否添加 BOS（Begin of Sequence）和 EOS（End of Sequence）token。</li>
+<li><strong>特殊 token 处理</strong>: 如果输入文本中包含特殊 token（如对话中的角色标记），Tokenizer 会将其编码为对应的 token ID。</li>
+<li><strong>对话格式编码</strong>: 对于对话任务，<code>ChatFormat</code> 类会将对话中的每条消息编码为 token 序列，并添加适当的特殊 token（如 <code>&lt;|start_header_id|&gt;</code> 和 <code>&lt;|end_header_id|&gt;</code>）。</li>
+</ul>
+</li>
+</ol>
+<h3 id="4-2-模型的前向传播"><a href="#4-2-模型的前向传播" class="headerlink" title="4.2 模型的前向传播"></a><strong>4.2 模型的前向传播</strong></h3><ol>
+<li><strong>输入 token 序列</strong>:<ul>
+<li>编码后的 token 序列被转换为 PyTorch 张量，并输入到 Transformer 模型中。</li>
+<li>如果输入序列长度小于模型的最大序列长度，会使用 pad token 进行填充。</li>
+</ul>
+</li>
+<li><strong>嵌入层</strong>:<ul>
+<li><strong>tok_embeddings</strong>: 输入 token 序列通过嵌入层（<code>VocabParallelEmbedding</code>）转换为词向量表示。</li>
+<li>每个 token 被映射为一个高维向量（维度由 <code>ModelArgs.dim</code> 决定）。</li>
+</ul>
+</li>
+<li><strong>旋转位置编码</strong>:<ul>
+<li><strong>precompute_freqs_cis</strong>: 预计算旋转位置编码的频率。</li>
+<li><strong>apply_rotary_emb</strong>: 将旋转位置编码应用到查询（query）和键（key）张量上，增强模型对位置信息的感知。</li>
+</ul>
+</li>
+<li><strong>Transformer 层</strong>:<ul>
+<li><strong>TransformerBlock</strong>: 模型由多个 TransformerBlock 组成，每个块包含一个多头注意力机制和一个前馈网络。<ul>
+<li><strong>Attention</strong>: 多头注意力机制计算查询、键和值之间的注意力分数，生成上下文感知的表示。</li>
+<li><strong>FeedForward</strong>: 前馈网络使用 SwiGLU 激活函数进一步增强表示。</li>
+</ul>
+</li>
+<li><strong>RMSNorm</strong>: 在每个 TransformerBlock 中，使用 RMSNorm 对输入进行归一化。</li>
+<li><strong>残差连接</strong>: 在每个 TransformerBlock 中，输入和输出通过残差连接进行叠加。</li>
+</ul>
+</li>
+<li><strong>输出层</strong>:<ul>
+<li><strong>norm</strong>: 最后一层 TransformerBlock 的输出通过 RMSNorm 进行归一化。</li>
+<li><strong>output</strong>: 归一化后的输出通过线性层（<code>ColumnParallelLinear</code>）映射回词汇表空间，生成每个 token 的 logits（未归一化的概率分布）。</li>
+</ul>
+</li>
+</ol>
+<h3 id="4-3-文本生成"><a href="#4-3-文本生成" class="headerlink" title="4.3 文本生成"></a><strong>4.3 文本生成</strong></h3><ol>
+<li><strong>logits 处理</strong>:<ul>
+<li>模型输出的 logits 表示每个 token 的未归一化概率分布。</li>
+<li>根据生成任务的需求，可以选择不同的采样策略（如贪婪采样、top-p 采样等）。</li>
+</ul>
+</li>
+<li><strong>采样</strong>:<ul>
+<li><strong>sample_top_p</strong>: 使用 top-p 采样从 logits 中选择下一个 token。该方法会从累积概率超过阈值 p 的最小 token 集合中进行采样，确保生成的文本既多样又合理。</li>
+<li><strong>温度调节</strong>: 通过调节温度参数（temperature），控制生成文本的随机性。温度越高，生成的文本越随机；温度越低，生成的文本越确定。</li>
+</ul>
+</li>
+<li><strong>生成 token 序列</strong>:<ul>
+<li>根据采样结果，逐步生成 token 序列，直到达到最大生成长度或遇到停止 token（如 EOS token）。</li>
+<li>在生成过程中，模型会不断更新键值缓存（key-value cache），以加速后续 token 的生成。</li>
+</ul>
+</li>
+</ol>
+<h3 id="4-4-输出文本的解码"><a href="#4-4-输出文本的解码" class="headerlink" title="4.4 输出文本的解码"></a><strong>4.4 输出文本的解码</strong></h3><ol>
+<li><strong>token 序列解码</strong>:<ul>
+<li>生成的 token 序列通过 <code>Tokenizer.decode</code> 方法解码为文本。</li>
+<li>解码过程中会去除特殊 token（如 BOS 和 EOS token），并将 token ID 映射回对应的字符或子词。</li>
+</ul>
+</li>
+<li><strong>输出文本</strong>:<ul>
+<li>解码后的文本作为模型的最终输出，返回给用户。</li>
+<li>对于对话任务，输出文本通常是助手的回复；对于文本补全任务，输出文本是输入提示的补全结果。</li>
+</ul>
+</li>
+</ol>
+<h3 id="4-5-整体流程总结"><a href="#4-5-整体流程总结" class="headerlink" title="4.5 整体流程总结"></a><strong>4.5 整体流程总结</strong></h3><ol>
+<li><strong>输入文本</strong> → <strong>Tokenizer 编码</strong> → <strong>token 序列</strong></li>
+<li><strong>token 序列</strong> → <strong>嵌入层</strong> → <strong>词向量表示</strong></li>
+<li><strong>词向量表示</strong> → <strong>旋转位置编码</strong> → <strong>上下文感知表示</strong></li>
+<li><strong>上下文感知表示</strong> → <strong>Transformer 层</strong> → <strong>logits</strong></li>
+<li><strong>logits</strong> → <strong>采样策略</strong> → <strong>生成 token 序列</strong></li>
+<li><strong>生成 token 序列</strong> → <strong>Tokenizer 解码</strong> → <strong>输出文本</strong></li>
+</ol>
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. <strong>总结</strong></h2><p>Llama3 模型的处理流程从输入文本到输出文本，涉及分词、编码、嵌入、Transformer 层的前向传播、采样和解码等多个步骤。每个步骤都通过精心设计的模块（如 Tokenizer、TransformerBlock、Attention 等）实现，确保模型能够高效地生成高质量的文本。通过调节温度、top-p 采样等参数，用户可以控制生成文本的多样性和质量，满足不同任务的需求。</p>
+<p>Llama3 是一个功能强大的语言模型，支持文本生成和对话生成任务。其核心架构基于 Transformer，使用了旋转位置编码、RMSNorm、SwiGLU 激活函数等先进技术。通过 <code>generation.py</code> 中的 <code>Llama</code> 类，用户可以方便地加载模型、生成文本和对话。<code>model.py</code> 定义了 Transformer 模型的结构，<code>tokenizer.py</code> 负责文本的编码和解码。整体项目架构清晰，模块功能明确，适合大规模语言模型的训练和推理任务。</p>
+<p>文章合集：<a target="_blank" rel="noopener" href="https://github.com/chongzicbo/ReadWriteThink/tree/main">chongzicbo&#x2F;ReadWriteThink: 博学而笃志，切问而近思 (github.com)</a></p>
+<p>个人博客：<a href="https://chongzicbo.github.io/">程博仕</a></p>
+<p>微信公众号：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg" srcset="/img/loading.gif" lazyload alt="微信公众号"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" class="category-chain-item">人工智能</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/" class="category-chain-item">nlp</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/" class="category-chain-item">llm</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/nlp/" class="print-no-link">#nlp</a>
+      
+        <a href="/tags/llm/" class="print-no-link">#llm</a>
+      
+        <a href="/tags/llama/" class="print-no-link">#llama</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>llama3源码解析-01：整体代码结构及模块功能</div>
+      <div>https://chongzicbo.github.io/2024/12/26/人工智能/nlp/llm/源码解析：llama3源码解析-01：整体代码结构及模块功能/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>程博</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>December 26, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/26/%E5%BC%80%E5%8F%91/Python/Python-004%EF%BC%9APython%20%E6%97%A5%E5%BF%97%E5%A4%84%E7%90%86%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5%EF%BC%9A%E4%BD%BF%E7%94%A8loguru%E6%A8%A1%E5%9D%97%E6%9E%84%E5%BB%BA%E9%AB%98%E6%95%88%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F/" title="Python 日志处理最佳实践：使用loguru模块构建高效日志系统">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Python 日志处理最佳实践：使用loguru模块构建高效日志系统</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/26/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB14%EF%BC%9AMiniCPM%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90/" title="MiniCPM详解">
+                        <span class="hidden-mobile">MiniCPM详解</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/chongzicbo" target="_blank" rel="nofollow noopener"><span>Github</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

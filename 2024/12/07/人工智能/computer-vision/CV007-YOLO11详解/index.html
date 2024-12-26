@@ -1,0 +1,1246 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/daxiong.jpg">
+  <link rel="icon" href="/img/daxiong.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="程博">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="2024 年是 YOLO 模型的一年。在 2023 年发布 Ultralytics YOLOv8 之后， YOLOv9 和 YOLOv10也在2024年发布了。但等等，这还不是结束！Ultralytics YOLO11 终于来了，在激动人心的 YOLO Vision 2024 （YV24） 活动中亮相。  YOLO11 系列是 YOLO 系列中最先进的 （SOTA）、最轻、最高效的型号，性能优于其">
+<meta property="og:type" content="article">
+<meta property="og:title" content="YOLO11 详解">
+<meta property="og:url" content="https://chongzicbo.github.io/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV007-YOLO11%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="程博仕">
+<meta property="og:description" content="2024 年是 YOLO 模型的一年。在 2023 年发布 Ultralytics YOLOv8 之后， YOLOv9 和 YOLOv10也在2024年发布了。但等等，这还不是结束！Ultralytics YOLO11 终于来了，在激动人心的 YOLO Vision 2024 （YV24） 活动中亮相。  YOLO11 系列是 YOLO 系列中最先进的 （SOTA）、最轻、最高效的型号，性能优于其">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/feature.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/yolo11-1.png">
+<meta property="og:image" content="https://learnopencv.com/wp-content/uploads/2024/10/yolo11-model-table.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/yolo11-object-detection.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/yolo11-instance-segmentation-1-1733102326734-1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/yolo11-pose-estimation.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/yolo11-image-classification.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/yolo11-obb-detection-1.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/yolo11-obb-logic-1-1024x615.png">
+<meta property="article:published_time" content="2024-12-07T10:30:00.000Z">
+<meta property="article:modified_time" content="2024-12-26T04:24:42.759Z">
+<meta property="article:author" content="程博">
+<meta property="article:tag" content="人工智能">
+<meta property="article:tag" content="yolo">
+<meta property="article:tag" content="目标检测">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/feature.gif">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>YOLO11 详解 - 程博仕</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>程博仕</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>人工智能</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/asr" target="_self">
+                    
+                    <span>语音识别</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>开发</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91" target="_self">
+                    
+                    <span>音视频</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/web&#39;" target="_self">
+                    
+                    <span>Web开发</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>文章分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>时间轴</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="YOLO11 详解"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        程博
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-07 18:30" pubdate>
+          December 7, 2024 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.5k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          54 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">YOLO11 详解</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    Last updated on December 26, 2024 pm
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p>2024 年是 YOLO 模型的一年。在 2023 年发布 Ultralytics YOLOv8 之后， YOLOv9 和 YOLOv10也在2024年发布了。但等等，这还不是结束！Ultralytics YOLO11 终于来了，在激动人心的 YOLO Vision 2024 （YV24） 活动中亮相。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/feature.gif" srcset="/img/loading.gif" lazyload></p>
+<p>YOLO11 系列是 YOLO 系列中最先进的 （SOTA）、最轻、最高效的型号，性能优于其前代产品。它由 Ultralytics 创建，该组织发布了 YOLOv8，这是迄今为止最稳定和使用最广泛的 YOLO 变体。现在，YOLO11 将继续 YOLO 系列的传统。在本文中，我们将探讨：</p>
+<ul>
+<li><strong>什么是 YOLO11？</strong></li>
+<li><strong>YOLO11 能做什么？</strong></li>
+<li><strong>YOLO11 比其他 YOLO 变体更高效吗？</strong></li>
+<li><strong>YOLO11 架构有哪些改进？</strong></li>
+<li><strong>YOLO11 的代码pipeline是如何工作的？</strong></li>
+<li><strong>YOLO11 的基准测试</strong></li>
+<li><strong>YOLO11 快速回顾</strong></li>
+</ul>
+<h1 id="什么是YOLO11"><a href="#什么是YOLO11" class="headerlink" title="什么是YOLO11"></a>什么是YOLO11</h1><p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/yolo11-1.png" srcset="/img/loading.gif" lazyload></p>
+<p>YOLO11 是 Ultralytics 的 YOLO 系列的最新版本。YOLO11 配备了超轻量级型号，比以前的 YOLO 更快、更高效。YOLO11 能够执行更广泛的计算机视觉任务。Ultralytics 根据大小发布了 5 个 YOLO11 模型，并在<strong>所有任务中发布了 25 个模型</strong>：</p>
+<ul>
+<li><strong>YOLO11n</strong> – Nano 适用于小型和轻量级任务。</li>
+<li><strong>YOLO11s</strong> – Nano 的小升级，具有一些额外的准确性。</li>
+<li><strong>YOLO11m</strong> – 通用型。</li>
+<li><strong>YOLO11l</strong> – 大，精度更高，计算量更高。</li>
+<li><strong>YOLO11x</strong> – 超大尺寸，可实现最大精度和性能。</li>
+</ul>
+<p><img src="https://learnopencv.com/wp-content/uploads/2024/10/yolo11-model-table.png" srcset="/img/loading.gif" lazyload></p>
+<p>YOLO11 构建在 Ultralytics YOLOv8 代码库之上，并进行了一些架构修改。它还集成了以前 YOLO（如 YOLOv9 和 YOLOv10）的新功能（改进这些功能）以提高性能。我们将在博客文章的后面部分探讨架构和代码库中的新变化。</p>
+<h1 id="YOLO11的应用"><a href="#YOLO11的应用" class="headerlink" title="YOLO11的应用"></a>YOLO11的应用</h1><p>YOLO 以其对象检测模型而闻名。但是，YOLO11 可以执行多个计算机视觉任务，例如 YOLOv8。它包括：</p>
+<ul>
+<li><strong>对象检测</strong></li>
+<li><strong>实例分段</strong></li>
+<li><strong>图像分类</strong></li>
+<li><strong>姿势估计</strong></li>
+<li><strong>定向目标检测 （OBB）</strong></li>
+</ul>
+<p>让我们来探索所有这些。</p>
+<h3 id="对象检测"><a href="#对象检测" class="headerlink" title="对象检测"></a>对象检测</h3><p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/yolo11-object-detection.gif" srcset="/img/loading.gif" lazyload alt="yolo11-对象检测"></p>
+<p>YOLO11 通过将输入图像传递到 CNN 以提取特征来执行对象检测。然后，网络预测这些网格中对象的边界框和类概率。为了处理多尺度检测，使用图层来确保检测到各种大小的物体。然后使用非极大值抑制 （NMS） 来优化这些预测，以过滤掉重复或低置信度的框，从而获得更准确的对象检测。YOLO11 在 MS-COCO 数据集上进行对象检测训练，其中包括 80 个预训练类。</p>
+<h3 id="实例分割"><a href="#实例分割" class="headerlink" title="实例分割"></a>实例分割</h3><p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/yolo11-instance-segmentation-1-1733102326734-1.png" srcset="/img/loading.gif" lazyload alt=" "></p>
+<p>除了检测对象之外，YOLO11 还通过添加掩码预测分支扩展到实例分割。这些模型在 MS-COCO 数据集上进行训练，其中包括 80 个预训练类。此分支为每个检测到的对象生成像素级分割掩码，使模型能够区分重叠的对象并提供其形状的精确轮廓。head 中的蒙版分支处理特征映射并输出对象蒙版，从而在识别和区分图像中的对象时实现像素级精度。</p>
+<h3 id="姿势估计"><a href="#姿势估计" class="headerlink" title="姿势估计"></a>姿势估计</h3><p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/yolo11-pose-estimation.gif" srcset="/img/loading.gif" lazyload alt="YOLO11 姿势"></p>
+<p>YOLO11 通过检测和预测物体上的关键点（例如人体的关节）来执行姿态估计。关键点连接起来形成骨架结构，该结构表示姿势。这些模型在 COCO 上进行训练，其中包括一个预先训练的类“person”。</p>
+<p>在头部添加姿态估计层，并训练网络预测关键点的坐标。后处理步骤将点连接起来以形成骨架结构，从而实现实时姿势识别。</p>
+<h3 id="图像分类"><a href="#图像分类" class="headerlink" title="图像分类"></a>图像分类</h3><p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/yolo11-image-classification.gif" srcset="/img/loading.gif" lazyload alt="YOLO11 图像分类"></p>
+<p>对于图像分类，YOLO11 使用其深度神经网络从输入图像中提取高级特征，并将其分配给多个预定义类别之一。这些模型在 ImageNet 上进行训练，其中包括 1000 个预训练类。该网络通过多层卷积和池化处理图像，在增强基本特征的同时减少空间维度。网络顶部的分类头输出预测的类，使其适用于需要识别图像整体类别的任务。</p>
+<h3 id="定向目标检测-（OBB）"><a href="#定向目标检测-（OBB）" class="headerlink" title="定向目标检测 （OBB）"></a>定向目标检测 （OBB）</h3><p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/yolo11-obb-detection-1.gif" srcset="/img/loading.gif" lazyload alt="YOLO11-OBB"></p>
+<p>YOLO11 通过整合 OBB 扩展了常规对象检测，使模型能够检测和分类旋转或不规则方向的物体。这对于航空影像分析等应用程序特别有用。这些模型在 DOTAv1 上进行训练，其中包括 15 个预训练类。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/yolo11-obb-logic-1-1024x615.png" srcset="/img/loading.gif" lazyload alt="YOLO11-OBB"></p>
+<p>OBB 模型不仅输出边界框坐标，还输出旋转角度 （θ） 或四个角点。这些坐标用于创建与对象方向对齐的边界框，从而提高旋转对象的检测准确性。</p>
+<h1 id="YOLO11-架构和-YOLO11-中的新增功能"><a href="#YOLO11-架构和-YOLO11-中的新增功能" class="headerlink" title="YOLO11 架构和 YOLO11 中的新增功能"></a>YOLO11 架构和 YOLO11 中的新增功能</h1><p>YOLO11 架构是对 YOLOv8 架构的升级，具有一些新的集成和参数调整。在我们继续主要部分之前，您可以查看我们关于 <a target="_blank" rel="noopener" href="https://learnopencv.com/ultralytics-yolov8/"><strong>YOLOv8</strong></a> 的详细文章以大致了解架构。现在，如果你看一下 YOLO11 的配置文件：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-comment"># Parameters</span><br><span class="hljs-attr">nc:</span> <span class="hljs-number">80</span> <span class="hljs-comment"># number of classes</span><br><span class="hljs-attr">scales:</span> <span class="hljs-comment"># model compound scaling constants, i.e. &#x27;model=yolo11n.yaml&#x27; will call yolo11.yaml with scale &#x27;n&#x27;</span><br>  <span class="hljs-comment"># [depth, width, max_channels]</span><br>  <span class="hljs-attr">n:</span> [<span class="hljs-number">0.50</span>, <span class="hljs-number">0.25</span>, <span class="hljs-number">1024</span>] <span class="hljs-comment"># summary: 319 layers, 2624080 parameters, 2624064 gradients, 6.6 GFLOPs</span><br>  <span class="hljs-attr">s:</span> [<span class="hljs-number">0.50</span>, <span class="hljs-number">0.50</span>, <span class="hljs-number">1024</span>] <span class="hljs-comment"># summary: 319 layers, 9458752 parameters, 9458736 gradients, 21.7 GFLOPs</span><br>  <span class="hljs-attr">m:</span> [<span class="hljs-number">0.50</span>, <span class="hljs-number">1.00</span>, <span class="hljs-number">512</span>] <span class="hljs-comment"># summary: 409 layers, 20114688 parameters, 20114672 gradients, 68.5 GFLOPs</span><br>  <span class="hljs-attr">l:</span> [<span class="hljs-number">1.00</span>, <span class="hljs-number">1.00</span>, <span class="hljs-number">512</span>] <span class="hljs-comment"># summary: 631 layers, 25372160 parameters, 25372144 gradients, 87.6 GFLOPs</span><br>  <span class="hljs-attr">x:</span> [<span class="hljs-number">1.00</span>, <span class="hljs-number">1.50</span>, <span class="hljs-number">512</span>] <span class="hljs-comment"># summary: 631 layers, 56966176 parameters, 56966160 gradients, 196.0 GFLOPs</span><br> <br><span class="hljs-comment"># YOLO11n backbone</span><br><span class="hljs-attr">backbone:</span><br>  <span class="hljs-comment"># [from, repeats, module, args]</span><br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-string">Conv</span>, [<span class="hljs-number">64</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>]] <span class="hljs-comment"># 0-P1/2</span><br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-string">Conv</span>, [<span class="hljs-number">128</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>]] <span class="hljs-comment"># 1-P2/4</span><br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">2</span>, <span class="hljs-string">C3k2</span>, [<span class="hljs-number">256</span>, <span class="hljs-literal">False</span>, <span class="hljs-number">0.25</span>]]<br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-string">Conv</span>, [<span class="hljs-number">256</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>]] <span class="hljs-comment"># 3-P3/8</span><br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">2</span>, <span class="hljs-string">C3k2</span>, [<span class="hljs-number">512</span>, <span class="hljs-literal">False</span>, <span class="hljs-number">0.25</span>]]<br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-string">Conv</span>, [<span class="hljs-number">512</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>]] <span class="hljs-comment"># 5-P4/16</span><br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">2</span>, <span class="hljs-string">C3k2</span>, [<span class="hljs-number">512</span>, <span class="hljs-literal">True</span>]]<br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-string">Conv</span>, [<span class="hljs-number">1024</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>]] <span class="hljs-comment"># 7-P5/32</span><br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">2</span>, <span class="hljs-string">C3k2</span>, [<span class="hljs-number">1024</span>, <span class="hljs-literal">True</span>]]<br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-string">SPPF</span>, [<span class="hljs-number">1024</span>, <span class="hljs-number">5</span>]] <span class="hljs-comment"># 9</span><br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">2</span>, <span class="hljs-string">C2PSA</span>, [<span class="hljs-number">1024</span>]] <span class="hljs-comment"># 10</span><br> <br><span class="hljs-comment"># YOLO11n head</span><br><span class="hljs-attr">head:</span><br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-string">nn.Upsample</span>, [<span class="hljs-string">None</span>, <span class="hljs-number">2</span>, <span class="hljs-string">&quot;nearest&quot;</span>]]<br>  <span class="hljs-bullet">-</span> [[<span class="hljs-number">-1</span>, <span class="hljs-number">6</span>], <span class="hljs-number">1</span>, <span class="hljs-string">Concat</span>, [<span class="hljs-number">1</span>]] <span class="hljs-comment"># cat backbone P4</span><br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">2</span>, <span class="hljs-string">C3k2</span>, [<span class="hljs-number">512</span>, <span class="hljs-literal">False</span>]] <span class="hljs-comment"># 13</span><br> <br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-string">nn.Upsample</span>, [<span class="hljs-string">None</span>, <span class="hljs-number">2</span>, <span class="hljs-string">&quot;nearest&quot;</span>]]<br>  <span class="hljs-bullet">-</span> [[<span class="hljs-number">-1</span>, <span class="hljs-number">4</span>], <span class="hljs-number">1</span>, <span class="hljs-string">Concat</span>, [<span class="hljs-number">1</span>]] <span class="hljs-comment"># cat backbone P3</span><br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">2</span>, <span class="hljs-string">C3k2</span>, [<span class="hljs-number">256</span>, <span class="hljs-literal">False</span>]] <span class="hljs-comment"># 16 (P3/8-small)</span><br> <br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-string">Conv</span>, [<span class="hljs-number">256</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>]]<br>  <span class="hljs-bullet">-</span> [[<span class="hljs-number">-1</span>, <span class="hljs-number">13</span>], <span class="hljs-number">1</span>, <span class="hljs-string">Concat</span>, [<span class="hljs-number">1</span>]] <span class="hljs-comment"># cat head P4</span><br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">2</span>, <span class="hljs-string">C3k2</span>, [<span class="hljs-number">512</span>, <span class="hljs-literal">False</span>]] <span class="hljs-comment"># 19 (P4/16-medium)</span><br> <br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-string">Conv</span>, [<span class="hljs-number">512</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>]]<br>  <span class="hljs-bullet">-</span> [[<span class="hljs-number">-1</span>, <span class="hljs-number">10</span>], <span class="hljs-number">1</span>, <span class="hljs-string">Concat</span>, [<span class="hljs-number">1</span>]] <span class="hljs-comment"># cat head P5</span><br>  <span class="hljs-bullet">-</span> [<span class="hljs-number">-1</span>, <span class="hljs-number">2</span>, <span class="hljs-string">C3k2</span>, [<span class="hljs-number">1024</span>, <span class="hljs-literal">True</span>]] <span class="hljs-comment"># 22 (P5/32-large)</span><br> <br>  <span class="hljs-bullet">-</span> [[<span class="hljs-number">16</span>, <span class="hljs-number">19</span>, <span class="hljs-number">22</span>], <span class="hljs-number">1</span>, <span class="hljs-string">Detect</span>, [<span class="hljs-string">nc</span>]] <span class="hljs-comment"># Detect(P3, P4, P5)</span><br></code></pre></td></tr></table></figure>
+
+<p>架构级别的变化：</p>
+<h3 id="1-骨干"><a href="#1-骨干" class="headerlink" title="1. 骨干"></a><strong>1. 骨干</strong></h3><p>主干是模型的一部分，用于从多个比例的输入图像中提取特征。它通常涉及堆叠卷积层和块以创建不同分辨率的特征图。</p>
+<p><strong>卷积层：</strong>YOLO11 具有类似的结构，带有初始卷积层来对图像进行下采样：</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs gauss">- [<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-built_in">Conv</span>, [<span class="hljs-number">64</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>]] <span class="hljs-meta"># 0-P1/2</span><br>- [<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-built_in">Conv</span>, [<span class="hljs-number">128</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>]] <span class="hljs-meta"># 1-P2/4</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>C3k2 区块：</strong>YOLO11 引入了 <strong>C3k2 块，而不是 C2f</strong>，它在计算方面效率更高。此块是 <strong>CSP 瓶颈</strong>的自定义实现，它使用两个卷积，而不是一个大型卷积（如 YOLOv8 中所示）。</p>
+<ul>
+<li><strong>CSP （Cross Stage Partial）：</strong>CSP 网络拆分特征图并通过瓶颈层处理一部分，同时将另一部分与瓶颈的输出合并。这减少了计算负载并改善了特征表示。</li>
+</ul>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs inform7">- <span class="hljs-comment">[-1, 2, C3k2, <span class="hljs-comment">[256, False, 0.25]</span>]</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>C3k2 块还使用较小的内核大小（由 k2 表示），使其更快，同时保持性能。</li>
+</ul>
+<p><strong>SPPF 和 C2PSA：</strong>YOLO11 保留了 SPPF 块，但在 SPPF 之后添加了一个新的 <strong>C2PSA</strong> 块：</p>
+</li>
+</ul>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs inform7">- <span class="hljs-comment">[-1, 1, SPPF, <span class="hljs-comment">[1024, 5]</span>]</span><br>- <span class="hljs-comment">[-1, 2, C2PSA, <span class="hljs-comment">[1024]</span></span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>C2PSA （Cross Stage Partial with Spatial Attention）</strong> 模块增强了特征图中的空间注意力，从而提高了模型对图像重要部分的关注。这使模型能够通过在空间上池化特征来更有效地关注特定的感兴趣区域。</li>
+</ul>
+<h3 id="2-neck"><a href="#2-neck" class="headerlink" title="2. neck"></a><strong>2. neck</strong></h3><p>neck 负责聚合来自不同分辨率的特征，并将它们传递给头部进行预测。它通常涉及来自不同级别的特征图的上采样和连接。</p>
+<p><strong>C3k2 区块：</strong>YOLO11 用 <strong>C3k2</strong> 块替换了颈部的 C2f 块。如前所述，C3k2 是一个更快、更高效的区块。例如，在上采样和串联后，YOLO11 中的 neck 如下所示：</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs autoit">	<br>- [<span class="hljs-number">-1</span>, <span class="hljs-number">2</span>, C3k2, [<span class="hljs-number">512</span>, <span class="hljs-literal">False</span>]] <span class="hljs-meta"># P4/16-medium</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>此更改提高了要素聚合过程的速度和性能。</li>
+<li><strong>注意力机制：</strong>YOLO11 通过 <strong>C2PSA</strong> 更侧重于空间注意力，这有助于模型专注于图像中的关键区域，以便更好地检测。这在 YOLOv8 中是缺失的，这使得 YOLO11 在检测较小或被遮挡的对象时可能更准确。</li>
+</ul>
+<hr>
+<h3 id="3-head"><a href="#3-head" class="headerlink" title="3. head"></a><strong>3. head</strong></h3><p>head 是模型中负责生成最终预测的部分。在对象检测中，这通常意味着生成边界框并对这些框内的对象进行分类。</p>
+<p><strong>C3k2 区块：</strong>与颈部类似，YOLO11 取代了头部的 <strong>C2f</strong> 块。</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs autoit">	<br>- [<span class="hljs-number">-1</span>, <span class="hljs-number">2</span>, C3k2, [<span class="hljs-number">512</span>, <span class="hljs-literal">False</span>]] <span class="hljs-meta"># P4/16-medium</span><br><br></code></pre></td></tr></table></figure>
+
+<p><strong>检测层：</strong>最终的 Detect 层与 YOLOv8 中的层相同：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs lua">- <span class="hljs-string">[[16, 19, 22], 1, Detect, [nc]]</span> # Detect(P3, P4, P5)<br><br></code></pre></td></tr></table></figure>
+
+<p>使用 C3k2 块使模型在推理方面更快，在参数方面更高效。<br>那么，让我们看看新块（层）在代码中的样子：</p>
+<hr>
+<p>那么，让我们看看新块（层）在代码中的样子：</p>
+<ol>
+<li><strong>C3k2 区块（从</strong> <strong>blocks.py</strong> 开始<strong>）：</strong><ul>
+<li><strong>C3k2</strong> 是 <strong>CSP 瓶颈</strong>的更快、更高效的变体。它使用两个卷积而不是一个大型卷积，从而加快了特征提取速度。</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">C3k2</span>(<span class="hljs-title class_ inherited__">C2f</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, c1, c2, n=<span class="hljs-number">1</span>, c3k=<span class="hljs-literal">False</span>, e=<span class="hljs-number">0.5</span>, g=<span class="hljs-number">1</span>, shortcut=<span class="hljs-literal">True</span></span>):<br>        <span class="hljs-built_in">super</span>().__init__(c1, c2, n, shortcut, g, e)<br>        <span class="hljs-variable language_">self</span>.m = nn.ModuleList(<br>            C3k(<span class="hljs-variable language_">self</span>.c, <span class="hljs-variable language_">self</span>.c, <span class="hljs-number">2</span>, shortcut, g) <span class="hljs-keyword">if</span> c3k <span class="hljs-keyword">else</span> Bottleneck(<span class="hljs-variable language_">self</span>.c, <span class="hljs-variable language_">self</span>.c, shortcut, g) <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n)<br>        )<br></code></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><strong>C3k 块（从</strong> <strong>blocks.py</strong> 开始<strong>）</strong>：</li>
+</ol>
+<ul>
+<li><strong>C3k</strong> 是一个更灵活的瓶颈模块，允许自定义内核大小。这对于提取图像中更详细的特征非常有用。</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros">class C3k(C3):<br>    def __init__(self, c1, c2, <span class="hljs-attribute">n</span>=1, <span class="hljs-attribute">shortcut</span>=<span class="hljs-literal">True</span>, <span class="hljs-attribute">g</span>=1, <span class="hljs-attribute">e</span>=0.5, <span class="hljs-attribute">k</span>=3):<br>        super().__init__(c1, c2, n, shortcut, g, e)<br>        c_ = int(c2 * e)  # hidden channels<br>        self.m = nn.Sequential(*(Bottleneck(c_, c_, shortcut, g, k=(k, k), <span class="hljs-attribute">e</span>=1.0) <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> range(n)))<br></code></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><strong>C2PSA 块（从</strong> <strong>blocks.py</strong> 年起<strong>）：</strong></li>
+</ol>
+<ul>
+<li><strong>C2PSA</strong> （Cross Stage Partial with Spatial Attention） 增强了模型的空间注意力能力。此模块增加了对特征图的关注，帮助模型专注于图像的重要区域。</li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs ruby"><span class="hljs-keyword">class</span> <span class="hljs-title class_">C2</span>PSA(nn.<span class="hljs-title class_">Module</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params"><span class="hljs-variable language_">self</span>, c1, c2, e=<span class="hljs-number">0.5</span></span>):<br>        <span class="hljs-variable language_">super</span>().__init__()<br>        c_ = int(c2 * e)<br>        <span class="hljs-variable language_">self</span>.cv1 = <span class="hljs-title class_">Conv</span>(c1, c_, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>)<br>        <span class="hljs-variable language_">self</span>.cv2 = <span class="hljs-title class_">Conv</span>(c1, c_, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>)<br>        <span class="hljs-variable language_">self</span>.cv3 = <span class="hljs-title class_">Conv</span>(<span class="hljs-number">2</span> * c_, c2, <span class="hljs-number">1</span>)<br>     <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params"><span class="hljs-variable language_">self</span>, x</span>):<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.cv3(torch.cat((<span class="hljs-variable language_">self</span>.cv1(x), <span class="hljs-variable language_">self</span>.cv2(x)), <span class="hljs-number">1</span>))<br></code></pre></td></tr></table></figure>
+
+<h1 id="YOLO11-pipeline"><a href="#YOLO11-pipeline" class="headerlink" title="YOLO11 pipeline"></a>YOLO11 pipeline</h1><p>在 <a target="_blank" rel="noopener" href="https://github.com/ultralytics/ultralytics"><strong>ultralytics</strong></a> GitHub 仓库中，我们将主要关注：</p>
+<ol>
+<li><strong>nn&#x2F;modules&#x2F;</strong> 中的模块<ul>
+<li><strong>block.py</strong></li>
+<li><strong>conv.py</strong></li>
+<li><strong>head.py</strong></li>
+<li><strong>transformer.py</strong></li>
+<li><strong>utils.py</strong></li>
+</ul>
+</li>
+<li><strong>nn&#x2F;tasks.py</strong> 文件</li>
+</ol>
+<h3 id="1-代码库概述"><a href="#1-代码库概述" class="headerlink" title="1. 代码库概述"></a>1. 代码库概述</h3><p>代码库被构建为多个模块，这些模块定义了 YOLO11 模型中使用的各种神经网络组件。这些组件在 nn&#x2F;modules&#x2F; 目录中被组织到不同的文件中：</p>
+<ul>
+<li><strong>block.py</strong>：定义模型中使用的各种构建块（模块），例如瓶颈、CSP 模块和注意力机制。</li>
+<li><strong>conv.py</strong>：包含卷积模块，包括标准卷积、深度卷积和其他变体。</li>
+<li><strong>head.py</strong>：实现负责生成最终预测（例如，边界框、类概率）的模型头。</li>
+<li><strong>transformer.py</strong>：包括基于 transformer 的模块，用于注意力机制和高级特征提取。</li>
+<li><strong>utils.py</strong>：提供跨模块使用的实用程序函数和帮助程序类。</li>
+</ul>
+<p>nn&#x2F;tasks.py 文件定义了不同的特定于任务的模型（例如，检测、分割、分类），这些模型将这些模块组合成完整的架构。</p>
+<h3 id="2-nn-modules-中的模块"><a href="#2-nn-modules-中的模块" class="headerlink" title="2. nn&#x2F;modules&#x2F; 中的模块"></a>2. nn&#x2F;modules&#x2F; 中的模块</h3><p>如前所述，YOLO11 构建在 YOLOv8 代码库之上。因此，我们将主要关注更新的脚本：<strong>block.py</strong>、<strong>conv.py</strong> 和 <strong>head.py</strong> 在这里。</p>
+<h4 id="block-py"><a href="#block-py" class="headerlink" title="block.py"></a><strong>block.py</strong></h4><p>此文件定义 YOLO11 模型中使用的各种构建块。这些块是构成神经网络层的基本组件。</p>
+<h5 id="关键组件："><a href="#关键组件：" class="headerlink" title="关键组件："></a><strong>关键组件：</strong></h5><ol>
+<li>瓶颈模块：<ul>
+<li><strong>Bottleneck</strong>：具有可选快捷方式连接的标准瓶颈模块。</li>
+<li><strong>Res</strong>：使用一系列卷积和身份快捷方式的残差块。</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Bottleneck</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, c1, c2, shortcut=<span class="hljs-literal">True</span>, g=<span class="hljs-number">1</span>, e=<span class="hljs-number">0.5</span></span>):<br>        <span class="hljs-built_in">super</span>().__init__()<br>        c_ = <span class="hljs-built_in">int</span>(c2 * e)<br>        <span class="hljs-variable language_">self</span>.cv1 = Conv(c1, c_, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>)<br>        <span class="hljs-variable language_">self</span>.cv2 = Conv(c_, c2, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>, g=g)<br>        <span class="hljs-variable language_">self</span>.add = shortcut <span class="hljs-keyword">and</span> c1 == c2<br> <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-keyword">return</span> x + <span class="hljs-variable language_">self</span>.cv2(<span class="hljs-variable language_">self</span>.cv1(x)) <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.add <span class="hljs-keyword">else</span> <span class="hljs-variable language_">self</span>.cv2(<span class="hljs-variable language_">self</span>.cv1(x))<br><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>Bottleneck 类实现了一个 bottleneck 模块，该模块减少了通道的数量（降维），然后再次扩展它们。</li>
+<li><strong>组件</strong>：<ul>
+<li>self.cv1：一个 1×1 卷积，用于减少通道数。</li>
+<li>self.cv2：一个 3×3 卷积，用于将通道数增加回原始通道数。</li>
+<li>self.add：一个布尔值，指示是否添加快捷方式连接。</li>
+</ul>
+</li>
+<li><strong>Forward Pass</strong>：输入 x 通过 cv1 和 cv2 传递。如果 self.add 为 True，则原始输入 x 将添加到输出（残差连接）。</li>
+</ul>
+<ol start="2">
+<li>CSP （Cross Stage Partial） 模块：</li>
+</ol>
+<ul>
+<li><strong>BottleneckCSP：</strong>瓶颈模块的 CSP 版本。</li>
+<li><strong>CSPBlock</strong>：具有多个瓶颈层的更复杂的 CSP 模块。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">BottleneckCSP</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, c1, c2, n=<span class="hljs-number">1</span>, shortcut=<span class="hljs-literal">True</span>, g=<span class="hljs-number">1</span>, e=<span class="hljs-number">0.5</span></span>):<br>        <span class="hljs-built_in">super</span>().__init__()<br>        c_ = <span class="hljs-built_in">int</span>(c2 * e)<br>        <span class="hljs-variable language_">self</span>.cv1 = Conv(c1, c_, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>)<br>        <span class="hljs-variable language_">self</span>.cv2 = nn.Sequential(<br>            *[Bottleneck(c_, c_, shortcut, g, e=<span class="hljs-number">1.0</span>) <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n)]<br>        )<br>        <span class="hljs-variable language_">self</span>.cv3 = Conv(<span class="hljs-number">2</span> * c_, c2, <span class="hljs-number">1</span>)<br>        <span class="hljs-variable language_">self</span>.add = c1 == c2<br> <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):<br>        y1 = <span class="hljs-variable language_">self</span>.cv2(<span class="hljs-variable language_">self</span>.cv1(x))<br>        y2 = x <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.add <span class="hljs-keyword">else</span> <span class="hljs-literal">None</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.cv3(torch.cat((y1, y2), <span class="hljs-number">1</span>)) <span class="hljs-keyword">if</span> y2 <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">else</span> <span class="hljs-variable language_">self</span>.cv3(y1)<br><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>CSPBottleneck 模块将特征图分为两部分。一部分通过一系列瓶颈层，另一部分直接连接到输出，从而降低了计算成本并增强了梯度流。</li>
+<li><strong>组件</strong>：<ul>
+<li>self.cv1：减少通道数。</li>
+<li>self.cv2：瓶颈层序列。</li>
+<li>self.cv3：合并功能并调整通道数。</li>
+<li>self.add：确定是否添加快捷方式连接。</li>
+</ul>
+</li>
+</ul>
+<ol start="3">
+<li>其他模块：</li>
+</ol>
+<ul>
+<li><strong>SPPF：</strong>Spatial Pyramid Pooling Fast 模块，可在多个比例下执行池化。</li>
+<li><strong>Concat</strong>：沿指定维度连接多个 Tensor。</li>
+</ul>
+<figure class="highlight gml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs gml">class SPPF(nn.Module):<br>    def __init__(<span class="hljs-symbol">self</span>, c1, c2, k=<span class="hljs-number">5</span>):<br>        super().__init__()<br>        c_ = c1 <span class="hljs-comment">// 2</span><br>        <span class="hljs-symbol">self</span>.cv1 = Conv(c1, c_, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>)<br>        <span class="hljs-symbol">self</span>.cv2 = Conv(c_ * <span class="hljs-number">4</span>, c2, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>)<br>        <span class="hljs-symbol">self</span>.m = nn.MaxPool2d(kernel_size=k, stride=<span class="hljs-number">1</span>, padding=k <span class="hljs-comment">// 2)</span><br> <br>    def forward(<span class="hljs-symbol">self</span>, <span class="hljs-variable language_">x</span>):<br>        <span class="hljs-variable language_">x</span> = <span class="hljs-symbol">self</span>.cv1(<span class="hljs-variable language_">x</span>)<br>        y1 = <span class="hljs-symbol">self</span>.m(<span class="hljs-variable language_">x</span>)<br>        y2 = <span class="hljs-symbol">self</span>.m(y1)<br>        y3 = <span class="hljs-symbol">self</span>.m(y2)<br>        <span class="hljs-keyword">return</span> <span class="hljs-symbol">self</span>.cv2(torch.cat([<span class="hljs-variable language_">x</span>, y1, y2, y3], <span class="hljs-number">1</span>))<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>SPPF 模块在不同比例下执行最大池化，并将结果连接起来以捕获多个空间比例的要素。</li>
+<li><strong>组件</strong>：<ul>
+<li>self.cv1：减少通道数。</li>
+<li>self.cv2：调整拼接后的 Channel 数。</li>
+<li>self.m：最大池化层数。</li>
+</ul>
+</li>
+<li><strong>Forward Pass</strong>：输入 x 通过 cv1，然后通过三个连续的最大池化层（y1、y2、y3）。结果被连接并通过 cv2 传递。</li>
+</ul>
+<h5 id="了解概念："><a href="#了解概念：" class="headerlink" title="了解概念："></a><strong>了解概念：</strong></h5><ul>
+<li><strong>瓶颈层</strong>：用于通过在昂贵的操作之前减少通道数并在之后增加通道数来降低计算复杂性。</li>
+<li><strong>残差连接</strong>：通过缓解梯度消失问题来帮助训练更深的网络。</li>
+<li><strong>CSP 架构</strong>：将特征图分为两部分;一部分发生转换，而另一部分保持不变，从而提高学习能力并减少计算。</li>
+</ul>
+<h4 id="conv-py"><a href="#conv-py" class="headerlink" title="conv.py"></a><strong>conv.py</strong></h4><p>此文件包含各种卷积模块，包括标准卷积和专用卷积。</p>
+<h5 id="关键组件：-1"><a href="#关键组件：-1" class="headerlink" title="关键组件："></a><strong>关键组件：</strong></h5><p><strong>标准卷积模块 （Conv）：</strong></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs routeros">class Conv(nn.Module):<br>    default_act = nn.SiLU()  #<span class="hljs-built_in"> default </span>activation<br> <br>    def __init__(self, c1, c2, <span class="hljs-attribute">k</span>=1, <span class="hljs-attribute">s</span>=1, <span class="hljs-attribute">p</span>=None, <span class="hljs-attribute">g</span>=1, <span class="hljs-attribute">d</span>=1, <span class="hljs-attribute">act</span>=<span class="hljs-literal">True</span>):<br>        super().__init__()<br>        self.conv = nn.Conv2d(c1, c2, k, s, autopad(k, p, d), <span class="hljs-attribute">groups</span>=g, <span class="hljs-attribute">dilation</span>=d, <span class="hljs-attribute">bias</span>=<span class="hljs-literal">False</span>)<br>        self.bn = nn.BatchNorm2d(c2)<br>        self.act = self.default_act <span class="hljs-keyword">if</span> act is <span class="hljs-literal">True</span> <span class="hljs-keyword">else</span> act <span class="hljs-keyword">if</span> isinstance(act, nn.Module) <span class="hljs-keyword">else</span> nn.Identity()<br> <br>    def forward(self, x):<br>        return self.act(self.bn(self.conv(x)))<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>实现具有批量规范化和激活的标准卷积层。</li>
+<li><strong>组件</strong>：<ul>
+<li>self.conv：卷积层。</li>
+<li>self.bn：批量规范化。</li>
+<li>self.act：激活函数（默认为 nn.SiLU（））的</li>
+</ul>
+</li>
+<li><strong>Forward Pass</strong>：应用卷积，然后进行批量规范化和激活。</li>
+</ul>
+<p><strong>深度卷积 （DWConv）：</strong></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs routeros">class DWConv(Conv):<br>    def __init__(self, c1, c2, <span class="hljs-attribute">k</span>=1, <span class="hljs-attribute">s</span>=1, <span class="hljs-attribute">d</span>=1, <span class="hljs-attribute">act</span>=<span class="hljs-literal">True</span>):<br>        super().__init__(c1, c2, k, s, <span class="hljs-attribute">g</span>=math.gcd(c1, c2), <span class="hljs-attribute">d</span>=d, <span class="hljs-attribute">act</span>=act)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>执行深度卷积，其中每个输入通道单独卷积。</li>
+<li><strong>组件</strong>：<ul>
+<li>继承自 Conv。</li>
+<li>将 groups 参数设置为 c1 和 c2 的最大公约数，从而有效地对每个通道的卷积进行分组。</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>其他卷积模块：<ul>
+<li><strong>Conv2</strong>：RepConv 的简化版本，用于模型压缩和加速。</li>
+<li><strong>GhostConv</strong>：实现 GhostNet 的 ghost 模块，减少特性图中的冗余。</li>
+<li><strong>RepConv</strong>：可重新参数化的卷积层，可以从训练模式转换为推理模式。</li>
+</ul>
+</li>
+</ol>
+<h5 id="了解概念：-1"><a href="#了解概念：-1" class="headerlink" title="了解概念："></a><strong>了解概念：</strong></h5><ul>
+<li><strong>自动填充 （<strong><strong>autopad</strong></strong>）：</strong>自动计算保持输出尺寸一致所需的填充。</li>
+<li><strong>深度卷积和点卷积</strong>：用于 MobileNet 架构，以减少计算，同时保持准确性。</li>
+<li><strong>重新参数化</strong>：RepConv 等技术通过合并层来实现高效的训练和更快的推理。</li>
+</ul>
+<h4 id="head-py"><a href="#head-py" class="headerlink" title="head.py"></a><strong>head.py</strong></h4><p>此文件实现了负责生成模型最终预测的 head 模块。</p>
+<h5 id="关键组件：-2"><a href="#关键组件：-2" class="headerlink" title="关键组件："></a><strong>关键组件：</strong></h5><p><strong>检测头 （Detect）：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Detect</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, nc=<span class="hljs-number">80</span>, ch=(<span class="hljs-params"></span>)</span>):<br>        <span class="hljs-built_in">super</span>().__init__()<br>        <span class="hljs-variable language_">self</span>.nc = nc  <span class="hljs-comment"># number of classes</span><br>        <span class="hljs-variable language_">self</span>.nl = <span class="hljs-built_in">len</span>(ch)  <span class="hljs-comment"># number of detection layers</span><br>        <span class="hljs-variable language_">self</span>.reg_max = <span class="hljs-number">16</span>  <span class="hljs-comment"># DFL channels</span><br>        <span class="hljs-variable language_">self</span>.no = nc + <span class="hljs-variable language_">self</span>.reg_max * <span class="hljs-number">4</span>  <span class="hljs-comment"># number of outputs per anchor</span><br>        <span class="hljs-variable language_">self</span>.stride = torch.zeros(<span class="hljs-variable language_">self</span>.nl)  <span class="hljs-comment"># strides computed during build</span><br> <br>        <span class="hljs-comment"># Define layers</span><br>        <span class="hljs-variable language_">self</span>.cv2 = nn.ModuleList(<br>            nn.Sequential(Conv(x, c2, <span class="hljs-number">3</span>), Conv(c2, c2, <span class="hljs-number">3</span>), nn.Conv2d(c2, <span class="hljs-number">4</span> * <span class="hljs-variable language_">self</span>.reg_max, <span class="hljs-number">1</span>)) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> ch<br>        )<br>        <span class="hljs-variable language_">self</span>.cv3 = nn.ModuleList(<br>            nn.Sequential(<br>                nn.Sequential(DWConv(x, x, <span class="hljs-number">3</span>), Conv(x, c3, <span class="hljs-number">1</span>)),<br>                nn.Sequential(DWConv(c3, c3, <span class="hljs-number">3</span>), Conv(c3, c3, <span class="hljs-number">1</span>)),<br>                nn.Conv2d(c3, <span class="hljs-variable language_">self</span>.nc, <span class="hljs-number">1</span>),<br>            )<br>            <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> ch<br>        )<br>        <span class="hljs-variable language_">self</span>.dfl = DFL(<span class="hljs-variable language_">self</span>.reg_max) <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.reg_max &gt; <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> nn.Identity()<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>Detect 类定义输出边界框坐标和类概率的检测头。</li>
+<li><strong>组件</strong>：<ul>
+<li>self.cv2：用于边界框回归的卷积层。</li>
+<li>self.cv3：用于分类的卷积层。</li>
+<li>self.dfl：用于边界框细化的 Distribution Focal Loss 模块。</li>
+</ul>
+</li>
+<li><strong>Forward Pass</strong>：处理输入特征映射并输出边界框和类的预测。</li>
+</ul>
+<p><strong>分割 （<strong><strong>Segment</strong></strong>）：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Segment</span>(<span class="hljs-title class_ inherited__">Detect</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, nc=<span class="hljs-number">80</span>, nm=<span class="hljs-number">32</span>, npr=<span class="hljs-number">256</span>, ch=(<span class="hljs-params"></span>)</span>):<br>        <span class="hljs-built_in">super</span>().__init__(nc, ch)<br>        <span class="hljs-variable language_">self</span>.nm = nm  <span class="hljs-comment"># number of masks</span><br>        <span class="hljs-variable language_">self</span>.npr = npr  <span class="hljs-comment"># number of prototypes</span><br>        <span class="hljs-variable language_">self</span>.proto = Proto(ch[<span class="hljs-number">0</span>], <span class="hljs-variable language_">self</span>.npr, <span class="hljs-variable language_">self</span>.nm)  <span class="hljs-comment"># protos</span><br> <br>        c4 = <span class="hljs-built_in">max</span>(ch[<span class="hljs-number">0</span>] // <span class="hljs-number">4</span>, <span class="hljs-variable language_">self</span>.nm)<br>        <span class="hljs-variable language_">self</span>.cv4 = nn.ModuleList(nn.Sequential(Conv(x, c4, <span class="hljs-number">3</span>), Conv(c4, c4, <span class="hljs-number">3</span>), nn.Conv2d(c4, <span class="hljs-variable language_">self</span>.nm, <span class="hljs-number">1</span>)) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> ch)<br><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>扩展 Detect 类以包含分段功能。</li>
+<li><strong>组件</strong>：<ul>
+<li>self.proto：生成掩码原型。</li>
+<li>self.cv4：掩码系数的卷积层。</li>
+</ul>
+</li>
+<li><strong>Forward Pass</strong>：输出边界框、类概率和掩码系数。</li>
+</ul>
+<p><strong>姿势估计头部 （Pose）：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Pose</span>(<span class="hljs-title class_ inherited__">Detect</span>):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, nc=<span class="hljs-number">80</span>, kpt_shape=(<span class="hljs-params"><span class="hljs-number">17</span>, <span class="hljs-number">3</span></span>), ch=(<span class="hljs-params"></span>)</span>):<br>        <span class="hljs-built_in">super</span>().__init__(nc, ch)<br>        <span class="hljs-variable language_">self</span>.kpt_shape = kpt_shape  <span class="hljs-comment"># number of keypoints, number of dimensions</span><br>        <span class="hljs-variable language_">self</span>.nk = kpt_shape[<span class="hljs-number">0</span>] * kpt_shape[<span class="hljs-number">1</span>]  <span class="hljs-comment"># total number of keypoint outputs</span><br> <br>        c4 = <span class="hljs-built_in">max</span>(ch[<span class="hljs-number">0</span>] // <span class="hljs-number">4</span>, <span class="hljs-variable language_">self</span>.nk)<br>        <span class="hljs-variable language_">self</span>.cv4 = nn.ModuleList(nn.Sequential(Conv(x, c4, <span class="hljs-number">3</span>), Conv(c4, c4, <span class="hljs-number">3</span>), nn.Conv2d(c4, <span class="hljs-variable language_">self</span>.nk, <span class="hljs-number">1</span>)) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> ch)<br><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>扩展了 Detect 类，用于人体姿势估计任务。</li>
+<li><strong>组件</strong>：<ul>
+<li>self.kpt_shape：关键点的形状（关键点的数量、每个关键点的维度）。</li>
+<li>self.cv4：用于关键点回归的卷积层。</li>
+</ul>
+</li>
+<li><strong>Forward Pass</strong>：输出边界框、类概率和关键点坐标。</li>
+</ul>
+<h5 id="了解概念：-2"><a href="#了解概念：-2" class="headerlink" title="了解概念："></a><strong>了解概念：</strong></h5><ul>
+<li><strong>模块化</strong>：通过扩展 Detect 类，我们可以为不同的任务创建专门的 head，同时重用通用功能。</li>
+<li><strong>无锚点检测</strong>：现代对象检测器通常使用无锚点方法，直接预测边界框。</li>
+<li><strong>关键点估计</strong>：在姿势估计中，模型预测表示关节或地标的关键点。</li>
+</ul>
+<h3 id="3-nn-tasks-py-文件"><a href="#3-nn-tasks-py-文件" class="headerlink" title="3. nn&#x2F;tasks.py 文件"></a>3. <strong>nn&#x2F;tasks.py</strong> 文件</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># Ultralytics YOLO &lt;img draggable=&quot;false&quot; role=&quot;img&quot; class=&quot;emoji&quot; alt=&quot;🚀&quot; src=&quot;https://s.w.org/images/core/emoji/15.0.3/svg/1f680.svg&quot;&gt;, AGPL-3.0 license</span><br> <br><span class="hljs-keyword">import</span> contextlib<br><span class="hljs-keyword">import</span> pickle<br><span class="hljs-keyword">import</span> types<br><span class="hljs-keyword">from</span> copy <span class="hljs-keyword">import</span> deepcopy<br><span class="hljs-keyword">from</span> pathlib <span class="hljs-keyword">import</span> Path<br> <br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br> <br><span class="hljs-comment"># Other imports...</span><br> <br><span class="hljs-keyword">class</span> <span class="hljs-title class_">BaseModel</span>(nn.Module):<br>    <span class="hljs-string">&quot;&quot;&quot;The BaseModel class serves as a base class for all the models in the Ultralytics YOLO family.&quot;&quot;&quot;</span><br> <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x, *args, **kwargs</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;Handles both training and inference, returns predictions or loss.&quot;&quot;&quot;</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(x, <span class="hljs-built_in">dict</span>):<br>            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.loss(x, *args, **kwargs)  <span class="hljs-comment"># Training: return loss</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.predict(x, *args, **kwargs)  <span class="hljs-comment"># Inference: return predictions</span><br> <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">predict</span>(<span class="hljs-params">self, x, profile=<span class="hljs-literal">False</span>, visualize=<span class="hljs-literal">False</span>, augment=<span class="hljs-literal">False</span>, embed=<span class="hljs-literal">None</span></span>):<br>        <span class="hljs-string">&quot;&quot;&quot;Run a forward pass through the network for inference.&quot;&quot;&quot;</span><br>        <span class="hljs-keyword">if</span> augment:<br>            <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>._predict_augment(x)<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>._predict_once(x, profile, visualize, embed)<br>     <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">fuse</span>(<span class="hljs-params">self, verbose=<span class="hljs-literal">True</span></span>):<br>        <span class="hljs-string">&quot;&quot;&quot;Fuses Conv and BatchNorm layers for efficiency during inference.&quot;&quot;&quot;</span><br>        <span class="hljs-keyword">for</span> m <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>.model.modules():<br>            <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(m, (Conv, Conv2, DWConv)) <span class="hljs-keyword">and</span> <span class="hljs-built_in">hasattr</span>(m, <span class="hljs-string">&quot;bn&quot;</span>):<br>                m.conv = fuse_conv_and_bn(m.conv, m.bn)<br>                <span class="hljs-built_in">delattr</span>(m, <span class="hljs-string">&quot;bn&quot;</span>)<br>                m.forward = m.forward_fuse  <span class="hljs-comment"># Use the fused forward</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span><br>     <br>    <span class="hljs-comment"># More BaseModel methods...</span><br> <br><span class="hljs-keyword">class</span> <span class="hljs-title class_">DetectionModel</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;YOLOv8 detection model.&quot;&quot;&quot;</span><br> <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, cfg=<span class="hljs-string">&quot;yolov8n.yaml&quot;</span>, ch=<span class="hljs-number">3</span>, nc=<span class="hljs-literal">None</span>, verbose=<span class="hljs-literal">True</span></span>):<br>        <span class="hljs-string">&quot;&quot;&quot;Initialize the YOLOv8 detection model with config and parameters.&quot;&quot;&quot;</span><br>        <span class="hljs-built_in">super</span>().__init__()<br>        <span class="hljs-variable language_">self</span>.yaml = cfg <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(cfg, <span class="hljs-built_in">dict</span>) <span class="hljs-keyword">else</span> yaml_model_load(cfg)<br>        <span class="hljs-variable language_">self</span>.model, <span class="hljs-variable language_">self</span>.save = parse_model(deepcopy(<span class="hljs-variable language_">self</span>.yaml), ch=ch, verbose=verbose)<br>        <span class="hljs-variable language_">self</span>.names = &#123;i: <span class="hljs-string">f&quot;<span class="hljs-subst">&#123;i&#125;</span>&quot;</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-variable language_">self</span>.yaml[<span class="hljs-string">&quot;nc&quot;</span>])&#125;  <span class="hljs-comment"># Class names</span><br>        <span class="hljs-variable language_">self</span>.inplace = <span class="hljs-variable language_">self</span>.yaml.get(<span class="hljs-string">&quot;inplace&quot;</span>, <span class="hljs-literal">True</span>)<br> <br>        <span class="hljs-comment"># Initialize strides</span><br>        m = <span class="hljs-variable language_">self</span>.model[-<span class="hljs-number">1</span>]  <span class="hljs-comment"># Detect() layer</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(m, Detect):<br>            s = <span class="hljs-number">256</span>  <span class="hljs-comment"># Max stride</span><br>            m.stride = torch.tensor([s / x.shape[-<span class="hljs-number">2</span>] <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>._predict_once(torch.zeros(<span class="hljs-number">1</span>, ch, s, s))])<br>            <span class="hljs-variable language_">self</span>.stride = m.stride<br>            m.bias_init()  <span class="hljs-comment"># Initialize biases</span><br> <br>    <span class="hljs-comment"># More DetectionModel methods...</span><br> <br><span class="hljs-keyword">class</span> <span class="hljs-title class_">SegmentationModel</span>(<span class="hljs-title class_ inherited__">DetectionModel</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;YOLOv8 segmentation model.&quot;&quot;&quot;</span><br> <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, cfg=<span class="hljs-string">&quot;yolov8n-seg.yaml&quot;</span>, ch=<span class="hljs-number">3</span>, nc=<span class="hljs-literal">None</span>, verbose=<span class="hljs-literal">True</span></span>):<br>        <span class="hljs-string">&quot;&quot;&quot;Initialize YOLOv8 segmentation model with given config and parameters.&quot;&quot;&quot;</span><br>        <span class="hljs-built_in">super</span>().__init__(cfg=cfg, ch=ch, nc=nc, verbose=verbose)<br> <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">init_criterion</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;Initialize the loss criterion for the SegmentationModel.&quot;&quot;&quot;</span><br>        <span class="hljs-keyword">return</span> v8SegmentationLoss(<span class="hljs-variable language_">self</span>)<br> <br><span class="hljs-keyword">class</span> <span class="hljs-title class_">PoseModel</span>(<span class="hljs-title class_ inherited__">DetectionModel</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;YOLOv8 pose model.&quot;&quot;&quot;</span><br> <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, cfg=<span class="hljs-string">&quot;yolov8n-pose.yaml&quot;</span>, ch=<span class="hljs-number">3</span>, nc=<span class="hljs-literal">None</span>, data_kpt_shape=(<span class="hljs-params"><span class="hljs-literal">None</span>, <span class="hljs-literal">None</span></span>), verbose=<span class="hljs-literal">True</span></span>):<br>        <span class="hljs-string">&quot;&quot;&quot;Initialize YOLOv8 Pose model.&quot;&quot;&quot;</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">isinstance</span>(cfg, <span class="hljs-built_in">dict</span>):<br>            cfg = yaml_model_load(cfg)<br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">list</span>(data_kpt_shape) != <span class="hljs-built_in">list</span>(cfg[<span class="hljs-string">&quot;kpt_shape&quot;</span>]):<br>            cfg[<span class="hljs-string">&quot;kpt_shape&quot;</span>] = data_kpt_shape<br>        <span class="hljs-built_in">super</span>().__init__(cfg=cfg, ch=ch, nc=nc, verbose=verbose)<br> <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">init_criterion</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;Initialize the loss criterion for the PoseModel.&quot;&quot;&quot;</span><br>        <span class="hljs-keyword">return</span> v8PoseLoss(<span class="hljs-variable language_">self</span>)<br> <br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ClassificationModel</span>(<span class="hljs-title class_ inherited__">BaseModel</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;YOLOv8 classification model.&quot;&quot;&quot;</span><br> <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, cfg=<span class="hljs-string">&quot;yolov8n-cls.yaml&quot;</span>, ch=<span class="hljs-number">3</span>, nc=<span class="hljs-literal">None</span>, verbose=<span class="hljs-literal">True</span></span>):<br>        <span class="hljs-string">&quot;&quot;&quot;Initialize the YOLOv8 classification model.&quot;&quot;&quot;</span><br>        <span class="hljs-built_in">super</span>().__init__()<br>        <span class="hljs-variable language_">self</span>._from_yaml(cfg, ch, nc, verbose)<br> <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_from_yaml</span>(<span class="hljs-params">self, cfg, ch, nc, verbose</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;Set YOLOv8 model configurations and define the model architecture.&quot;&quot;&quot;</span><br>        <span class="hljs-variable language_">self</span>.yaml = cfg <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(cfg, <span class="hljs-built_in">dict</span>) <span class="hljs-keyword">else</span> yaml_model_load(cfg)<br>        <span class="hljs-variable language_">self</span>.model, <span class="hljs-variable language_">self</span>.save = parse_model(deepcopy(<span class="hljs-variable language_">self</span>.yaml), ch=ch, verbose=verbose)<br>        <span class="hljs-variable language_">self</span>.names = &#123;i: <span class="hljs-string">f&quot;<span class="hljs-subst">&#123;i&#125;</span>&quot;</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-variable language_">self</span>.yaml[<span class="hljs-string">&quot;nc&quot;</span>])&#125;<br>        <span class="hljs-variable language_">self</span>.info()<br> <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">reshape_outputs</span>(<span class="hljs-params">model, nc</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;Update a classification model to match the class count (nc).&quot;&quot;&quot;</span><br>        name, m = <span class="hljs-built_in">list</span>((model.model <span class="hljs-keyword">if</span> <span class="hljs-built_in">hasattr</span>(model, <span class="hljs-string">&quot;model&quot;</span>) <span class="hljs-keyword">else</span> model).named_children())[-<span class="hljs-number">1</span>]<br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(m, nn.Linear):<br>            <span class="hljs-keyword">if</span> m.out_features != nc:<br>                <span class="hljs-built_in">setattr</span>(model, name, nn.Linear(m.in_features, nc))<br> <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">init_criterion</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;Initialize the loss criterion for the ClassificationModel.&quot;&quot;&quot;</span><br>        <span class="hljs-keyword">return</span> v8ClassificationLoss()<br> <br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Ensemble</span>(nn.ModuleList):<br>    <span class="hljs-string">&quot;&quot;&quot;Ensemble of models.&quot;&quot;&quot;</span><br> <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;Initialize an ensemble of models.&quot;&quot;&quot;</span><br>        <span class="hljs-built_in">super</span>().__init__()<br> <br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x, augment=<span class="hljs-literal">False</span>, profile=<span class="hljs-literal">False</span>, visualize=<span class="hljs-literal">False</span></span>):<br>        <span class="hljs-string">&quot;&quot;&quot;Generate the ensemble’s final layer by combining outputs from each model.&quot;&quot;&quot;</span><br>        y = [module(x, augment, profile, visualize)[<span class="hljs-number">0</span>] <span class="hljs-keyword">for</span> module <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>]<br>        <span class="hljs-keyword">return</span> torch.cat(y, <span class="hljs-number">2</span>), <span class="hljs-literal">None</span>  <span class="hljs-comment"># Concatenate outputs along the third dimension</span><br> <br><span class="hljs-comment"># Functions ------------------------------------------------------------------------------------------------------------</span><br> <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">parse_model</span>(<span class="hljs-params">d, ch, verbose=<span class="hljs-literal">True</span></span>):<br>    <span class="hljs-string">&quot;&quot;&quot;Parse a YOLO model.yaml dictionary into a PyTorch model.&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">import</span> ast<br> <br>    max_channels = <span class="hljs-built_in">float</span>(<span class="hljs-string">&quot;inf&quot;</span>)<br>    nc, act, scales = (d.get(x) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> (<span class="hljs-string">&quot;nc&quot;</span>, <span class="hljs-string">&quot;activation&quot;</span>, <span class="hljs-string">&quot;scales&quot;</span>))<br>    depth, width, kpt_shape = (d.get(x, <span class="hljs-number">1.0</span>) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> (<span class="hljs-string">&quot;depth_multiple&quot;</span>, <span class="hljs-string">&quot;width_multiple&quot;</span>, <span class="hljs-string">&quot;kpt_shape&quot;</span>))<br> <br>    <span class="hljs-comment"># Model scaling</span><br>    <span class="hljs-keyword">if</span> scales:<br>        scale = d.get(<span class="hljs-string">&quot;scale&quot;</span>)<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> scale:networ<br>            scale = <span class="hljs-built_in">tuple</span>(scales.keys())[<span class="hljs-number">0</span>]<br>            LOGGER.warning(<span class="hljs-string">f&quot;WARNING &lt;img draggable=&quot;</span>false<span class="hljs-string">&quot; role=&quot;</span>img<span class="hljs-string">&quot; class=&quot;</span>emoji<span class="hljs-string">&quot; alt=&quot;</span>⚠️<span class="hljs-string">&quot; src=&quot;</span>https://s.w.org/images/core/emoji/<span class="hljs-number">15.0</span><span class="hljs-number">.3</span>/svg/26a0.svg<span class="hljs-string">&quot;&gt; no model scale passed. Assuming scale=&#x27;&#123;scale&#125;&#x27;.&quot;</span>)<br>        depth, width, max_channels = scales[scale]<br> <br>    <span class="hljs-keyword">if</span> act:<br>        Conv.default_act = <span class="hljs-built_in">eval</span>(act)  <span class="hljs-comment"># redefine default activation</span><br>        <span class="hljs-keyword">if</span> verbose:<br>            LOGGER.info(<span class="hljs-string">f&quot;Activation: <span class="hljs-subst">&#123;act&#125;</span>&quot;</span>)<br> <br>    <span class="hljs-comment"># Logging and parsing layers</span><br>    <span class="hljs-keyword">if</span> verbose:<br>        LOGGER.info(<span class="hljs-string">f&quot;\n<span class="hljs-subst">&#123;<span class="hljs-string">&#x27;&#x27;</span>:&gt;<span class="hljs-number">3</span>&#125;</span><span class="hljs-subst">&#123;<span class="hljs-string">&#x27;from&#x27;</span>:&gt;<span class="hljs-number">20</span>&#125;</span><span class="hljs-subst">&#123;<span class="hljs-string">&#x27;n&#x27;</span>:&gt;<span class="hljs-number">3</span>&#125;</span><span class="hljs-subst">&#123;<span class="hljs-string">&#x27;params&#x27;</span>:&gt;<span class="hljs-number">10</span>&#125;</span>  <span class="hljs-subst">&#123;<span class="hljs-string">&#x27;module&#x27;</span>:&lt;<span class="hljs-number">45</span>&#125;</span><span class="hljs-subst">&#123;<span class="hljs-string">&#x27;arguments&#x27;</span>:&lt;<span class="hljs-number">30</span>&#125;</span>&quot;</span>)<br>    ch = [ch]<br>    layers, save, c2 = [], [], ch[-<span class="hljs-number">1</span>]<br> <br>    <span class="hljs-keyword">for</span> i, (f, n, m, args) <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(d[<span class="hljs-string">&quot;backbone&quot;</span>] + d[<span class="hljs-string">&quot;head&quot;</span>]):  <span class="hljs-comment"># from, number, module, args</span><br>        m = <span class="hljs-built_in">globals</span>()[m] <span class="hljs-keyword">if</span> m <span class="hljs-keyword">in</span> <span class="hljs-built_in">globals</span>() <span class="hljs-keyword">else</span> <span class="hljs-built_in">getattr</span>(nn, m[<span class="hljs-number">3</span>:], m)  <span class="hljs-comment"># get module</span><br>        <span class="hljs-keyword">for</span> j, a <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(args):<br>            <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(a, <span class="hljs-built_in">str</span>):<br>                <span class="hljs-keyword">with</span> contextlib.suppress(ValueError):<br>                    args[j] = ast.literal_eval(a) <span class="hljs-keyword">if</span> a <span class="hljs-keyword">in</span> <span class="hljs-built_in">locals</span>() <span class="hljs-keyword">else</span> a<br> <br>        n = <span class="hljs-built_in">max</span>(<span class="hljs-built_in">round</span>(n * depth), <span class="hljs-number">1</span>) <span class="hljs-keyword">if</span> n &gt; <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> n  <span class="hljs-comment"># depth gain</span><br>        <span class="hljs-keyword">if</span> m <span class="hljs-keyword">in</span> &#123;Conv, Bottleneck, C2f, C3k2, ...&#125;:  <span class="hljs-comment"># Module list</span><br>            c1, c2 = ch[f], args[<span class="hljs-number">0</span>]<br>            c2 = make_divisible(<span class="hljs-built_in">min</span>(c2, max_channels) * width, <span class="hljs-number">8</span>)<br>            args = [c1, c2, *args[<span class="hljs-number">1</span>:]]<br>            <span class="hljs-keyword">if</span> m <span class="hljs-keyword">in</span> &#123;C2f, C3k2, ...&#125;:  <span class="hljs-comment"># Repeated layers</span><br>                args.insert(<span class="hljs-number">2</span>, n)<br>                n = <span class="hljs-number">1</span><br>        <span class="hljs-keyword">elif</span> m <span class="hljs-keyword">in</span> &#123;Concat, Detect, ...&#125;:  <span class="hljs-comment"># Head layers</span><br>            args.append([ch[x] <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> f])<br>        <span class="hljs-comment"># Append layers</span><br>        m_ = nn.Sequential(*(m(*args) <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n))) <span class="hljs-keyword">if</span> n &gt; <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> m(*args)<br>        layers.append(m_)<br> <br>        ch.append(c2)<br>        save.extend([x % i <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> ([f] <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(f, <span class="hljs-built_in">int</span>) <span class="hljs-keyword">else</span> f) <span class="hljs-keyword">if</span> x != -<span class="hljs-number">1</span>])<br> <br>        <span class="hljs-keyword">if</span> verbose:<br>            LOGGER.info(<span class="hljs-string">f&quot;<span class="hljs-subst">&#123;i:&gt;<span class="hljs-number">3</span>&#125;</span><span class="hljs-subst">&#123;<span class="hljs-built_in">str</span>(f):&gt;<span class="hljs-number">20</span>&#125;</span><span class="hljs-subst">&#123;n:&gt;<span class="hljs-number">3</span>&#125;</span><span class="hljs-subst">&#123;<span class="hljs-built_in">sum</span>(x.numel() <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> m_.parameters()):<span class="hljs-number">10.0</span>f&#125;</span>  <span class="hljs-subst">&#123;<span class="hljs-built_in">str</span>(m):&lt;<span class="hljs-number">45</span>&#125;</span><span class="hljs-subst">&#123;<span class="hljs-built_in">str</span>(args):&lt;<span class="hljs-number">30</span>&#125;</span>&quot;</span>)<br> <br>    <span class="hljs-keyword">return</span> nn.Sequential(*layers), <span class="hljs-built_in">sorted</span>(save)<br> <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">yaml_model_load</span>(<span class="hljs-params">path</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;Load a YOLO model from a YAML file.&quot;&quot;&quot;</span><br>    path = Path(path)<br>    unified_path = path.with_name(path.stem.replace(<span class="hljs-string">&quot;yolov8&quot;</span>, <span class="hljs-string">&quot;yolov&quot;</span>))<br>    yaml_file = check_yaml(<span class="hljs-built_in">str</span>(unified_path), hard=<span class="hljs-literal">False</span>) <span class="hljs-keyword">or</span> check_yaml(path)<br>    d = yaml_load(yaml_file)<br>    d[<span class="hljs-string">&quot;scale&quot;</span>] = guess_model_scale(path)<br>    d[<span class="hljs-string">&quot;yaml_file&quot;</span>] = <span class="hljs-built_in">str</span>(path)<br>    <span class="hljs-keyword">return</span> d<br> <br><span class="hljs-comment"># More utility functions...</span><br> <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">guess_model_scale</span>(<span class="hljs-params">model_path</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;Extract the scale from the YAML file.&quot;&quot;&quot;</span><br>    <span class="hljs-keyword">import</span> re<br>    <span class="hljs-keyword">return</span> re.search(<span class="hljs-string">r&quot;yolov\d+([nslmx])&quot;</span>, Path(model_path).stem).group(<span class="hljs-number">1</span>)<br> <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">attempt_load_weights</span>(<span class="hljs-params">weights, device=<span class="hljs-literal">None</span>, inplace=<span class="hljs-literal">True</span>, fuse=<span class="hljs-literal">False</span></span>):<br>    <span class="hljs-string">&quot;&quot;&quot;Loads weights for a model or an ensemble of models.&quot;&quot;&quot;</span><br>    ensemble = Ensemble()<br>    <span class="hljs-keyword">for</span> w <span class="hljs-keyword">in</span> weights <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(weights, <span class="hljs-built_in">list</span>) <span class="hljs-keyword">else</span> [weights]:<br>        ckpt, _ = torch_safe_load(w)<br>        model = (ckpt.get(<span class="hljs-string">&quot;ema&quot;</span>) <span class="hljs-keyword">or</span> ckpt[<span class="hljs-string">&quot;model&quot;</span>]).to(device).<span class="hljs-built_in">float</span>()<br>        model = model.fuse().<span class="hljs-built_in">eval</span>() <span class="hljs-keyword">if</span> fuse <span class="hljs-keyword">and</span> <span class="hljs-built_in">hasattr</span>(model, <span class="hljs-string">&quot;fuse&quot;</span>) <span class="hljs-keyword">else</span> model.<span class="hljs-built_in">eval</span>()<br>        ensemble.append(model)<br> <br>    <span class="hljs-keyword">return</span> ensemble <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(ensemble) &gt; <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> ensemble[-<span class="hljs-number">1</span>]<br> <br></code></pre></td></tr></table></figure>
+
+<p>此 tasks.py 脚本是代码管道的核心部分;它仍然使用 YOLOv8 方法和逻辑;我们只需要将 YOLO11 模型解析到其中。此脚本专为各种计算机视觉任务而设计，例如对象检测、分割、分类、姿势估计、OBB 等。它定义了用于训练、推理和模型管理的基础模型、特定于任务的模型和效用函数。</p>
+<h4 id="关键组件：-3"><a href="#关键组件：-3" class="headerlink" title="关键组件："></a><strong>关键组件：</strong></h4><ul>
+<li><strong>Imports：</strong>该脚本从 Ultralytics 导入 PyTorch （torch）、神经网络层 （torch.nn） 和实用函数等基本模块。一些关键导入包括：<ul>
+<li>对 <strong>C3k2</strong>、<strong>C2PSA</strong>、<strong>C3</strong>、<strong>SPPF、****Concat</strong> 等架构模块进行建模。</li>
+<li>损失函数，如 <strong>v8DetectionLoss</strong>、<strong>v8SegmentationLoss</strong>、<strong>v8ClassificationLoss</strong>、<strong>v8OBBLoss</strong>。</li>
+<li>各种实用程序函数，如 model_info、<strong>fuse_conv_and_bn</strong>、<strong>scale_img</strong> <strong>time_sync</strong>，以帮助进行模型处理、分析和评估。</li>
+</ul>
+</li>
+</ul>
+<h4 id="模型基类："><a href="#模型基类：" class="headerlink" title="模型基类："></a><strong>模型基类：</strong></h4><ol>
+<li>BaseModel 类：<ul>
+<li>BaseModel 用作 Ultralytics YOLO 系列中所有模型的基类。</li>
+<li>实现如下基本方法：<ul>
+<li><strong>forward（）：</strong>根据输入数据处理训练和推理。</li>
+<li><strong>predict（）：</strong>处理前向传递以进行推理。</li>
+<li><strong>fuse（）：</strong>融合 Conv2d 和 BatchNorm2d 层以提高效率。</li>
+<li><strong>info（）：</strong>提供详细的模型信息。</li>
+</ul>
+</li>
+<li>此类旨在通过特定于任务的模型（例如检测、分割和分类）进行扩展。</li>
+</ul>
+</li>
+<li><strong>DetectionModel</strong> <strong>类：</strong><ul>
+<li>扩展 BaseModel，专门用于对象检测任务。</li>
+<li>加载模型配置，初始化检测头（如 Detect 模块）并设置模型步幅。</li>
+<li>它支持使用 YOLOv8 等架构的检测任务，并可以通过 <strong>_predict_augment（）</strong> 执行增强推理。</li>
+</ul>
+</li>
+</ol>
+<h4 id="特定于任务的模型："><a href="#特定于任务的模型：" class="headerlink" title="特定于任务的模型："></a><strong>特定于任务的模型：</strong></h4><ol>
+<li><strong>SegmentationModel 的 SegmentationModel</strong> <strong>中：</strong><ul>
+<li>专门用于分割任务（如 YOLOv8 分割）的 DetectionModel 的子类。</li>
+<li>初始化特定于分割的损失函数 （v8SegmentationLoss）。</li>
+</ul>
+</li>
+<li><strong>PoseModel 的 PoseModel</strong> <strong>中：</strong><ul>
+<li>通过初始化具有关键点检测 （<strong>kpt_shape</strong>） 特定配置的模型来处理姿态估计任务。</li>
+<li>使用 v8PoseLoss 进行特定于姿势的损失计算。</li>
+</ul>
+</li>
+<li><strong>分类型号****：</strong><ul>
+<li>专为使用 YOLOv8 分类架构的图像分类任务而设计。</li>
+<li>初始化和管理特定于分类的损失 （<strong>v8ClassificationLoss</strong>）。</li>
+<li>它还支持重塑用于分类任务的预训练 TorchVision 模型。</li>
+</ul>
+</li>
+<li><strong>OBB型号****：</strong><ul>
+<li>用于定向边界框 （OBB） 检测任务。</li>
+<li>实现特定的损失函数 （<strong>v8OBBLoss</strong>） 来处理旋转的边界框。</li>
+</ul>
+</li>
+<li><strong>世界模型****：</strong><ul>
+<li>此模型处理图像字幕和基于文本的识别等任务。</li>
+<li>利用 CLIP 模型中的文本特征执行基于文本的视觉识别任务。</li>
+<li>包括对文本嵌入 （<strong>txt_feats</strong>） 的特殊处理，用于字幕和世界相关任务。</li>
+</ul>
+</li>
+</ol>
+<h4 id="集成模型："><a href="#集成模型：" class="headerlink" title="集成模型："></a><strong>集成模型：</strong></h4><ol>
+<li><strong>集成****：</strong><ul>
+<li>一个简单的 ensemble 类，它将多个模型合并为一个模型。</li>
+<li>允许对不同模型的输出进行平均或串联，以提高整体性能。</li>
+<li>对于组合多个模型的输出提供更好的预测的任务非常有用。</li>
+</ul>
+</li>
+</ol>
+<h4 id="实用功能："><a href="#实用功能：" class="headerlink" title="实用功能："></a><strong>实用功能：</strong></h4><ol>
+<li>模型加载和管理：<ul>
+<li><strong>attempt_load_weights（）、****attempt_load_one_weight（）</strong>：用于加载模型、管理集成模型以及处理加载预训练权重时的兼容性问题的函数。</li>
+<li>这些功能可确保以适当的步幅、层和配置正确加载模型。</li>
+</ul>
+</li>
+<li>临时模块重定向：<ul>
+<li><strong>temporary_modules（）</strong>：一个上下文管理器，用于临时重定向模块路径，确保在模块位置更改时向后兼容。</li>
+<li>有助于保持与旧型号版本的兼容性。</li>
+</ul>
+</li>
+<li><strong>Pickle</strong>安全处理：<ul>
+<li>SafeUnpickler：一个自定义的解封器，可以安全地加载模型检查点，确保未知类被安全的占位符（SafeClass）替换，以避免在加载过程中发生崩溃。</li>
+</ul>
+</li>
+</ol>
+<h4 id="模型解析："><a href="#模型解析：" class="headerlink" title="模型解析："></a><strong>模型解析：</strong></h4><ol>
+<li><strong>parse_model（）</strong> <strong>中：</strong><ul>
+<li>此函数将 YAML 文件中的模型配置解析为 PyTorch 模型。</li>
+<li>它处理主干和头架构，解释每个层类型（如 Conv、SPPF、Detect），并构建最终模型。</li>
+<li>支持各种架构，包括 C3k2、C2PSA 等 YOLO11 组件。</li>
+</ul>
+</li>
+<li>YAML 模型加载：<ul>
+<li><strong>yaml_model_load（）</strong>）：从 YAML 文件加载模型配置，检测模型比例（例如 n、s、m、l、x）并相应地调整参数。</li>
+<li><strong>guess_model_scale（）、****guess_model_task（）</strong>：用于根据 YAML 文件结构推断模型规模和任务的辅助函数。</li>
+</ul>
+</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" class="category-chain-item">人工智能</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/" class="category-chain-item">computer-vision</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" class="print-no-link">#人工智能</a>
+      
+        <a href="/tags/yolo/" class="print-no-link">#yolo</a>
+      
+        <a href="/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" class="print-no-link">#目标检测</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>YOLO11 详解</div>
+      <div>https://chongzicbo.github.io/2024/12/07/人工智能/computer-vision/CV007-YOLO11详解/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>程博</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>December 7, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV010-YOLO%20V10%E8%AF%A6%E8%A7%A3/" title="YOLO V10 详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">YOLO V10 详解</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/chongzicbo" target="_blank" rel="nofollow noopener"><span>Github</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,1247 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/daxiong.jpg">
+  <link rel="icon" href="/img/daxiong.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="程博">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Tokenizer类以下是 tokenizer.py 中 Tokenizer 类的逐行详细解释： 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798">
+<meta property="og:type" content="article">
+<meta property="og:title" content="llama3源码解析-02：tokenizer模块解析">
+<meta property="og:url" content="https://chongzicbo.github.io/2024/12/26/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-02%EF%BC%9Atokenizer%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="程博仕">
+<meta property="og:description" content="Tokenizer类以下是 tokenizer.py 中 Tokenizer 类的逐行详细解释： 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/Llama3_Repo.jpeg">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
+<meta property="article:published_time" content="2024-12-26T04:24:42.760Z">
+<meta property="article:modified_time" content="2024-12-26T04:24:42.760Z">
+<meta property="article:author" content="程博">
+<meta property="article:tag" content="nlp">
+<meta property="article:tag" content="llm">
+<meta property="article:tag" content="llama">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/Llama3_Repo.jpeg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>llama3源码解析-02：tokenizer模块解析 - 程博仕</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>程博仕</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>人工智能</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/asr" target="_self">
+                    
+                    <span>语音识别</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>开发</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91" target="_self">
+                    
+                    <span>音视频</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/web&#39;" target="_self">
+                    
+                    <span>Web开发</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>文章分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>时间轴</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="llama3源码解析-02：tokenizer模块解析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        程博
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-26 12:24" pubdate>
+          December 26, 2024 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.5k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          38 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">llama3源码解析-02：tokenizer模块解析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/Llama3_Repo.jpeg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="Tokenizer类"><a href="#Tokenizer类" class="headerlink" title="Tokenizer类"></a>Tokenizer类</h2><p>以下是 <code>tokenizer.py</code> 中 <code>Tokenizer</code> 类的逐行详细解释：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Tokenizer</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    Tokenizing and encoding/decoding text using the Tiktoken tokenizer.</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-comment"># 特殊 token 的字典，用于存储特殊 token 及其对应的 token ID</span><br>    special_tokens: <span class="hljs-type">Dict</span>[<span class="hljs-built_in">str</span>, <span class="hljs-built_in">int</span>]<br><br>    <span class="hljs-comment"># 保留的特殊 token 数量，默认为 256</span><br>    num_reserved_special_tokens = <span class="hljs-number">256</span><br><br>    <span class="hljs-comment"># 正则表达式模式，用于匹配文本中的子词和特殊字符</span><br>    pat_str = <span class="hljs-string">r&quot;(?i:&#x27;s|&#x27;t|&#x27;re|&#x27;ve|&#x27;m|&#x27;ll|&#x27;d)|[^\r\n\p&#123;L&#125;\p&#123;N&#125;]?\p&#123;L&#125;+|\p&#123;N&#125;&#123;1,3&#125;| ?[^\s\p&#123;L&#125;\p&#123;N&#125;]+[\r\n]*|\s*[\r\n]+|\s+(?!\S)|\s+&quot;</span>  <span class="hljs-comment"># noqa: E501</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, model_path: <span class="hljs-built_in">str</span></span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        Initializes the Tokenizer with a Tiktoken model.</span><br><span class="hljs-string"></span><br><span class="hljs-string">        Args:</span><br><span class="hljs-string">            model_path (str): The path to the Tiktoken model file.</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-comment"># 检查模型文件是否存在</span><br>        <span class="hljs-keyword">assert</span> os.path.isfile(model_path), model_path<br><br>        <span class="hljs-comment"># 加载 Tiktoken 模型的 BPE（Byte Pair Encoding）合并表</span><br>        mergeable_ranks = load_tiktoken_bpe(model_path)<br>        <span class="hljs-comment"># 获取基础 token 的数量</span><br>        num_base_tokens = <span class="hljs-built_in">len</span>(mergeable_ranks)<br>        <span class="hljs-comment"># 定义特殊 token 列表</span><br>        special_tokens = [<br>            <span class="hljs-string">&quot;&lt;|begin_of_text|&gt;&quot;</span>,<br>            <span class="hljs-string">&quot;&lt;|end_of_text|&gt;&quot;</span>,<br>            <span class="hljs-string">&quot;&lt;|reserved_special_token_0|&gt;&quot;</span>,<br>            <span class="hljs-string">&quot;&lt;|reserved_special_token_1|&gt;&quot;</span>,<br>            <span class="hljs-string">&quot;&lt;|reserved_special_token_2|&gt;&quot;</span>,<br>            <span class="hljs-string">&quot;&lt;|reserved_special_token_3|&gt;&quot;</span>,<br>            <span class="hljs-string">&quot;&lt;|start_header_id|&gt;&quot;</span>,<br>            <span class="hljs-string">&quot;&lt;|end_header_id|&gt;&quot;</span>,<br>            <span class="hljs-string">&quot;&lt;|reserved_special_token_4|&gt;&quot;</span>,<br>            <span class="hljs-string">&quot;&lt;|eot_id|&gt;&quot;</span>,  <span class="hljs-comment"># end of turn</span><br>        ] + [<br>            <span class="hljs-comment"># 生成剩余的保留特殊 token</span><br>            <span class="hljs-string">f&quot;&lt;|reserved_special_token_<span class="hljs-subst">&#123;i&#125;</span>|&gt;&quot;</span><br>            <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">5</span>, <span class="hljs-variable language_">self</span>.num_reserved_special_tokens - <span class="hljs-number">5</span>)<br>        ]<br>        <span class="hljs-comment"># 将特殊 token 映射到 token ID，ID 从基础 token 数量开始递增</span><br>        <span class="hljs-variable language_">self</span>.special_tokens = &#123;<br>            token: num_base_tokens + i <span class="hljs-keyword">for</span> i, token <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(special_tokens)<br>        &#125;<br>        <span class="hljs-comment"># 初始化 Tiktoken 的 Encoding 对象</span><br>        <span class="hljs-variable language_">self</span>.model = tiktoken.Encoding(<br>            name=Path(model_path).name,<br>            pat_str=<span class="hljs-variable language_">self</span>.pat_str,<br>            mergeable_ranks=mergeable_ranks,<br>            special_tokens=<span class="hljs-variable language_">self</span>.special_tokens,<br>        )<br>        <span class="hljs-comment"># 记录日志，表示模型已加载</span><br>        logger.info(<span class="hljs-string">f&quot;Reloaded tiktoken model from <span class="hljs-subst">&#123;model_path&#125;</span>&quot;</span>)<br><br>        <span class="hljs-comment"># 获取词汇表大小</span><br>        <span class="hljs-variable language_">self</span>.n_words: <span class="hljs-built_in">int</span> = <span class="hljs-variable language_">self</span>.model.n_vocab<br>        <span class="hljs-comment"># 获取 BOS（Begin of Sequence）token 的 ID</span><br>        <span class="hljs-variable language_">self</span>.bos_id: <span class="hljs-built_in">int</span> = <span class="hljs-variable language_">self</span>.special_tokens[<span class="hljs-string">&quot;&lt;|begin_of_text|&gt;&quot;</span>]<br>        <span class="hljs-comment"># 获取 EOS（End of Sequence）token 的 ID</span><br>        <span class="hljs-variable language_">self</span>.eos_id: <span class="hljs-built_in">int</span> = <span class="hljs-variable language_">self</span>.special_tokens[<span class="hljs-string">&quot;&lt;|end_of_text|&gt;&quot;</span>]<br>        <span class="hljs-comment"># 设置 pad token 的 ID，默认为 -1</span><br>        <span class="hljs-variable language_">self</span>.pad_id: <span class="hljs-built_in">int</span> = -<span class="hljs-number">1</span><br>        <span class="hljs-comment"># 定义停止 token 集合，包含 EOS 和 EOT（End of Turn）token</span><br>        <span class="hljs-variable language_">self</span>.stop_tokens = &#123;<br>            <span class="hljs-variable language_">self</span>.special_tokens[<span class="hljs-string">&quot;&lt;|end_of_text|&gt;&quot;</span>],<br>            <span class="hljs-variable language_">self</span>.special_tokens[<span class="hljs-string">&quot;&lt;|eot_id|&gt;&quot;</span>],<br>        &#125;<br>        <span class="hljs-comment"># 记录词汇表大小、BOS ID 和 EOS ID</span><br>        logger.info(<br>            <span class="hljs-string">f&quot;#words: <span class="hljs-subst">&#123;self.n_words&#125;</span> - BOS ID: <span class="hljs-subst">&#123;self.bos_id&#125;</span> - EOS ID: <span class="hljs-subst">&#123;self.eos_id&#125;</span>&quot;</span><br>        )<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">encode</span>(<span class="hljs-params"></span><br><span class="hljs-params">        self,</span><br><span class="hljs-params">        s: <span class="hljs-built_in">str</span>,</span><br><span class="hljs-params">        *,</span><br><span class="hljs-params">        bos: <span class="hljs-built_in">bool</span>,</span><br><span class="hljs-params">        eos: <span class="hljs-built_in">bool</span>,</span><br><span class="hljs-params">        allowed_special: <span class="hljs-type">Union</span>[<span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;all&quot;</span>], AbstractSet[<span class="hljs-built_in">str</span>]] = <span class="hljs-built_in">set</span>(<span class="hljs-params"></span>),</span><br><span class="hljs-params">        disallowed_special: <span class="hljs-type">Union</span>[<span class="hljs-type">Literal</span>[<span class="hljs-string">&quot;all&quot;</span>], Collection[<span class="hljs-built_in">str</span>]] = (<span class="hljs-params"></span>),</span><br><span class="hljs-params">    </span>) -&gt; <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]:<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        Encodes a string into a list of token IDs.</span><br><span class="hljs-string"></span><br><span class="hljs-string">        Args:</span><br><span class="hljs-string">            s (str): The input string to be encoded.</span><br><span class="hljs-string">            bos (bool): Whether to prepend the beginning-of-sequence token.</span><br><span class="hljs-string">            eos (bool): Whether to append the end-of-sequence token.</span><br><span class="hljs-string">            allowed_tokens (&quot;all&quot;|set[str]): allowed special tokens in string</span><br><span class="hljs-string">            disallowed_tokens (&quot;all&quot;|set[str]): special tokens that raise an error when in string</span><br><span class="hljs-string"></span><br><span class="hljs-string">        Returns:</span><br><span class="hljs-string">            list[int]: A list of token IDs.</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-comment"># 确保输入是字符串</span><br>        <span class="hljs-keyword">assert</span> <span class="hljs-built_in">type</span>(s) <span class="hljs-keyword">is</span> <span class="hljs-built_in">str</span><br><br>        <span class="hljs-comment"># Tiktoken 分词器单次编码的最大字符数</span><br>        TIKTOKEN_MAX_ENCODE_CHARS = <span class="hljs-number">400_000</span><br><br>        <span class="hljs-comment"># 最大连续非空格或空格字符数</span><br>        MAX_NO_WHITESPACES_CHARS = <span class="hljs-number">25_000</span><br><br>        <span class="hljs-comment"># 将输入字符串分割为子串，确保每个子串不超过最大字符数</span><br>        substrs = (<br>            substr<br>            <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(s), TIKTOKEN_MAX_ENCODE_CHARS)<br>            <span class="hljs-keyword">for</span> substr <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>._split_whitespaces_or_nonwhitespaces(<br>                s[i : i + TIKTOKEN_MAX_ENCODE_CHARS], MAX_NO_WHITESPACES_CHARS<br>            )<br>        )<br>        <span class="hljs-comment"># 初始化 token ID 列表</span><br>        t: <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>] = []<br>        <span class="hljs-comment"># 对每个子串进行编码</span><br>        <span class="hljs-keyword">for</span> substr <span class="hljs-keyword">in</span> substrs:<br>            t.extend(<br>                <span class="hljs-variable language_">self</span>.model.encode(<br>                    substr,<br>                    allowed_special=allowed_special,<br>                    disallowed_special=disallowed_special,<br>                )<br>            )<br>        <span class="hljs-comment"># 如果需要，在开头添加 BOS token</span><br>        <span class="hljs-keyword">if</span> bos:<br>            t.insert(<span class="hljs-number">0</span>, <span class="hljs-variable language_">self</span>.bos_id)<br>        <span class="hljs-comment"># 如果需要，在结尾添加 EOS token</span><br>        <span class="hljs-keyword">if</span> eos:<br>            t.append(<span class="hljs-variable language_">self</span>.eos_id)<br>        <span class="hljs-comment"># 返回编码后的 token ID 列表</span><br>        <span class="hljs-keyword">return</span> t<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">decode</span>(<span class="hljs-params">self, t: <span class="hljs-type">Sequence</span>[<span class="hljs-built_in">int</span>]</span>) -&gt; <span class="hljs-built_in">str</span>:<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        Decodes a list of token IDs into a string.</span><br><span class="hljs-string"></span><br><span class="hljs-string">        Args:</span><br><span class="hljs-string">            t (List[int]): The list of token IDs to be decoded.</span><br><span class="hljs-string"></span><br><span class="hljs-string">        Returns:</span><br><span class="hljs-string">            str: The decoded string.</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-comment"># 将 token ID 序列解码为字符串</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.model.decode(cast(<span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>], t))<br><br><span class="hljs-meta">    @staticmethod</span><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_split_whitespaces_or_nonwhitespaces</span>(<span class="hljs-params"></span><br><span class="hljs-params">        s: <span class="hljs-built_in">str</span>, max_consecutive_slice_len: <span class="hljs-built_in">int</span></span><br><span class="hljs-params">    </span>) -&gt; Iterator[<span class="hljs-built_in">str</span>]:<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        Splits the string `s` so that each substring contains no more than `max_consecutive_slice_len`</span><br><span class="hljs-string">        consecutive whitespaces or consecutive non-whitespaces.</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-comment"># 初始化当前子串的长度和类型</span><br>        current_slice_len = <span class="hljs-number">0</span><br>        current_slice_is_space = s[<span class="hljs-number">0</span>].isspace() <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(s) &gt; <span class="hljs-number">0</span> <span class="hljs-keyword">else</span> <span class="hljs-literal">False</span><br>        slice_start = <span class="hljs-number">0</span><br><br>        <span class="hljs-comment"># 遍历字符串，按空格或非空格进行分割</span><br>        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(s)):<br>            is_now_space = s[i].isspace()<br><br>            <span class="hljs-keyword">if</span> current_slice_is_space ^ is_now_space:<br>                current_slice_len = <span class="hljs-number">1</span><br>                current_slice_is_space = is_now_space<br>            <span class="hljs-keyword">else</span>:<br>                current_slice_len += <span class="hljs-number">1</span><br>                <span class="hljs-keyword">if</span> current_slice_len &gt; max_consecutive_slice_len:<br>                    <span class="hljs-keyword">yield</span> s[slice_start:i]<br>                    slice_start = i<br>                    current_slice_len = <span class="hljs-number">1</span><br>        <span class="hljs-keyword">yield</span> s[slice_start:]<br></code></pre></td></tr></table></figure>
+
+<h3 id="逐行解释总结"><a href="#逐行解释总结" class="headerlink" title="逐行解释总结"></a>逐行解释总结</h3><ol>
+<li><p><strong>特殊 token 处理</strong>:</p>
+<ul>
+<li><code>special_tokens</code> 字典存储特殊 token 及其对应的 token ID。</li>
+<li><code>num_reserved_special_tokens</code> 定义了保留的特殊 token 数量。</li>
+<li><code>pat_str</code> 是正则表达式模式，用于匹配文本中的子词和特殊字符。</li>
+</ul>
+</li>
+<li><p><strong>初始化方法 (<code>__init__</code>)</strong>:</p>
+<ul>
+<li>加载 Tiktoken 模型的 BPE 合并表，并初始化特殊 token。</li>
+<li>设置 BOS、EOS 和 pad token 的 ID，并定义停止 token 集合。</li>
+<li>初始化 Tiktoken 的 <code>Encoding</code> 对象，用于实际的编码和解码操作。</li>
+</ul>
+</li>
+<li><p><strong>编码方法 (<code>encode</code>)</strong>:</p>
+<ul>
+<li>将输入字符串分割为子串，确保每个子串不超过最大字符数。</li>
+<li>对每个子串进行编码，并根据参数决定是否添加 BOS 和 EOS token。</li>
+<li>返回编码后的 token ID 列表。</li>
+</ul>
+</li>
+<li><p><strong>解码方法 (<code>decode</code>)</strong>:</p>
+<ul>
+<li>将 token ID 序列解码为字符串。</li>
+</ul>
+</li>
+<li><p><strong>子串分割方法 (<code>_split_whitespaces_or_nonwhitespaces</code>)</strong>:</p>
+<ul>
+<li><p>将字符串按空格或非空格进行分割，确保每个子串不超过最大连续字符数。</p>
+</li>
+<li><h3 id="什么保留空格？"><a href="#什么保留空格？" class="headerlink" title="什么保留空格？"></a><strong>什么保留空格？</strong></h3><ol>
+<li><strong>语义完整性</strong>:<ul>
+<li>空格在文本中用于分隔单词、标点符号等，是文本结构的重要组成部分。</li>
+<li>如果丢弃空格，分词结果可能会将多个单词合并，导致语义错误。例如：<ul>
+<li>输入: <code>&quot;Hello, how are you?&quot;</code></li>
+<li>丢弃空格: <code>&quot;Hello,howareyou?&quot;</code>（分词结果错误）</li>
+<li>保留空格: <code>&quot;Hello, how are you?&quot;</code>（分词结果正确）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>特殊 token 处理</strong>:<ul>
+<li>某些特殊 token（如 <code>&lt;|end_of_text|&gt;</code>）可能被空格包围，保留空格可以确保这些特殊 token 被正确识别和处理。</li>
+</ul>
+</li>
+<li><strong>模型输入格式</strong>:<ul>
+<li>许多语言模型（如 GPT）的输入需要保留空格，以确保生成的文本格式正确。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="对输入字符串进行tokenize的详细流程"><a href="#对输入字符串进行tokenize的详细流程" class="headerlink" title="对输入字符串进行tokenize的详细流程"></a>对输入字符串进行tokenize的详细流程</h3><p>结合一个具体的字符串示例，详细说明 <code>Tokenizer</code> 如何处理输入字符串。假设我们已经有一个 Tiktoken 模型文件，并且输入字符串为：</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs 1c"><span class="hljs-string">&quot;Hello, how are you? &lt;|end_of_text|&gt;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>我们将逐步分析 <code>Tokenizer</code> 如何处理这个字符串。</p>
+<hr>
+<h4 id="1-输入字符串"><a href="#1-输入字符串" class="headerlink" title="1. 输入字符串"></a><strong>1. 输入字符串</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">s = <span class="hljs-string">&quot;Hello, how are you? &lt;|end_of_text|&gt;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="2-参数设置"><a href="#2-参数设置" class="headerlink" title="2. 参数设置"></a><strong>2. 参数设置</strong></h4><p>假设调用 <code>encode</code> 方法时，参数如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">bos = <span class="hljs-literal">True</span>  <span class="hljs-comment"># 添加 BOS token</span><br>eos = <span class="hljs-literal">False</span>  <span class="hljs-comment"># 不添加 EOS token</span><br>allowed_special = &#123;<span class="hljs-string">&quot;&lt;|end_of_text|&gt;&quot;</span>&#125;  <span class="hljs-comment"># 允许的特殊 token</span><br>disallowed_special = ()  <span class="hljs-comment"># 不允许的特殊 token（为空）</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="3-输入验证"><a href="#3-输入验证" class="headerlink" title="3. 输入验证"></a><strong>3. 输入验证</strong></h4><ul>
+<li><strong>类型检查</strong>:<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">assert</span> <span class="hljs-built_in">type</span>(s) <span class="hljs-keyword">is</span> <span class="hljs-built_in">str</span><br></code></pre></td></tr></table></figure>
+输入是一个字符串，检查通过。</li>
+</ul>
+<hr>
+<h4 id="4-字符串分割"><a href="#4-字符串分割" class="headerlink" title="4. 字符串分割"></a><strong>4. 字符串分割</strong></h4><p>由于输入字符串较短（远小于 <code>TIKTOKEN_MAX_ENCODE_CHARS = 400_000</code>），不需要按字符数分割。但为了演示，我们假设字符串较长，需要按空格和非空格进行分割。</p>
+<h5 id="分割逻辑"><a href="#分割逻辑" class="headerlink" title="分割逻辑"></a><strong>分割逻辑</strong></h5><ul>
+<li>输入字符串: <code>&quot;Hello, how are you? &lt;|end_of_text|&gt;&quot;</code></li>
+<li>按空格和非空格分割：<ul>
+<li><code>&quot;Hello,&quot;</code>（非空格）</li>
+<li><code>&quot; how &quot;</code>（空格）</li>
+<li><code>&quot;are&quot;</code>（非空格）</li>
+<li><code>&quot; you? &quot;</code>（空格）</li>
+<li><code>&quot;&lt;|end_of_text|&gt;&quot;</code>（非空格）</li>
+</ul>
+</li>
+</ul>
+<h5 id="分割结果"><a href="#分割结果" class="headerlink" title="分割结果"></a><strong>分割结果</strong></h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">substrs = [<span class="hljs-string">&quot;Hello,&quot;</span>, <span class="hljs-string">&quot; how &quot;</span>, <span class="hljs-string">&quot;are&quot;</span>, <span class="hljs-string">&quot; you? &quot;</span>, <span class="hljs-string">&quot;&lt;|end_of_text|&gt;&quot;</span>]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="5-子串编码"><a href="#5-子串编码" class="headerlink" title="5. 子串编码"></a><strong>5. 子串编码</strong></h4><p>对每个子串进行编码，生成 token ID 序列。</p>
+<h5 id="假设的-Tiktoken-模型"><a href="#假设的-Tiktoken-模型" class="headerlink" title="假设的 Tiktoken 模型"></a><strong>假设的 Tiktoken 模型</strong></h5><p>假设 Tiktoken 模型的词汇表和编码规则如下：</p>
+<ul>
+<li><code>&quot;Hello&quot;</code> → <code>[15496]</code></li>
+<li><code>&quot;,&quot;</code> → <code>[11]</code></li>
+<li><code>&quot; how&quot;</code> → <code>[703]</code></li>
+<li><code>&quot;are&quot;</code> → <code>[527]</code></li>
+<li><code>&quot; you&quot;</code> → <code>[366]</code></li>
+<li><code>&quot;?&quot;</code> → <code>[30]</code></li>
+<li><code>&quot;&lt;|end_of_text|&gt;&quot;</code> → <code>[50256]</code>（特殊 token）</li>
+</ul>
+<h5 id="编码过程"><a href="#编码过程" class="headerlink" title="编码过程"></a><strong>编码过程</strong></h5><ol>
+<li><strong>子串 <code>&quot;Hello,&quot;</code></strong>:<ul>
+<li>编码为 <code>[15496, 11]</code>。</li>
+</ul>
+</li>
+<li><strong>子串 <code>&quot; how &quot;</code></strong>:<ul>
+<li>编码为 <code>[703]</code>。</li>
+</ul>
+</li>
+<li><strong>子串 <code>&quot;are&quot;</code></strong>:<ul>
+<li>编码为 <code>[527]</code>。</li>
+</ul>
+</li>
+<li><strong>子串 <code>&quot; you? &quot;</code></strong>:<ul>
+<li>编码为 <code>[366, 30]</code>。</li>
+</ul>
+</li>
+<li><strong>子串 <code>&quot;&lt;|end_of_text|&gt;&quot;</code></strong>:<ul>
+<li>这是一个特殊 token，编码为 <code>[50256]</code>。</li>
+</ul>
+</li>
+</ol>
+<h5 id="编码结果"><a href="#编码结果" class="headerlink" title="编码结果"></a><strong>编码结果</strong></h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">t = [<span class="hljs-number">15496</span>, <span class="hljs-number">11</span>, <span class="hljs-number">703</span>, <span class="hljs-number">527</span>, <span class="hljs-number">366</span>, <span class="hljs-number">30</span>, <span class="hljs-number">50256</span>]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="6-添加特殊-token"><a href="#6-添加特殊-token" class="headerlink" title="6. 添加特殊 token"></a><strong>6. 添加特殊 token</strong></h4><p>根据参数设置，需要在开头添加 BOS token，不添加 EOS token。</p>
+<h5 id="BOS-token"><a href="#BOS-token" class="headerlink" title="BOS token"></a><strong>BOS token</strong></h5><p>假设 BOS token 的 ID 为 <code>50257</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">if</span> bos:<br>    t.insert(<span class="hljs-number">0</span>, <span class="hljs-number">50257</span>)<br></code></pre></td></tr></table></figure>
+
+<h5 id="更新后的-token-序列"><a href="#更新后的-token-序列" class="headerlink" title="更新后的 token 序列"></a><strong>更新后的 token 序列</strong></h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">t = [<span class="hljs-number">50257</span>, <span class="hljs-number">15496</span>, <span class="hljs-number">11</span>, <span class="hljs-number">703</span>, <span class="hljs-number">527</span>, <span class="hljs-number">366</span>, <span class="hljs-number">30</span>, <span class="hljs-number">50256</span>]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="7-返回编码结果"><a href="#7-返回编码结果" class="headerlink" title="7. 返回编码结果"></a><strong>7. 返回编码结果</strong></h4><p>最终的 token ID 序列为：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">[<span class="hljs-number">50257</span>, <span class="hljs-number">15496</span>, <span class="hljs-number">11</span>, <span class="hljs-number">703</span>, <span class="hljs-number">527</span>, <span class="hljs-number">366</span>, <span class="hljs-number">30</span>, <span class="hljs-number">50256</span>]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="8-解码过程"><a href="#8-解码过程" class="headerlink" title="8. 解码过程"></a><strong>8. 解码过程</strong></h4><p>如果需要将 token ID 序列解码回字符串，可以使用 <code>decode</code> 方法。</p>
+<h5 id="解码逻辑"><a href="#解码逻辑" class="headerlink" title="解码逻辑"></a><strong>解码逻辑</strong></h5><ul>
+<li>将每个 token ID 映射回对应的子词或字符。</li>
+<li>特殊 token（如 <code>&lt;|end_of_text|&gt;</code>）会被解码为原始字符串。</li>
+</ul>
+<h5 id="解码结果"><a href="#解码结果" class="headerlink" title="解码结果"></a><strong>解码结果</strong></h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">decoded_str = <span class="hljs-string">&quot;&lt;|begin_of_text|&gt;Hello, how are you? &lt;|end_of_text|&gt;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="9-总结"><a href="#9-总结" class="headerlink" title="9. 总结"></a><strong>9. 总结</strong></h4><p>结合具体示例，<code>Tokenizer</code> 处理输入字符串的详细流程如下：</p>
+<ol>
+<li><strong>输入字符串</strong>: <code>&quot;Hello, how are you? &lt;|end_of_text|&gt;&quot;</code></li>
+<li><strong>分割字符串</strong>: 按空格和非空格分割为 <code>[&quot;Hello,&quot;, &quot; how &quot;, &quot;are&quot;, &quot; you? &quot;, &quot;&lt;|end_of_text|&gt;&quot;]</code>。</li>
+<li><strong>编码子串</strong>: 将每个子串编码为 token ID 序列 <code>[15496, 11, 703, 527, 366, 30, 50256]</code>。</li>
+<li><strong>添加 BOS token</strong>: 在开头插入 BOS token，得到 <code>[50257, 15496, 11, 703, 527, 366, 30, 50256]</code>。</li>
+<li><strong>返回结果</strong>: 返回最终的 token ID 序列。</li>
+<li><strong>解码</strong>: 将 token ID 序列解码回原始字符串 <code>&quot;&lt;|begin_of_text|&gt;Hello, how are you? &lt;|end_of_text|&gt;&quot;</code>。</li>
+</ol>
+<p>通过这种分步骤的处理方式，<code>Tokenizer</code> 能够高效地将输入字符串转换为模型可处理的 token ID 序列，并支持特殊 token 的灵活处理。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><code>Tokenizer</code> 类负责文本的编码和解码，使用 Tiktoken 作为底层分词器。它支持特殊 token 的处理，并提供了灵活的编码和解码接口。通过 <code>encode</code> 方法，可以将文本转换为 token ID 序列；通过 <code>decode</code> 方法，可以将 token ID 序列转换回文本。此外，<code>Tokenizer</code> 还提供了对长文本的分割功能，确保编码过程不会因输入过长而失败。</p>
+<h2 id="ChatFormat类"><a href="#ChatFormat类" class="headerlink" title="ChatFormat类"></a>ChatFormat类</h2><p><code>ChatFormat</code> 类的主要功能是将对话消息（<code>Message</code>）编码为模型可以理解的 token 序列，特别适用于对话生成任务。</p>
+<hr>
+<h3 id="代码注释"><a href="#代码注释" class="headerlink" title="代码注释"></a><strong>代码注释</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ChatFormat</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, tokenizer: Tokenizer</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        初始化 ChatFormat 类。</span><br><span class="hljs-string"></span><br><span class="hljs-string">        Args:</span><br><span class="hljs-string">            tokenizer (Tokenizer): 用于编码和解码的 Tokenizer 实例。</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        <span class="hljs-variable language_">self</span>.tokenizer = tokenizer<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>功能</strong>: 初始化 <code>ChatFormat</code> 类，绑定一个 <code>Tokenizer</code> 实例，用于后续的编码操作。</li>
+<li><strong>参数</strong>:<ul>
+<li><code>tokenizer</code>: 一个 <code>Tokenizer</code> 对象，用于将文本转换为 token ID 序列。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">encode_header</span>(<span class="hljs-params">self, message: Message</span>) -&gt; <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    编码消息头，包括角色信息和分隔符。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    Args:</span><br><span class="hljs-string">        message (Message): 包含角色和内容的消息字典。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    Returns:</span><br><span class="hljs-string">        List[int]: 编码后的 token ID 序列。</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    tokens = []<br>    <span class="hljs-comment"># 添加消息头开始标记</span><br>    tokens.append(<span class="hljs-variable language_">self</span>.tokenizer.special_tokens[<span class="hljs-string">&quot;&lt;|start_header_id|&gt;&quot;</span>])<br>    <span class="hljs-comment"># 编码角色信息（如 &quot;user&quot; 或 &quot;assistant&quot;）</span><br>    tokens.extend(<span class="hljs-variable language_">self</span>.tokenizer.encode(message[<span class="hljs-string">&quot;role&quot;</span>], bos=<span class="hljs-literal">False</span>, eos=<span class="hljs-literal">False</span>))<br>    <span class="hljs-comment"># 添加消息头结束标记</span><br>    tokens.append(<span class="hljs-variable language_">self</span>.tokenizer.special_tokens[<span class="hljs-string">&quot;&lt;|end_header_id|&gt;&quot;</span>])<br>    <span class="hljs-comment"># 添加换行符（两个换行符，用于分隔消息头和内容）</span><br>    tokens.extend(<span class="hljs-variable language_">self</span>.tokenizer.encode(<span class="hljs-string">&quot;\n\n&quot;</span>, bos=<span class="hljs-literal">False</span>, eos=<span class="hljs-literal">False</span>))<br>    <span class="hljs-keyword">return</span> tokens<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>功能</strong>: 编码消息头，包括角色信息和分隔符。</li>
+<li><strong>参数</strong>:<ul>
+<li><code>message</code>: 一个 <code>Message</code> 字典，包含 <code>role</code>（角色）和 <code>content</code>（内容）。</li>
+</ul>
+</li>
+<li><strong>返回值</strong>: 编码后的 token ID 序列。</li>
+<li><strong>详细步骤</strong>:<ol>
+<li>添加消息头开始标记 <code>&lt;|start_header_id|&gt;</code>。</li>
+<li>编码角色信息（如 <code>&quot;user&quot;</code> 或 <code>&quot;assistant&quot;</code>）。</li>
+<li>添加消息头结束标记 <code>&lt;|end_header_id|&gt;</code>。</li>
+<li>添加两个换行符 <code>\n\n</code>，用于分隔消息头和内容。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">encode_message</span>(<span class="hljs-params">self, message: Message</span>) -&gt; <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    编码整个消息，包括消息头和内容。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    Args:</span><br><span class="hljs-string">        message (Message): 包含角色和内容的消息字典。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    Returns:</span><br><span class="hljs-string">        List[int]: 编码后的 token ID 序列。</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-comment"># 编码消息头</span><br>    tokens = <span class="hljs-variable language_">self</span>.encode_header(message)<br>    <span class="hljs-comment"># 编码消息内容，并去除首尾空白字符</span><br>    tokens.extend(<br>        <span class="hljs-variable language_">self</span>.tokenizer.encode(message[<span class="hljs-string">&quot;content&quot;</span>].strip(), bos=<span class="hljs-literal">False</span>, eos=<span class="hljs-literal">False</span>)<br>    )<br>    <span class="hljs-comment"># 添加消息结束标记 &lt;|eot_id|&gt;</span><br>    tokens.append(<span class="hljs-variable language_">self</span>.tokenizer.special_tokens[<span class="hljs-string">&quot;&lt;|eot_id|&gt;&quot;</span>])<br>    <span class="hljs-keyword">return</span> tokens<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>功能</strong>: 编码整个消息，包括消息头和内容。</li>
+<li><strong>参数</strong>:<ul>
+<li><code>message</code>: 一个 <code>Message</code> 字典，包含 <code>role</code>（角色）和 <code>content</code>（内容）。</li>
+</ul>
+</li>
+<li><strong>返回值</strong>: 编码后的 token ID 序列。</li>
+<li><strong>详细步骤</strong>:<ol>
+<li>调用 <code>encode_header</code> 方法，编码消息头。</li>
+<li>编码消息内容，并去除首尾空白字符。</li>
+<li>添加消息结束标记 <code>&lt;|eot_id|&gt;</code>，表示当前消息的结束。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">encode_dialog_prompt</span>(<span class="hljs-params">self, dialog: Dialog</span>) -&gt; <span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    编码整个对话，生成模型输入的 token 序列。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    Args:</span><br><span class="hljs-string">        dialog (Dialog): 对话列表，包含多条消息。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    Returns:</span><br><span class="hljs-string">        List[int]: 编码后的 token ID 序列。</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    tokens = []<br>    <span class="hljs-comment"># 添加对话开始标记 &lt;|begin_of_text|&gt;</span><br>    tokens.append(<span class="hljs-variable language_">self</span>.tokenizer.special_tokens[<span class="hljs-string">&quot;&lt;|begin_of_text|&gt;&quot;</span>])<br>    <span class="hljs-comment"># 编码每条消息</span><br>    <span class="hljs-keyword">for</span> message <span class="hljs-keyword">in</span> dialog:<br>        tokens.extend(<span class="hljs-variable language_">self</span>.encode_message(message))<br>    <span class="hljs-comment"># 添加助手消息的开始标记，供模型生成回复</span><br>    tokens.extend(<span class="hljs-variable language_">self</span>.encode_header(&#123;<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;assistant&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;&quot;</span>&#125;))<br>    <span class="hljs-keyword">return</span> tokens<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>功能</strong>: 编码整个对话，生成模型输入的 token 序列。</li>
+<li><strong>参数</strong>:<ul>
+<li><code>dialog</code>: 一个 <code>Dialog</code> 列表，包含多条消息。</li>
+</ul>
+</li>
+<li><strong>返回值</strong>: 编码后的 token ID 序列。</li>
+<li><strong>详细步骤</strong>:<ol>
+<li>添加对话开始标记 <code>&lt;|begin_of_text|&gt;</code>。</li>
+<li>遍历对话中的每条消息，调用 <code>encode_message</code> 方法进行编码。</li>
+<li>添加助手消息的开始标记（包括角色信息和分隔符），供模型生成回复。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a><strong>总结</strong></h3><h4 id="功能"><a href="#功能" class="headerlink" title="功能"></a><strong>功能</strong></h4><p><code>ChatFormat</code> 类的主要功能是将对话消息（<code>Message</code>）编码为模型可以理解的 token 序列。它特别适用于对话生成任务，能够处理多轮对话，并生成符合模型输入格式的 token 序列。</p>
+<h4 id="核心方法"><a href="#核心方法" class="headerlink" title="核心方法"></a><strong>核心方法</strong></h4><ol>
+<li><p><strong><code>encode_header</code></strong>:</p>
+<ul>
+<li>编码消息头，包括角色信息和分隔符。</li>
+<li>用于标识每条消息的角色（如 <code>&quot;user&quot;</code> 或 <code>&quot;assistant&quot;</code>）。</li>
+</ul>
+</li>
+<li><p><strong><code>encode_message</code></strong>:</p>
+<ul>
+<li>编码整个消息，包括消息头和内容。</li>
+<li>在消息末尾添加结束标记 <code>&lt;|eot_id|&gt;</code>，表示当前消息的结束。</li>
+</ul>
+</li>
+<li><p><strong><code>encode_dialog_prompt</code></strong>:</p>
+<ul>
+<li>编码整个对话，生成模型输入的 token 序列。</li>
+<li>在对话末尾添加助手消息的开始标记，供模型生成回复。</li>
+</ul>
+</li>
+</ol>
+<h4 id="特殊-token"><a href="#特殊-token" class="headerlink" title="特殊 token"></a><strong>特殊 token</strong></h4><ul>
+<li><code>&lt;|begin_of_text|&gt;</code>: 对话开始标记。</li>
+<li><code>&lt;|start_header_id|&gt;</code>: 消息头开始标记。</li>
+<li><code>&lt;|end_header_id|&gt;</code>: 消息头结束标记。</li>
+<li><code>&lt;|eot_id|&gt;</code>: 消息结束标记。</li>
+</ul>
+<h4 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a><strong>适用场景</strong></h4><ul>
+<li><strong>对话生成</strong>: 将多轮对话编码为模型输入，生成助手的回复。</li>
+<li><strong>消息格式化</strong>: 确保每条消息的格式符合模型的要求，包括角色信息和内容分隔符。</li>
+</ul>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a><strong>示例</strong></h4><p>假设有以下对话：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">dialog = [<br>    &#123;<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;user&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;Hello, how are you?&quot;</span>&#125;,<br>    &#123;<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;assistant&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;I&#x27;m fine, thank you!&quot;</span>&#125;,<br>]<br></code></pre></td></tr></table></figure>
+<p>调用 <code>encode_dialog_prompt(dialog)</code> 后，生成的 token 序列可能如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">[<br>    &lt;|begin_of_text|&gt;,<br>    &lt;|start_header_id|&gt;, <span class="hljs-string">&quot;user&quot;</span>, &lt;|end_header_id|&gt;, <span class="hljs-string">&quot;\n\n&quot;</span>, <span class="hljs-string">&quot;Hello, how are you?&quot;</span>, &lt;|eot_id|&gt;,<br>    &lt;|start_header_id|&gt;, <span class="hljs-string">&quot;assistant&quot;</span>, &lt;|end_header_id|&gt;, <span class="hljs-string">&quot;\n\n&quot;</span>, <span class="hljs-string">&quot;I&#x27;m fine, thank you!&quot;</span>, &lt;|eot_id|&gt;,<br>    &lt;|start_header_id|&gt;, <span class="hljs-string">&quot;assistant&quot;</span>, &lt;|end_header_id|&gt;, <span class="hljs-string">&quot;\n\n&quot;</span><br>]<br></code></pre></td></tr></table></figure>
+
+<h4 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a><strong>总结</strong></h4><p><code>ChatFormat</code> 类通过定义清晰的对话格式和特殊 token，确保对话消息能够被模型正确理解和处理。它是对话生成任务中不可或缺的一部分，能够有效提升模型生成回复的准确性和连贯性。</p>
+<h2 id="Message-实例解析"><a href="#Message-实例解析" class="headerlink" title="Message 实例解析"></a><strong>Message</strong> 实例解析</h2><p>结合实际的 <code>Message</code> 输入，详细说明 <code>Tokenizer</code> 和 <code>ChatFormat</code> 两个类如何协同工作，从 <code>Message</code> 输入到输出的完整流程。我们将重点关注 <code>encode_message</code>、<code>decode_message</code> 和 <code>encode_dialog_prompt</code> 方法，并明确区分 <code>encode_message</code> 和 <code>encode_dialog_prompt</code> 的输入和输出。</p>
+<hr>
+<h3 id="1-输入数据"><a href="#1-输入数据" class="headerlink" title="1. 输入数据"></a><strong>1. 输入数据</strong></h3><p>假设我们有以下 <code>Message</code> 和 <code>Dialog</code> 输入：</p>
+<h4 id="单个消息（Message）"><a href="#单个消息（Message）" class="headerlink" title="单个消息（Message）"></a><strong>单个消息（Message）</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">message = &#123;<br>    <span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;user&quot;</span>,<br>    <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;Hello, how are you?&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="多轮对话（Dialog）"><a href="#多轮对话（Dialog）" class="headerlink" title="多轮对话（Dialog）"></a><strong>多轮对话（Dialog）</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">dialog = [<br>    &#123;<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;user&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;Hello, how are you?&quot;</span>&#125;,<br>    &#123;<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;assistant&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;I&#x27;m fine, thank you!&quot;</span>&#125;,<br>]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-Tokenizer-和-ChatFormat-初始化"><a href="#2-Tokenizer-和-ChatFormat-初始化" class="headerlink" title="2. Tokenizer 和 ChatFormat 初始化"></a><strong>2. Tokenizer 和 ChatFormat 初始化</strong></h3><p>首先，我们需要初始化 <code>Tokenizer</code> 和 <code>ChatFormat</code> 类。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 假设模型文件路径为 &quot;tiktoken_model.model&quot;</span><br>tokenizer = Tokenizer(model_path=<span class="hljs-string">&quot;tiktoken_model.model&quot;</span>)<br>chat_format = ChatFormat(tokenizer)<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-encode-message-的流程"><a href="#3-encode-message-的流程" class="headerlink" title="3. encode_message 的流程"></a><strong>3. encode_message 的流程</strong></h3><p><code>encode_message</code> 方法用于编码单个消息，包括消息头和内容。</p>
+<h4 id="输入"><a href="#输入" class="headerlink" title="输入"></a><strong>输入</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">message = &#123;<br>    <span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;user&quot;</span>,<br>    <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;Hello, how are you?&quot;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a><strong>步骤</strong></h4><ol>
+<li><p><strong>编码消息头</strong>:</p>
+<ul>
+<li>调用 <code>encode_header</code> 方法，生成消息头的 token 序列。</li>
+<li>假设 <code>encode_header</code> 返回的 token 序列为：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">[<span class="hljs-number">50258</span>, <span class="hljs-number">366</span>, <span class="hljs-number">50259</span>, <span class="hljs-number">11</span>, <span class="hljs-number">11</span>]  <span class="hljs-comment"># &lt;|start_header_id|&gt;, &quot;user&quot;, &lt;|end_header_id|&gt;, &quot;\n\n&quot;</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>编码消息内容</strong>:</p>
+<ul>
+<li>调用 <code>Tokenizer.encode</code> 方法，编码消息内容 <code>&quot;Hello, how are you?&quot;</code>。</li>
+<li>假设返回的 token 序列为：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">[<span class="hljs-number">15496</span>, <span class="hljs-number">11</span>, <span class="hljs-number">703</span>, <span class="hljs-number">527</span>, <span class="hljs-number">366</span>, <span class="hljs-number">30</span>]  <span class="hljs-comment"># &quot;Hello, how are you?&quot;</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>添加消息结束标记</strong>:</p>
+<ul>
+<li>添加 <code>&lt;|eot_id|&gt;</code> 标记，假设其 ID 为 <code>50256</code>。</li>
+<li>最终的 token 序列为：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">[<span class="hljs-number">50258</span>, <span class="hljs-number">366</span>, <span class="hljs-number">50259</span>, <span class="hljs-number">11</span>, <span class="hljs-number">11</span>, <span class="hljs-number">15496</span>, <span class="hljs-number">11</span>, <span class="hljs-number">703</span>, <span class="hljs-number">527</span>, <span class="hljs-number">366</span>, <span class="hljs-number">30</span>, <span class="hljs-number">50256</span>]<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<h4 id="输出"><a href="#输出" class="headerlink" title="输出"></a><strong>输出</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">encoded_message = chat_format.encode_message(message)<br><span class="hljs-comment"># encoded_message = [50258, 366, 50259, 11, 11, 15496, 11, 703, 527, 366, 30, 50256]</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="4-decode-message-的流程"><a href="#4-decode-message-的流程" class="headerlink" title="4. decode_message 的流程"></a><strong>4. decode_message 的流程</strong></h3><p><code>decode_message</code> 方法用于将 token 序列解码回原始消息。</p>
+<h4 id="输入-1"><a href="#输入-1" class="headerlink" title="输入"></a><strong>输入</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">encoded_message = [<span class="hljs-number">50258</span>, <span class="hljs-number">366</span>, <span class="hljs-number">50259</span>, <span class="hljs-number">11</span>, <span class="hljs-number">11</span>, <span class="hljs-number">15496</span>, <span class="hljs-number">11</span>, <span class="hljs-number">703</span>, <span class="hljs-number">527</span>, <span class="hljs-number">366</span>, <span class="hljs-number">30</span>, <span class="hljs-number">50256</span>]<br></code></pre></td></tr></table></figure>
+
+<h4 id="步骤-1"><a href="#步骤-1" class="headerlink" title="步骤"></a><strong>步骤</strong></h4><ol>
+<li><p><strong>解码 token 序列</strong>:</p>
+<ul>
+<li>调用 <code>Tokenizer.decode</code> 方法，将 token 序列解码为字符串。</li>
+<li>假设解码结果为：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-string">&quot;&lt;|start_header_id|&gt;user&lt;|end_header_id|&gt;\n\nHello, how are you?&lt;|eot_id|&gt;&quot;</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>提取消息内容</strong>:</p>
+<ul>
+<li>从解码结果中提取消息内容 <code>&quot;Hello, how are you?&quot;</code>。</li>
+</ul>
+</li>
+</ol>
+<h4 id="输出-1"><a href="#输出-1" class="headerlink" title="输出"></a><strong>输出</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">decoded_message = tokenizer.decode(encoded_message)<br><span class="hljs-comment"># decoded_message = &quot;&lt;|start_header_id|&gt;user&lt;|end_header_id|&gt;\n\nHello, how are you?&lt;|eot_id|&gt;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="5-encode-dialog-prompt-的流程"><a href="#5-encode-dialog-prompt-的流程" class="headerlink" title="5. encode_dialog_prompt 的流程"></a><strong>5. encode_dialog_prompt 的流程</strong></h3><p><code>encode_dialog_prompt</code> 方法用于编码整个对话，生成模型输入的 token 序列。</p>
+<h4 id="输入-2"><a href="#输入-2" class="headerlink" title="输入"></a><strong>输入</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">dialog = [<br>    &#123;<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;user&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;Hello, how are you?&quot;</span>&#125;,<br>    &#123;<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;assistant&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;I&#x27;m fine, thank you!&quot;</span>&#125;,<br>]<br></code></pre></td></tr></table></figure>
+
+<h4 id="步骤-2"><a href="#步骤-2" class="headerlink" title="步骤"></a><strong>步骤</strong></h4><ol>
+<li><p><strong>添加对话开始标记</strong>:</p>
+<ul>
+<li>添加 <code>&lt;|begin_of_text|&gt;</code> 标记，假设其 ID 为 <code>50257</code>。</li>
+<li>当前的 token 序列为：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">[<span class="hljs-number">50257</span>]<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>编码每条消息</strong>:</p>
+<ul>
+<li>对每条消息调用 <code>encode_message</code> 方法，生成 token 序列。</li>
+<li>假设第一条消息的 token 序列为：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">[<span class="hljs-number">50258</span>, <span class="hljs-number">366</span>, <span class="hljs-number">50259</span>, <span class="hljs-number">11</span>, <span class="hljs-number">11</span>, <span class="hljs-number">15496</span>, <span class="hljs-number">11</span>, <span class="hljs-number">703</span>, <span class="hljs-number">527</span>, <span class="hljs-number">366</span>, <span class="hljs-number">30</span>, <span class="hljs-number">50256</span>]<br></code></pre></td></tr></table></figure></li>
+<li>假设第二条消息的 token 序列为：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">[<span class="hljs-number">50258</span>, <span class="hljs-number">527</span>, <span class="hljs-number">50259</span>, <span class="hljs-number">11</span>, <span class="hljs-number">11</span>, <span class="hljs-number">366</span>, <span class="hljs-number">30</span>, <span class="hljs-number">703</span>, <span class="hljs-number">527</span>, <span class="hljs-number">366</span>, <span class="hljs-number">30</span>, <span class="hljs-number">50256</span>]<br></code></pre></td></tr></table></figure></li>
+<li>将两条消息的 token 序列合并：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">[<span class="hljs-number">50257</span>, <span class="hljs-number">50258</span>, <span class="hljs-number">366</span>, <span class="hljs-number">50259</span>, <span class="hljs-number">11</span>, <span class="hljs-number">11</span>, <span class="hljs-number">15496</span>, <span class="hljs-number">11</span>, <span class="hljs-number">703</span>, <span class="hljs-number">527</span>, <span class="hljs-number">366</span>, <span class="hljs-number">30</span>, <span class="hljs-number">50256</span>, <span class="hljs-number">50258</span>, <span class="hljs-number">527</span>, <span class="hljs-number">50259</span>, <span class="hljs-number">11</span>, <span class="hljs-number">11</span>, <span class="hljs-number">366</span>, <span class="hljs-number">30</span>, <span class="hljs-number">703</span>, <span class="hljs-number">527</span>, <span class="hljs-number">366</span>, <span class="hljs-number">30</span>, <span class="hljs-number">50256</span>]<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>添加助手消息的开始标记</strong>:</p>
+<ul>
+<li>添加助手消息的开始标记（包括角色信息和分隔符），供模型生成回复。</li>
+<li>假设生成的 token 序列为：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">[<span class="hljs-number">50258</span>, <span class="hljs-number">527</span>, <span class="hljs-number">50259</span>, <span class="hljs-number">11</span>, <span class="hljs-number">11</span>]<br></code></pre></td></tr></table></figure></li>
+<li>最终的 token 序列为：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">[<span class="hljs-number">50257</span>, <span class="hljs-number">50258</span>, <span class="hljs-number">366</span>, <span class="hljs-number">50259</span>, <span class="hljs-number">11</span>, <span class="hljs-number">11</span>, <span class="hljs-number">15496</span>, <span class="hljs-number">11</span>, <span class="hljs-number">703</span>, <span class="hljs-number">527</span>, <span class="hljs-number">366</span>, <span class="hljs-number">30</span>, <span class="hljs-number">50256</span>, <span class="hljs-number">50258</span>, <span class="hljs-number">527</span>, <span class="hljs-number">50259</span>, <span class="hljs-number">11</span>, <span class="hljs-number">11</span>, <span class="hljs-number">366</span>, <span class="hljs-number">30</span>, <span class="hljs-number">703</span>, <span class="hljs-number">527</span>, <span class="hljs-number">366</span>, <span class="hljs-number">30</span>, <span class="hljs-number">50256</span>, <span class="hljs-number">50258</span>, <span class="hljs-number">527</span>, <span class="hljs-number">50259</span>, <span class="hljs-number">11</span>, <span class="hljs-number">11</span>]<br></code></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<h4 id="输出-2"><a href="#输出-2" class="headerlink" title="输出"></a><strong>输出</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">encoded_dialog = chat_format.encode_dialog_prompt(dialog)<br><span class="hljs-comment"># encoded_dialog = [50257, 50258, 366, 50259, 11, 11, 15496, 11, 703, 527, 366, 30, 50256, 50258, 527, 50259, 11, 11, 366, 30, 703, 527, 366, 30, 50256, 50258, 527, 50259, 11, 11]</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="6-区分-encode-message-和-encode-dialog-prompt"><a href="#6-区分-encode-message-和-encode-dialog-prompt" class="headerlink" title="6. 区分 encode_message 和 encode_dialog_prompt"></a><strong>6. 区分 encode_message 和 encode_dialog_prompt</strong></h3><h4 id="encode-message"><a href="#encode-message" class="headerlink" title="encode_message"></a><strong>encode_message</strong></h4><ul>
+<li><strong>输入</strong>: 单个 <code>Message</code> 字典。</li>
+<li><strong>输出</strong>: 编码后的 token 序列，包含消息头、内容和结束标记。</li>
+<li><strong>用途</strong>: 用于编码单条消息。</li>
+</ul>
+<h4 id="encode-dialog-prompt"><a href="#encode-dialog-prompt" class="headerlink" title="encode_dialog_prompt"></a><strong>encode_dialog_prompt</strong></h4><ul>
+<li><strong>输入</strong>: 一个 <code>Dialog</code> 列表，包含多条消息。</li>
+<li><strong>输出</strong>: 编码后的 token 序列，包含对话开始标记、所有消息的编码以及助手消息的开始标记。</li>
+<li><strong>用途</strong>: 用于编码整个对话，生成模型输入的 token 序列。</li>
+</ul>
+<hr>
+<h3 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a><strong>7. 总结</strong></h3><p>通过 <code>Tokenizer</code> 和 <code>ChatFormat</code> 两个类的协同工作，我们可以将 <code>Message</code> 和 <code>Dialog</code> 编码为模型可以理解的 token 序列，并能够将 token 序列解码回原始文本。以下是完整的流程总结：</p>
+<ol>
+<li><p><strong>单个消息编码</strong>:</p>
+<ul>
+<li>使用 <code>encode_message</code> 方法，将 <code>Message</code> 编码为 token 序列。</li>
+<li>输出包含消息头、内容和结束标记。</li>
+</ul>
+</li>
+<li><p><strong>对话编码</strong>:</p>
+<ul>
+<li>使用 <code>encode_dialog_prompt</code> 方法，将 <code>Dialog</code> 编码为 token 序列。</li>
+<li>输出包含对话开始标记、所有消息的编码以及助手消息的开始标记。</li>
+</ul>
+</li>
+<li><p><strong>解码</strong>:</p>
+<ul>
+<li>使用 <code>Tokenizer.decode</code> 方法，将 token 序列解码回原始文本。</li>
+</ul>
+</li>
+</ol>
+<p>通过这种方式，<code>Tokenizer</code> 和 <code>ChatFormat</code> 能够高效地处理对话数据，为语言模型提供格式化的输入。</p>
+<p>文章合集：<a target="_blank" rel="noopener" href="https://github.com/chongzicbo/ReadWriteThink/tree/main">chongzicbo&#x2F;ReadWriteThink: 博学而笃志，切问而近思 (github.com)</a></p>
+<p>个人博客：<a href="https://chongzicbo.github.io/">程博仕</a></p>
+<p>微信公众号：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg" srcset="/img/loading.gif" lazyload alt="微信公众号"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" class="category-chain-item">人工智能</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/" class="category-chain-item">nlp</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/" class="category-chain-item">llm</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/nlp/" class="print-no-link">#nlp</a>
+      
+        <a href="/tags/llm/" class="print-no-link">#llm</a>
+      
+        <a href="/tags/llama/" class="print-no-link">#llama</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>llama3源码解析-02：tokenizer模块解析</div>
+      <div>https://chongzicbo.github.io/2024/12/26/人工智能/nlp/llm/源码解析：llama3源码解析-02：tokenizer模块解析/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>程博</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>December 26, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/26/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB14%EF%BC%9AMiniCPM%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90/" title="MiniCPM详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">MiniCPM详解</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/26/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/OCR/%E5%A4%9A%E6%A8%A1%E6%80%81003%EF%BC%9AOCR%E7%AE%97%E6%B3%95%E3%80%81%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0/" title="OCR算法、模型综述">
+                        <span class="hidden-mobile">OCR算法、模型综述</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/chongzicbo" target="_blank" rel="nofollow noopener"><span>Github</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
