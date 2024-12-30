@@ -1,0 +1,1647 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/daxiong.jpg">
+  <link rel="icon" href="/img/daxiong.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="程博">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="整体generation.py 模块是 Llama 3 模型的核心生成模块，负责实现文本生成功能，包括文本补全和对话生成。  1. 核心功能 文本生成：根据输入的提示（prompt）生成文本。 文本补全：对给定的文本提示进行补全。 对话生成：根据对话历史生成助理的回复。 生成控制：支持通过温度（temperature）、top-p 采样（nucleus sampling）等参数控制生成过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="llama3源码解析-04：generation.py模块解析">
+<meta property="og:url" content="https://chongzicbo.github.io/2024/12/30/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-04%EF%BC%9Ageneration.py%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="程博仕">
+<meta property="og:description" content="整体generation.py 模块是 Llama 3 模型的核心生成模块，负责实现文本生成功能，包括文本补全和对话生成。  1. 核心功能 文本生成：根据输入的提示（prompt）生成文本。 文本补全：对给定的文本提示进行补全。 对话生成：根据对话历史生成助理的回复。 生成控制：支持通过温度（temperature）、top-p 采样（nucleus sampling）等参数控制生成过程。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/Llama3_Repo.jpeg">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241230115215231.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
+<meta property="article:published_time" content="2024-12-30T04:00:00.000Z">
+<meta property="article:modified_time" content="2024-12-30T03:53:57.855Z">
+<meta property="article:author" content="程博">
+<meta property="article:tag" content="nlp">
+<meta property="article:tag" content="llm">
+<meta property="article:tag" content="llama">
+<meta property="article:tag" content="源码解析">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/Llama3_Repo.jpeg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>llama3源码解析-04：generation.py模块解析 - 程博仕</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":"3841b375bfdd5627f0f840e1e289416e","google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?3841b375bfdd5627f0f840e1e289416e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>程博仕</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>人工智能</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/asr" target="_self">
+                    
+                    <span>语音识别</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>开发</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91" target="_self">
+                    
+                    <span>音视频</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/web&#39;" target="_self">
+                    
+                    <span>Web开发</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>文章分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>时间轴</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="llama3源码解析-04：generation.py模块解析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        程博
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-30 12:00" pubdate>
+          December 30, 2024 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.4k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          46 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">llama3源码解析-04：generation.py模块解析</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    Last updated on December 30, 2024 am
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/Llama3_Repo.jpeg" srcset="/img/loading.gif" lazyload alt="llama"></p>
+<h2 id="整体"><a href="#整体" class="headerlink" title="整体"></a>整体</h2><p><code>generation.py</code> 模块是 Llama 3 模型的核心生成模块，负责实现文本生成功能，包括文本补全和对话生成。</p>
+<hr>
+<h3 id="1-核心功能"><a href="#1-核心功能" class="headerlink" title="1. 核心功能"></a><strong>1. 核心功能</strong></h3><ul>
+<li><strong>文本生成</strong>：根据输入的提示（prompt）生成文本。</li>
+<li><strong>文本补全</strong>：对给定的文本提示进行补全。</li>
+<li><strong>对话生成</strong>：根据对话历史生成助理的回复。</li>
+<li><strong>生成控制</strong>：支持通过温度（temperature）、top-p 采样（nucleus sampling）等参数控制生成过程。</li>
+</ul>
+<hr>
+<h3 id="2-主要类和方法"><a href="#2-主要类和方法" class="headerlink" title="2. 主要类和方法"></a><strong>2. 主要类和方法</strong></h3><h4 id="class-Llama"><a href="#class-Llama" class="headerlink" title="class Llama"></a><strong><code>class Llama</code></strong></h4><ul>
+<li><strong><code>build</code> 方法</strong>：初始化并加载 Llama 模型和分词器。</li>
+<li><strong><code>generate</code> 方法</strong>：核心生成方法，根据输入的 tokenized prompts 生成文本。</li>
+<li><strong><code>text_completion</code> 方法</strong>：对文本提示进行补全。</li>
+<li><strong><code>chat_completion</code> 方法</strong>：根据对话历史生成助理的回复。</li>
+</ul>
+<h4 id="class-CompletionPrediction"><a href="#class-CompletionPrediction" class="headerlink" title="class CompletionPrediction"></a><strong><code>class CompletionPrediction</code></strong></h4><ul>
+<li>用于表示文本补全的生成结果，包含生成的文本、token 列表和 logprobs（可选）。</li>
+</ul>
+<h4 id="class-ChatPrediction"><a href="#class-ChatPrediction" class="headerlink" title="class ChatPrediction"></a><strong><code>class ChatPrediction</code></strong></h4><ul>
+<li>用于表示对话生成的生成结果，包含助理的回复、token 列表和 logprobs（可选）。</li>
+</ul>
+<hr>
+<h3 id="3-核心方法详解"><a href="#3-核心方法详解" class="headerlink" title="3. 核心方法详解"></a><strong>3. 核心方法详解</strong></h3><h4 id="generate-方法"><a href="#generate-方法" class="headerlink" title="generate 方法"></a><strong><code>generate</code> 方法</strong></h4><ul>
+<li><strong>功能</strong>：根据输入的 tokenized prompts 生成文本。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>prompt_tokens</code>：tokenized prompts，形状为 <code>(batch_size, seq_len)</code>。</li>
+<li><code>max_gen_len</code>：生成文本的最大长度。</li>
+<li><code>temperature</code>：控制生成随机性的温度参数。</li>
+<li><code>top_p</code>：top-p 采样的概率阈值。</li>
+<li><code>logprobs</code>：是否计算 token 的 log 概率。</li>
+<li><code>echo</code>：是否在生成结果中包含输入提示。</li>
+</ul>
+</li>
+<li><strong>返回值</strong>：生成的 token 序列和 logprobs（可选）。</li>
+</ul>
+<h4 id="text-completion-方法"><a href="#text-completion-方法" class="headerlink" title="text_completion 方法"></a><strong><code>text_completion</code> 方法</strong></h4><ul>
+<li><strong>功能</strong>：对文本提示进行补全。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>prompts</code>：文本提示列表。</li>
+<li><code>temperature</code>：控制生成随机性的温度参数。</li>
+<li><code>top_p</code>：top-p 采样的概率阈值。</li>
+<li><code>max_gen_len</code>：生成文本的最大长度。</li>
+<li><code>logprobs</code>：是否计算 token 的 log 概率。</li>
+<li><code>echo</code>：是否在生成结果中包含输入提示。</li>
+</ul>
+</li>
+<li><strong>返回值</strong>：文本补全的生成结果列表。</li>
+</ul>
+<h4 id="chat-completion-方法"><a href="#chat-completion-方法" class="headerlink" title="chat_completion 方法"></a><strong><code>chat_completion</code> 方法</strong></h4><ul>
+<li><strong>功能</strong>：根据对话历史生成助理的回复。</li>
+<li><strong>参数</strong>：<ul>
+<li><code>dialogs</code>：对话历史列表。</li>
+<li><code>temperature</code>：控制生成随机性的温度参数。</li>
+<li><code>top_p</code>：top-p 采样的概率阈值。</li>
+<li><code>max_gen_len</code>：生成文本的最大长度。</li>
+<li><code>logprobs</code>：是否计算 token 的 log 概率。</li>
+</ul>
+</li>
+<li><strong>返回值</strong>：对话生成的生成结果列表。</li>
+</ul>
+<hr>
+<h3 id="4-生成控制参数"><a href="#4-生成控制参数" class="headerlink" title="4. 生成控制参数"></a><strong>4. 生成控制参数</strong></h3><ul>
+<li><strong>温度（temperature）</strong>：<ul>
+<li>控制生成随机性的参数。</li>
+<li>值越大，生成结果越随机；值越小，生成结果越确定。</li>
+</ul>
+</li>
+<li><strong>top-p 采样（nucleus sampling）</strong>：<ul>
+<li>从概率累积值超过 <code>top_p</code> 的最小 token 集合中采样。</li>
+<li>用于控制生成结果的多样性和质量。</li>
+</ul>
+</li>
+<li><strong>logprobs</strong>：<ul>
+<li>是否计算生成 token 的 log 概率。</li>
+<li>用于分析生成结果的置信度。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="5-生成流程"><a href="#5-生成流程" class="headerlink" title="5. 生成流程"></a><strong>5. 生成流程</strong></h3><ol>
+<li><strong>输入处理</strong>：<ul>
+<li>将输入提示或对话历史转换为 tokenized prompts。</li>
+</ul>
+</li>
+<li><strong>生成文本</strong>：<ul>
+<li>使用 <code>generate</code> 方法生成 token 序列。</li>
+<li>通过温度、top-p 采样等参数控制生成过程。</li>
+</ul>
+</li>
+<li><strong>输出处理</strong>：<ul>
+<li>将生成的 token 序列解码为文本。</li>
+<li>返回生成结果，包含生成的文本、token 列表和 logprobs（可选）。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="6-示例"><a href="#6-示例" class="headerlink" title="6. 示例"></a><strong>6. 示例</strong></h3><h4 id="文本补全"><a href="#文本补全" class="headerlink" title="文本补全"></a><strong>文本补全</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">prompts = [<span class="hljs-string">&quot;Once upon a time&quot;</span>]<br>results = llama.text_completion(prompts, max_gen_len=<span class="hljs-number">50</span>)<br><span class="hljs-keyword">for</span> result <span class="hljs-keyword">in</span> results:<br>    <span class="hljs-built_in">print</span>(result[<span class="hljs-string">&quot;generation&quot;</span>])<br></code></pre></td></tr></table></figure>
+
+<h4 id="对话生成"><a href="#对话生成" class="headerlink" title="对话生成"></a><strong>对话生成</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">dialogs = [<br>    [&#123;<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;user&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;What is the capital of France?&quot;</span>&#125;]<br>]<br>results = llama.chat_completion(dialogs, max_gen_len=<span class="hljs-number">50</span>)<br><span class="hljs-keyword">for</span> result <span class="hljs-keyword">in</span> results:<br>    <span class="hljs-built_in">print</span>(result[<span class="hljs-string">&quot;generation&quot;</span>][<span class="hljs-string">&quot;content&quot;</span>])<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a><strong>7. 总结</strong></h3><p><code>generation.py</code> 模块是 Llama 3 模型的核心生成模块，提供了文本补全和对话生成功能。通过温度、top-p 采样等参数，用户可以灵活控制生成过程。</p>
+<h2 id="build-方法"><a href="#build-方法" class="headerlink" title="build 方法"></a><code>build</code> 方法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-meta">@staticmethod</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">build</span>(<span class="hljs-params"></span><br><span class="hljs-params">    ckpt_dir: <span class="hljs-built_in">str</span>,</span><br><span class="hljs-params">    tokenizer_path: <span class="hljs-built_in">str</span>,</span><br><span class="hljs-params">    max_seq_len: <span class="hljs-built_in">int</span>,</span><br><span class="hljs-params">    max_batch_size: <span class="hljs-built_in">int</span>,</span><br><span class="hljs-params">    model_parallel_size: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">int</span>] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    seed: <span class="hljs-built_in">int</span> = <span class="hljs-number">1</span>,</span><br><span class="hljs-params"></span>) -&gt; <span class="hljs-string">&quot;Llama&quot;</span>:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    初始化并加载 Llama 模型。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    参数:</span><br><span class="hljs-string">        ckpt_dir (str): 包含模型检查点文件的目录路径。</span><br><span class="hljs-string">        tokenizer_path (str): 分词器文件的路径。</span><br><span class="hljs-string">        max_seq_len (int): 输入序列的最大长度。</span><br><span class="hljs-string">        max_batch_size (int): 推理时的最大批次大小。</span><br><span class="hljs-string">        model_parallel_size (Optional[int], optional): 模型并行的大小（GPU 数量）。如果未提供，则从环境变量中获取。默认为 None。</span><br><span class="hljs-string">        seed (int, optional): 随机种子，确保所有进程的随机性一致。默认为 1。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    返回:</span><br><span class="hljs-string">        Llama: 加载了模型和分词器的 Llama 实例。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    异常:</span><br><span class="hljs-string">        AssertionError: 如果检查点目录中没有检查点文件，或者模型并行大小与检查点文件数量不匹配。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    注意:</span><br><span class="hljs-string">        该方法会初始化分布式进程组，设置设备为 CUDA，并加载预训练模型和分词器。</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-comment"># 检查 max_seq_len 是否在有效范围内</span><br>    <span class="hljs-keyword">assert</span> <span class="hljs-number">1</span> &lt;= max_seq_len &lt;= <span class="hljs-number">8192</span>, <span class="hljs-string">f&quot;max_seq_len must be between 1 and 8192, got <span class="hljs-subst">&#123;max_seq_len&#125;</span>.&quot;</span><br>    <span class="hljs-comment"># 检查检查点目录是否存在</span><br>    <span class="hljs-keyword">assert</span> os.path.isdir(ckpt_dir), <span class="hljs-string">f&quot;Checkpoint directory &#x27;<span class="hljs-subst">&#123;ckpt_dir&#125;</span>&#x27; does not exist.&quot;</span><br>    <span class="hljs-comment"># 检查分词器文件是否存在</span><br>    <span class="hljs-keyword">assert</span> os.path.isfile(tokenizer_path), <span class="hljs-string">f&quot;Tokenizer file &#x27;<span class="hljs-subst">&#123;tokenizer_path&#125;</span>&#x27; does not exist.&quot;</span><br><br>    <span class="hljs-comment"># 如果分布式进程组未初始化，则初始化</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> torch.distributed.is_initialized():<br>        torch.distributed.init_process_group(<span class="hljs-string">&quot;nccl&quot;</span>)<br>    <span class="hljs-comment"># 如果模型并行未初始化，则初始化</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> model_parallel_is_initialized():<br>        <span class="hljs-comment"># 如果未提供 model_parallel_size，则从环境变量中获取</span><br>        <span class="hljs-keyword">if</span> model_parallel_size <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>            model_parallel_size = <span class="hljs-built_in">int</span>(os.environ.get(<span class="hljs-string">&quot;WORLD_SIZE&quot;</span>, <span class="hljs-number">1</span>))<br>        initialize_model_parallel(model_parallel_size)<br><br>    <span class="hljs-comment"># 获取当前进程的本地 rank</span><br>    local_rank = <span class="hljs-built_in">int</span>(os.environ.get(<span class="hljs-string">&quot;LOCAL_RANK&quot;</span>, <span class="hljs-number">0</span>))<br>    <span class="hljs-comment"># 设置当前进程使用的 GPU 设备</span><br>    torch.cuda.set_device(local_rank)<br><br>    <span class="hljs-comment"># 设置随机种子，确保所有进程的随机性一致</span><br>    torch.manual_seed(seed)<br><br>    <span class="hljs-comment"># 如果当前进程不是主进程（rank &gt; 0），则关闭标准输出</span><br>    <span class="hljs-keyword">if</span> local_rank &gt; <span class="hljs-number">0</span>:<br>        sys.stdout = <span class="hljs-built_in">open</span>(os.devnull, <span class="hljs-string">&quot;w&quot;</span>)<br><br>    <span class="hljs-comment"># 记录加载模型的开始时间</span><br>    start_time = time.time()<br>    <span class="hljs-comment"># 获取检查点目录中的所有 .pth 文件，并按文件名排序</span><br>    checkpoints = <span class="hljs-built_in">sorted</span>(Path(ckpt_dir).glob(<span class="hljs-string">&quot;*.pth&quot;</span>))<br>    <span class="hljs-comment"># 检查检查点目录中是否有检查点文件</span><br>    <span class="hljs-keyword">assert</span> <span class="hljs-built_in">len</span>(checkpoints) &gt; <span class="hljs-number">0</span>, <span class="hljs-string">f&quot;no checkpoint files found in <span class="hljs-subst">&#123;ckpt_dir&#125;</span>&quot;</span><br>    <span class="hljs-comment"># 检查模型并行大小是否与检查点文件数量匹配</span><br>    <span class="hljs-keyword">assert</span> model_parallel_size == <span class="hljs-built_in">len</span>(<br>        checkpoints<br>    ), <span class="hljs-string">f&quot;Loading a checkpoint for MP=<span class="hljs-subst">&#123;<span class="hljs-built_in">len</span>(checkpoints)&#125;</span> but world size is <span class="hljs-subst">&#123;model_parallel_size&#125;</span>&quot;</span><br>    <span class="hljs-comment"># 获取当前进程对应的检查点文件</span><br>    ckpt_path = checkpoints[get_model_parallel_rank()]<br>    <span class="hljs-comment"># 加载检查点文件到 CPU</span><br>    checkpoint = torch.load(ckpt_path, map_location=<span class="hljs-string">&quot;cpu&quot;</span>)<br>    <span class="hljs-comment"># 加载模型参数文件</span><br>    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(Path(ckpt_dir) / <span class="hljs-string">&quot;params.json&quot;</span>, <span class="hljs-string">&quot;r&quot;</span>) <span class="hljs-keyword">as</span> f:<br>        params = json.loads(f.read())<br><br>    <span class="hljs-comment"># 初始化模型参数</span><br>    model_args: ModelArgs = ModelArgs(<br>        max_seq_len=max_seq_len,<br>        max_batch_size=max_batch_size,<br>        **params,<br>    )<br>    <span class="hljs-comment"># 初始化分词器</span><br>    tokenizer = Tokenizer(model_path=tokenizer_path)<br>    <span class="hljs-comment"># 检查模型词汇表大小是否与分词器词汇表大小匹配</span><br>    <span class="hljs-keyword">assert</span> model_args.vocab_size == tokenizer.n_words<br>    <span class="hljs-comment"># 如果当前设备支持 bfloat16，则设置默认张量类型为 bfloat16，否则设置为 float16</span><br>    <span class="hljs-keyword">if</span> torch.cuda.is_bf16_supported():<br>        torch.set_default_tensor_type(torch.cuda.BFloat16Tensor)<br>    <span class="hljs-keyword">else</span>:<br>        torch.set_default_tensor_type(torch.cuda.HalfTensor)<br>    <span class="hljs-comment"># 初始化 Transformer 模型</span><br>    model = Transformer(model_args)<br>    <span class="hljs-comment"># 加载模型权重</span><br>    model.load_state_dict(checkpoint, strict=<span class="hljs-literal">False</span>)<br>    <span class="hljs-comment"># 打印模型加载时间</span><br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Loaded in <span class="hljs-subst">&#123;time.time() - start_time:<span class="hljs-number">.2</span>f&#125;</span> seconds&quot;</span>)<br><br>    <span class="hljs-comment"># 返回 Llama 实例，包含加载的模型和分词器</span><br>    <span class="hljs-keyword">return</span> Llama(model, tokenizer)<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="详细解释"><a href="#详细解释" class="headerlink" title="详细解释"></a><strong>详细解释</strong></h3><h4 id="1-参数检查"><a href="#1-参数检查" class="headerlink" title="1. 参数检查"></a><strong>1. 参数检查</strong></h4><ul>
+<li><strong><code>max_seq_len</code></strong>: 检查输入序列的最大长度是否在有效范围内（1 到 8192）。</li>
+<li><strong><code>ckpt_dir</code></strong>: 检查检查点目录是否存在。</li>
+<li><strong><code>tokenizer_path</code></strong>: 检查分词器文件是否存在。</li>
+</ul>
+<h4 id="2-分布式初始化"><a href="#2-分布式初始化" class="headerlink" title="2. 分布式初始化"></a><strong>2. 分布式初始化</strong></h4><ul>
+<li>如果分布式进程组未初始化，则使用 <code>torch.distributed.init_process_group</code> 初始化。</li>
+<li>如果模型并行未初始化，则根据 <code>model_parallel_size</code> 或环境变量初始化模型并行。</li>
+</ul>
+<h4 id="3-设备设置"><a href="#3-设备设置" class="headerlink" title="3. 设备设置"></a><strong>3. 设备设置</strong></h4><ul>
+<li>获取当前进程的本地 rank，并设置使用的 GPU 设备。</li>
+</ul>
+<h4 id="4-随机种子"><a href="#4-随机种子" class="headerlink" title="4. 随机种子"></a><strong>4. 随机种子</strong></h4><ul>
+<li>设置随机种子，确保所有进程的随机性一致。</li>
+</ul>
+<h4 id="5-检查点加载"><a href="#5-检查点加载" class="headerlink" title="5. 检查点加载"></a><strong>5. 检查点加载</strong></h4><ul>
+<li>获取检查点目录中的所有 <code>.pth</code> 文件，并按文件名排序。</li>
+<li>检查检查点文件数量和模型并行大小是否匹配。</li>
+<li>加载当前进程对应的检查点文件到 CPU。</li>
+</ul>
+<h4 id="6-模型参数加载"><a href="#6-模型参数加载" class="headerlink" title="6. 模型参数加载"></a><strong>6. 模型参数加载</strong></h4><ul>
+<li>从 <code>params.json</code> 文件中加载模型参数。</li>
+<li>使用 <code>ModelArgs</code> 初始化模型参数。</li>
+</ul>
+<h4 id="7-分词器初始化"><a href="#7-分词器初始化" class="headerlink" title="7. 分词器初始化"></a><strong>7. 分词器初始化</strong></h4><ul>
+<li>使用 <code>Tokenizer</code> 初始化分词器，并检查模型词汇表大小是否与分词器词汇表大小匹配。</li>
+</ul>
+<h4 id="8-张量类型设置"><a href="#8-张量类型设置" class="headerlink" title="8. 张量类型设置"></a><strong>8. 张量类型设置</strong></h4><ul>
+<li>如果当前设备支持 <code>bfloat16</code>，则设置默认张量类型为 <code>bfloat16</code>，否则设置为 <code>float16</code>。</li>
+</ul>
+<h4 id="9-模型初始化"><a href="#9-模型初始化" class="headerlink" title="9. 模型初始化"></a><strong>9. 模型初始化</strong></h4><ul>
+<li>使用 <code>Transformer</code> 初始化模型，并加载检查点中的权重。</li>
+</ul>
+<h4 id="10-返回-Llama-实例"><a href="#10-返回-Llama-实例" class="headerlink" title="10. 返回 Llama 实例"></a><strong>10. 返回 Llama 实例</strong></h4><ul>
+<li>返回包含加载的模型和分词器的 <code>Llama</code> 实例。</li>
+</ul>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p><code>build</code> 方法负责初始化并加载 Llama 模型，包括分布式设置、设备配置、检查点加载、模型参数初始化、分词器初始化等。它是 Llama 模型的核心初始化方法，确保模型能够正确加载并准备好进行推理或训练。</p>
+<h2 id="generate-方法-1"><a href="#generate-方法-1" class="headerlink" title="generate 方法"></a><code>generate</code> 方法</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-meta">@torch.inference_mode()</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">generate</span>(<span class="hljs-params"></span><br><span class="hljs-params">    self,</span><br><span class="hljs-params">    prompt_tokens: <span class="hljs-type">List</span>[<span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]],</span><br><span class="hljs-params">    max_gen_len: <span class="hljs-built_in">int</span>,</span><br><span class="hljs-params">    temperature: <span class="hljs-built_in">float</span> = <span class="hljs-number">0.6</span>,</span><br><span class="hljs-params">    top_p: <span class="hljs-built_in">float</span> = <span class="hljs-number">0.9</span>,</span><br><span class="hljs-params">    logprobs: <span class="hljs-built_in">bool</span> = <span class="hljs-literal">False</span>,</span><br><span class="hljs-params">    echo: <span class="hljs-built_in">bool</span> = <span class="hljs-literal">False</span>,</span><br><span class="hljs-params"></span>) -&gt; <span class="hljs-type">Tuple</span>[<span class="hljs-type">List</span>[<span class="hljs-type">List</span>[<span class="hljs-built_in">int</span>]], <span class="hljs-type">Optional</span>[<span class="hljs-type">List</span>[<span class="hljs-type">List</span>[<span class="hljs-built_in">float</span>]]]]:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    根据输入的 tokenized prompts 生成文本。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    参数:</span><br><span class="hljs-string">        prompt_tokens (List[List[int]]): tokenized prompts，每个 prompt 是一个整数列表。</span><br><span class="hljs-string">        max_gen_len (int): 生成文本的最大长度。</span><br><span class="hljs-string">        temperature (float, optional): 控制生成随机性的温度参数。默认为 0.6。</span><br><span class="hljs-string">        top_p (float, optional): top-p 采样的概率阈值。默认为 0.9。</span><br><span class="hljs-string">        logprobs (bool, optional): 是否计算 token 的 log 概率。默认为 False。</span><br><span class="hljs-string">        echo (bool, optional): 是否在生成结果中包含输入提示。默认为 False。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    返回:</span><br><span class="hljs-string">        Tuple[List[List[int]], Optional[List[List[float]]]]: 生成的 token 序列和 logprobs（可选）。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    注意:</span><br><span class="hljs-string">        该方法使用 nucleus sampling（top-p 采样）生成文本，支持通过温度参数控制生成随机性。</span><br><span class="hljs-string">        如果 logprobs 为 True，则返回每个生成 token 的 log 概率。</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-comment"># 获取模型参数</span><br>    params = <span class="hljs-variable language_">self</span>.model.params<br>    <span class="hljs-comment"># 获取批次大小</span><br>    bsz = <span class="hljs-built_in">len</span>(prompt_tokens)<br>    <span class="hljs-comment"># 检查批次大小是否超过模型的最大批次大小</span><br>    <span class="hljs-keyword">assert</span> bsz &lt;= params.max_batch_size, (bsz, params.max_batch_size)<br><br>    <span class="hljs-comment"># 计算输入 prompts 的最小和最大长度</span><br>    min_prompt_len = <span class="hljs-built_in">min</span>(<span class="hljs-built_in">len</span>(t) <span class="hljs-keyword">for</span> t <span class="hljs-keyword">in</span> prompt_tokens)<br>    max_prompt_len = <span class="hljs-built_in">max</span>(<span class="hljs-built_in">len</span>(t) <span class="hljs-keyword">for</span> t <span class="hljs-keyword">in</span> prompt_tokens)<br>    <span class="hljs-comment"># 检查输入 prompts 的最大长度是否超过模型的最大序列长度</span><br>    <span class="hljs-keyword">assert</span> max_prompt_len &lt;= params.max_seq_len<br>    <span class="hljs-comment"># 计算总长度（输入 prompts 长度 + 生成文本长度）</span><br>    total_len = <span class="hljs-built_in">min</span>(params.max_seq_len, max_gen_len + max_prompt_len)<br><br>    <span class="hljs-comment"># 获取填充 token 的 ID</span><br>    pad_id = <span class="hljs-variable language_">self</span>.tokenizer.pad_id<br>    <span class="hljs-comment"># 初始化 tokens 张量，用 pad_id 填充</span><br>    tokens = torch.full((bsz, total_len), pad_id, dtype=torch.long, device=<span class="hljs-string">&quot;cuda&quot;</span>)<br>    <span class="hljs-comment"># 将输入 prompts 填充到 tokens 张量中</span><br>    <span class="hljs-keyword">for</span> k, t <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(prompt_tokens):<br>        tokens[k, : <span class="hljs-built_in">len</span>(t)] = torch.tensor(t, dtype=torch.long, device=<span class="hljs-string">&quot;cuda&quot;</span>)<br>    <span class="hljs-comment"># 如果 logprobs 为 True，则初始化 token_logprobs 张量</span><br>    <span class="hljs-keyword">if</span> logprobs:<br>        token_logprobs = torch.zeros_like(tokens, dtype=torch.<span class="hljs-built_in">float</span>)<br><br>    <span class="hljs-comment"># 初始化当前位置和 EOS（结束符）标记</span><br>    prev_pos = <span class="hljs-number">0</span><br>    eos_reached = torch.tensor([<span class="hljs-literal">False</span>] * bsz, device=<span class="hljs-string">&quot;cuda&quot;</span>)<br>    <span class="hljs-comment"># 创建输入文本的掩码（非填充部分为 True）</span><br>    input_text_mask = tokens != pad_id<br><br>    <span class="hljs-comment"># 如果输入 prompts 的长度等于总长度，则直接计算 logits</span><br>    <span class="hljs-keyword">if</span> min_prompt_len == total_len:<br>        logits = <span class="hljs-variable language_">self</span>.model.forward(tokens, prev_pos)<br>        <span class="hljs-comment"># 计算 token 的 log 概率</span><br>        token_logprobs = -F.cross_entropy(<br>            <span class="hljs-built_in">input</span>=logits.transpose(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>),<br>            target=tokens,<br>            reduction=<span class="hljs-string">&quot;none&quot;</span>,<br>            ignore_index=pad_id,<br>        )<br><br>    <span class="hljs-comment"># 获取停止 token 的 ID</span><br>    stop_tokens = torch.tensor(<span class="hljs-built_in">list</span>(<span class="hljs-variable language_">self</span>.tokenizer.stop_tokens))<br><br>    <span class="hljs-comment"># 逐 token 生成文本</span><br>    <span class="hljs-keyword">for</span> cur_pos <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(min_prompt_len, total_len):<br>        <span class="hljs-comment"># 计算当前 token 的 logits</span><br>        logits = <span class="hljs-variable language_">self</span>.model.forward(tokens[:, prev_pos:cur_pos], prev_pos)<br>        <span class="hljs-comment"># 如果 temperature &gt; 0，则使用温度参数和 top-p 采样生成下一个 token</span><br>        <span class="hljs-keyword">if</span> temperature &gt; <span class="hljs-number">0</span>:<br>            probs = torch.softmax(logits[:, -<span class="hljs-number">1</span>] / temperature, dim=-<span class="hljs-number">1</span>)<br>            next_token = sample_top_p(probs, top_p)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-comment"># 如果 temperature = 0，则选择概率最大的 token</span><br>            next_token = torch.argmax(logits[:, -<span class="hljs-number">1</span>], dim=-<span class="hljs-number">1</span>)<br>        <span class="hljs-comment"># 将下一个 token 填充到 tokens 张量中</span><br>        next_token = next_token.reshape(-<span class="hljs-number">1</span>)<br>        <span class="hljs-comment"># 如果当前位置在输入 prompts 范围内，则保留输入 token</span><br>        next_token = torch.where(<br>            input_text_mask[:, cur_pos], tokens[:, cur_pos], next_token<br>        )<br>        tokens[:, cur_pos] = next_token<br>        <span class="hljs-comment"># 如果 logprobs 为 True，则计算 token 的 log 概率</span><br>        <span class="hljs-keyword">if</span> logprobs:<br>            token_logprobs[:, prev_pos + <span class="hljs-number">1</span> : cur_pos + <span class="hljs-number">1</span>] = -F.cross_entropy(<br>                <span class="hljs-built_in">input</span>=logits.transpose(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>),<br>                target=tokens[:, prev_pos + <span class="hljs-number">1</span> : cur_pos + <span class="hljs-number">1</span>],<br>                reduction=<span class="hljs-string">&quot;none&quot;</span>,<br>                ignore_index=pad_id,<br>            )<br>        <span class="hljs-comment"># 检查是否生成停止 token</span><br>        eos_reached |= (~input_text_mask[:, cur_pos]) &amp; (<br>            torch.isin(next_token, stop_tokens)<br>        )<br>        <span class="hljs-comment"># 更新当前位置</span><br>        prev_pos = cur_pos<br>        <span class="hljs-comment"># 如果所有批次都生成停止 token，则提前结束</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">all</span>(eos_reached):<br>            <span class="hljs-keyword">break</span><br><br>    <span class="hljs-comment"># 如果 logprobs 为 True，则将 token_logprobs 转换为列表</span><br>    <span class="hljs-keyword">if</span> logprobs:<br>        token_logprobs = token_logprobs.tolist()<br>    <span class="hljs-comment"># 初始化输出 token 序列和 logprobs</span><br>    out_tokens, out_logprobs = [], []<br>    <span class="hljs-comment"># 处理每个批次的生成结果</span><br>    <span class="hljs-keyword">for</span> i, toks <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(tokens.tolist()):<br>        <span class="hljs-comment"># 如果 echo 为 False，则从生成部分开始截取</span><br>        start = <span class="hljs-number">0</span> <span class="hljs-keyword">if</span> echo <span class="hljs-keyword">else</span> <span class="hljs-built_in">len</span>(prompt_tokens[i])<br>        toks = toks[start : <span class="hljs-built_in">len</span>(prompt_tokens[i]) + max_gen_len]<br>        probs = <span class="hljs-literal">None</span><br>        <span class="hljs-comment"># 如果 logprobs 为 True，则截取对应的 logprobs</span><br>        <span class="hljs-keyword">if</span> logprobs:<br>            probs = token_logprobs[i][start : <span class="hljs-built_in">len</span>(prompt_tokens[i]) + max_gen_len]<br>        <span class="hljs-comment"># 如果生成结果中包含停止 token，则截取到停止 token 之前</span><br>        <span class="hljs-keyword">for</span> stop_token <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>.tokenizer.stop_tokens:<br>            <span class="hljs-keyword">try</span>:<br>                eos_idx = toks.index(stop_token)<br>                toks = toks[:eos_idx]<br>                probs = probs[:eos_idx] <span class="hljs-keyword">if</span> logprobs <span class="hljs-keyword">else</span> <span class="hljs-literal">None</span><br>            <span class="hljs-keyword">except</span> ValueError:<br>                <span class="hljs-keyword">pass</span><br>        <span class="hljs-comment"># 将结果添加到输出列表中</span><br>        out_tokens.append(toks)<br>        out_logprobs.append(probs)<br>    <span class="hljs-comment"># 返回生成的 token 序列和 logprobs（可选）</span><br>    <span class="hljs-keyword">return</span> (out_tokens, out_logprobs <span class="hljs-keyword">if</span> logprobs <span class="hljs-keyword">else</span> <span class="hljs-literal">None</span>)<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="详细解释-1"><a href="#详细解释-1" class="headerlink" title="详细解释"></a><strong>详细解释</strong></h3><h4 id="1-输入处理"><a href="#1-输入处理" class="headerlink" title="1. 输入处理"></a><strong>1. 输入处理</strong></h4><ul>
+<li><strong><code>prompt_tokens</code></strong>: 输入的 tokenized prompts，每个 prompt 是一个整数列表。</li>
+<li><strong><code>max_gen_len</code></strong>: 生成文本的最大长度。</li>
+<li><strong><code>temperature</code></strong>: 控制生成随机性的温度参数。</li>
+<li><strong><code>top_p</code></strong>: top-p 采样的概率阈值。</li>
+<li><strong><code>logprobs</code></strong>: 是否计算 token 的 log 概率。</li>
+<li><strong><code>echo</code></strong>: 是否在生成结果中包含输入提示。</li>
+</ul>
+<h4 id="2-初始化"><a href="#2-初始化" class="headerlink" title="2. 初始化"></a><strong>2. 初始化</strong></h4><ul>
+<li><strong><code>params</code></strong>: 获取模型参数。</li>
+<li><strong><code>bsz</code></strong>: 获取批次大小。</li>
+<li><strong><code>min_prompt_len</code> 和 <code>max_prompt_len</code></strong>: 计算输入 prompts 的最小和最大长度。</li>
+<li><strong><code>total_len</code></strong>: 计算总长度（输入 prompts 长度 + 生成文本长度）。</li>
+<li><strong><code>tokens</code></strong>: 初始化 tokens 张量，用 pad_id 填充，并将输入 prompts 填充到 tokens 张量中。</li>
+</ul>
+<h4 id="3-生成文本"><a href="#3-生成文本" class="headerlink" title="3. 生成文本"></a><strong>3. 生成文本</strong></h4><ul>
+<li><strong>逐 token 生成</strong>:<ul>
+<li>使用 <code>model.forward</code> 计算当前 token 的 logits。</li>
+<li>如果 <code>temperature &gt; 0</code>，则使用温度参数和 top-p 采样生成下一个 token。</li>
+<li>如果 <code>temperature = 0</code>，则选择概率最大的 token。</li>
+<li>将下一个 token 填充到 tokens 张量中。</li>
+<li>如果 <code>logprobs</code> 为 True，则计算 token 的 log 概率。</li>
+<li>检查是否生成停止 token，如果所有批次都生成停止 token，则提前结束。</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-输出处理"><a href="#4-输出处理" class="headerlink" title="4. 输出处理"></a><strong>4. 输出处理</strong></h4><ul>
+<li><strong><code>out_tokens</code> 和 <code>out_logprobs</code></strong>: 处理每个批次的生成结果。<ul>
+<li>如果 <code>echo</code> 为 False，则从生成部分开始截取。</li>
+<li>如果生成结果中包含停止 token，则截取到停止 token 之前。</li>
+</ul>
+</li>
+<li><strong>返回结果</strong>: 返回生成的 token 序列和 logprobs（可选）。</li>
+</ul>
+<hr>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a><strong>总结</strong></h3><p><code>generate</code> 方法是 Llama 3 模型的核心生成方法，负责根据输入的 tokenized prompts 生成文本。通过温度、top-p 采样等参数，用户可以灵活控制生成过程。该方法支持计算 token 的 log 概率，并可以处理停止 token 和输入提示。</p>
+<h2 id="generate-详细流程图"><a href="#generate-详细流程图" class="headerlink" title="generate 详细流程图"></a><code>generate</code> 详细流程图</h2><p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241230115215231.png" srcset="/img/loading.gif" lazyload alt="generate流程图"></p>
+<hr>
+<h3 id="详细步骤说明"><a href="#详细步骤说明" class="headerlink" title="详细步骤说明"></a><strong>详细步骤说明</strong></h3><h4 id="1-输入处理-1"><a href="#1-输入处理-1" class="headerlink" title="1. 输入处理"></a><strong>1. 输入处理</strong></h4><ul>
+<li><strong>输入</strong>: <code>prompt_tokens</code>，tokenized prompts，每个 prompt 是一个整数列表。</li>
+</ul>
+<h4 id="2-初始化-1"><a href="#2-初始化-1" class="headerlink" title="2. 初始化"></a><strong>2. 初始化</strong></h4><ul>
+<li><strong>初始化 tokens 张量</strong>: 用 pad_id 填充，并将输入 prompts 填充到 tokens 张量中。</li>
+<li><strong>计算 min_prompt_len 和 max_prompt_len</strong>: 输入 prompts 的最小和最大长度。</li>
+<li><strong>检查 max_prompt_len 是否超过 max_seq_len</strong>: 确保输入 prompts 的长度不超过模型的最大序列长度。</li>
+<li><strong>计算 total_len</strong>: 输入 prompts 长度 + 生成文本长度。</li>
+<li><strong>初始化 token_logprobs</strong>: 如果 <code>logprobs=True</code>，则初始化 token_logprobs 张量。</li>
+<li><strong>初始化 prev_pos 和 eos_reached</strong>: 当前位置和 EOS（结束符）标记。</li>
+<li><strong>创建 input_text_mask</strong>: 输入文本的掩码（非填充部分为 True）。</li>
+</ul>
+<h4 id="3-生成文本-1"><a href="#3-生成文本-1" class="headerlink" title="3. 生成文本"></a><strong>3. 生成文本</strong></h4><ul>
+<li><strong>检查 min_prompt_len 是否等于 total_len</strong>:<ul>
+<li>如果相等，则直接计算 logits 和 token_logprobs。</li>
+<li>否则，逐 token 生成文本。</li>
+</ul>
+</li>
+<li><strong>逐 token 生成文本</strong>:<ul>
+<li><strong>计算当前 token 的 logits</strong>。</li>
+<li><strong>检查 temperature 是否大于 0</strong>:<ul>
+<li>如果大于 0，则使用温度参数和 top-p 采样生成下一个 token。</li>
+<li>否则，选择概率最大的 token。</li>
+</ul>
+</li>
+<li><strong>填充下一个 token 到 tokens 张量</strong>。</li>
+<li><strong>检查 logprobs 是否为 True</strong>:<ul>
+<li>如果为 True，则计算 token 的 log 概率。</li>
+</ul>
+</li>
+<li><strong>检查是否生成停止 token</strong>。</li>
+<li><strong>更新 prev_pos</strong>。</li>
+<li><strong>检查所有批次是否都生成停止 token</strong>:<ul>
+<li>如果是，则提前结束。</li>
+<li>否则，继续生成下一个 token。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-输出处理-1"><a href="#4-输出处理-1" class="headerlink" title="4. 输出处理"></a><strong>4. 输出处理</strong></h4><ul>
+<li><strong>处理每个批次的生成结果</strong>:<ul>
+<li><strong>检查 echo 是否为 False</strong>:<ul>
+<li>如果为 False，则从生成部分开始截取。</li>
+<li>否则，保留输入提示。</li>
+</ul>
+</li>
+<li><strong>截取到停止 token 之前</strong>。</li>
+<li><strong>将结果添加到输出列表中</strong>。</li>
+</ul>
+</li>
+<li><strong>返回生成的 token 序列和 logprobs（可选）</strong>。</li>
+</ul>
+<hr>
+<h3 id="总结-2"><a href="#总结-2" class="headerlink" title="总结"></a><strong>总结</strong></h3><p><code>generate</code> 方法的流程图清晰地展示了从输入到输出的完整生成过程，包括初始化、逐 token 生成和输出处理。通过该流程图，可以更好地理解 Llama 3 模型的文本生成机制。</p>
+<h2 id="text-completion-和-chat-completion"><a href="#text-completion-和-chat-completion" class="headerlink" title="text_completion 和 chat_completion"></a><code>text_completion</code> 和 <code>chat_completion</code></h2><hr>
+<h3 id="1-text-completion-方法"><a href="#1-text-completion-方法" class="headerlink" title="1. text_completion 方法"></a><strong>1. <code>text_completion</code> 方法</strong></h3><h4 id="功能"><a href="#功能" class="headerlink" title="功能"></a><strong>功能</strong></h4><p>对给定的文本提示进行补全，生成后续文本。</p>
+<h4 id="参数"><a href="#参数" class="headerlink" title="参数"></a><strong>参数</strong></h4><ul>
+<li><strong><code>prompts</code></strong>: 文本提示列表，每个提示是一个字符串。</li>
+<li><strong><code>temperature</code></strong>: 控制生成随机性的温度参数。值越大，生成结果越随机；值越小，生成结果越确定。</li>
+<li><strong><code>top_p</code></strong>: top-p 采样的概率阈值。用于控制生成结果的多样性和质量。</li>
+<li><strong><code>max_gen_len</code></strong>: 生成文本的最大长度。如果未提供，则使用模型的最大序列长度减 1。</li>
+<li><strong><code>logprobs</code></strong>: 是否计算 token 的 log 概率。默认为 False。</li>
+<li><strong><code>echo</code></strong>: 是否在生成结果中包含输入提示。默认为 False。</li>
+</ul>
+<h4 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a><strong>返回值</strong></h4><ul>
+<li><strong><code>List[CompletionPrediction]</code></strong>: 文本补全的生成结果列表，每个结果包含生成的文本、token 列表和 logprobs（可选）。</li>
+</ul>
+<h4 id="代码逻辑"><a href="#代码逻辑" class="headerlink" title="代码逻辑"></a><strong>代码逻辑</strong></h4><ol>
+<li><strong>检查 <code>max_gen_len</code></strong>:<ul>
+<li>如果未提供 <code>max_gen_len</code>，则使用模型的最大序列长度减 1。</li>
+</ul>
+</li>
+<li><strong>编码输入提示</strong>:<ul>
+<li>使用分词器将输入提示编码为 tokenized prompts。</li>
+</ul>
+</li>
+<li><strong>调用 <code>generate</code> 方法</strong>:<ul>
+<li>使用 <code>generate</code> 方法生成 token 序列。</li>
+</ul>
+</li>
+<li><strong>解码生成结果</strong>:<ul>
+<li>将生成的 token 序列解码为文本。</li>
+</ul>
+</li>
+<li><strong>返回生成结果</strong>:<ul>
+<li>如果 <code>logprobs</code> 为 True，则返回生成的文本、token 列表和 logprobs。</li>
+<li>否则，仅返回生成的文本。</li>
+</ul>
+</li>
+</ol>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a><strong>示例</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">prompts = [<span class="hljs-string">&quot;Once upon a time&quot;</span>]<br>results = llama.text_completion(prompts, max_gen_len=<span class="hljs-number">50</span>)<br><span class="hljs-keyword">for</span> result <span class="hljs-keyword">in</span> results:<br>    <span class="hljs-built_in">print</span>(result[<span class="hljs-string">&quot;generation&quot;</span>])<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-chat-completion-方法"><a href="#2-chat-completion-方法" class="headerlink" title="2. chat_completion 方法"></a><strong>2. <code>chat_completion</code> 方法</strong></h3><h4 id="功能-1"><a href="#功能-1" class="headerlink" title="功能"></a><strong>功能</strong></h4><p>根据对话历史生成助理的回复。</p>
+<h4 id="参数-1"><a href="#参数-1" class="headerlink" title="参数"></a><strong>参数</strong></h4><ul>
+<li><strong><code>dialogs</code></strong>: 对话历史列表，每个对话是一个消息列表，每个消息包含角色（<code>role</code>）和内容（<code>content</code>）。</li>
+<li><strong><code>temperature</code></strong>: 控制生成随机性的温度参数。值越大，生成结果越随机；值越小，生成结果越确定。</li>
+<li><strong><code>top_p</code></strong>: top-p 采样的概率阈值。用于控制生成结果的多样性和质量。</li>
+<li><strong><code>max_gen_len</code></strong>: 生成文本的最大长度。如果未提供，则使用模型的最大序列长度减 1。</li>
+<li><strong><code>logprobs</code></strong>: 是否计算 token 的 log 概率。默认为 False。</li>
+</ul>
+<h4 id="返回值-1"><a href="#返回值-1" class="headerlink" title="返回值"></a><strong>返回值</strong></h4><ul>
+<li><strong><code>List[ChatPrediction]</code></strong>: 对话生成的生成结果列表，每个结果包含助理的回复、token 列表和 logprobs（可选）。</li>
+</ul>
+<h4 id="代码逻辑-1"><a href="#代码逻辑-1" class="headerlink" title="代码逻辑"></a><strong>代码逻辑</strong></h4><ol>
+<li><strong>检查 <code>max_gen_len</code></strong>:<ul>
+<li>如果未提供 <code>max_gen_len</code>，则使用模型的最大序列长度减 1。</li>
+</ul>
+</li>
+<li><strong>编码对话历史</strong>:<ul>
+<li>使用 <code>ChatFormat</code> 将对话历史编码为 tokenized prompts。</li>
+</ul>
+</li>
+<li><strong>调用 <code>generate</code> 方法</strong>:<ul>
+<li>使用 <code>generate</code> 方法生成 token 序列。</li>
+</ul>
+</li>
+<li><strong>解码生成结果</strong>:<ul>
+<li>将生成的 token 序列解码为文本。</li>
+</ul>
+</li>
+<li><strong>返回生成结果</strong>:<ul>
+<li>如果 <code>logprobs</code> 为 True，则返回助理的回复、token 列表和 logprobs。</li>
+<li>否则，仅返回助理的回复。</li>
+</ul>
+</li>
+</ol>
+<h4 id="示例-1"><a href="#示例-1" class="headerlink" title="示例"></a><strong>示例</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">dialogs = [<br>    [&#123;<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;user&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;What is the capital of France?&quot;</span>&#125;]<br>]<br>results = llama.chat_completion(dialogs, max_gen_len=<span class="hljs-number">50</span>)<br><span class="hljs-keyword">for</span> result <span class="hljs-keyword">in</span> results:<br>    <span class="hljs-built_in">print</span>(result[<span class="hljs-string">&quot;generation&quot;</span>][<span class="hljs-string">&quot;content&quot;</span>])<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-主要区别"><a href="#3-主要区别" class="headerlink" title="3. 主要区别"></a><strong>3. 主要区别</strong></h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th><code>text_completion</code></th>
+<th><code>chat_completion</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>输入</strong></td>
+<td>文本提示列表</td>
+<td>对话历史列表</td>
+</tr>
+<tr>
+<td><strong>输出</strong></td>
+<td>文本补全结果</td>
+<td>助理的回复</td>
+</tr>
+<tr>
+<td><strong>编码方式</strong></td>
+<td>直接使用分词器编码</td>
+<td>使用 <code>ChatFormat</code> 编码对话历史</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>单轮文本补全</td>
+<td>多轮对话生成</td>
+</tr>
+<tr>
+<td><strong>返回格式</strong></td>
+<td><code>CompletionPrediction</code></td>
+<td><code>ChatPrediction</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="4-生成控制参数-1"><a href="#4-生成控制参数-1" class="headerlink" title="4. 生成控制参数"></a><strong>4. 生成控制参数</strong></h3><ul>
+<li><strong>温度（temperature）</strong>:<ul>
+<li>控制生成随机性的参数。</li>
+<li>值越大，生成结果越随机；值越小，生成结果越确定。</li>
+</ul>
+</li>
+<li><strong>top-p 采样（nucleus sampling）</strong>:<ul>
+<li>从概率累积值超过 <code>top_p</code> 的最小 token 集合中采样。</li>
+<li>用于控制生成结果的多样性和质量。</li>
+</ul>
+</li>
+<li><strong>logprobs</strong>:<ul>
+<li>是否计算生成 token 的 log 概率。</li>
+<li>用于分析生成结果的置信度。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a><strong>5. 总结</strong></h3><ul>
+<li><strong><code>text_completion</code></strong>: 用于文本补全，适用于单轮文本生成任务。</li>
+<li><strong><code>chat_completion</code></strong>: 用于对话生成，适用于多轮对话任务。</li>
+<li>两者都通过 <code>generate</code> 方法实现核心生成逻辑，并支持温度、top-p 采样等参数控制生成过程。</li>
+</ul>
+<h2 id="sample-top-p"><a href="#sample-top-p" class="headerlink" title="sample_top_p"></a>sample_top_p</h2><p>该函数实现了 <strong>top-p 采样（nucleus sampling）</strong>，用于从概率分布中选择 token。</p>
+<hr>
+<h3 id="代码注释"><a href="#代码注释" class="headerlink" title="代码注释"></a><strong>代码注释</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">sample_top_p</span>(<span class="hljs-params">probs, p</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    对概率分布进行 top-p 采样（nucleus sampling）。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    参数:</span><br><span class="hljs-string">        probs (torch.Tensor): 概率分布张量，形状为 (batch_size, vocab_size)。</span><br><span class="hljs-string">        p (float): top-p 采样的概率阈值，取值范围为 (0, 1]。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    返回:</span><br><span class="hljs-string">        torch.Tensor: 采样得到的 token 索引，形状为 (batch_size, 1)。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    注意:</span><br><span class="hljs-string">        top-p 采样从概率累积值超过 p 的最小 token 集合中采样，用于控制生成结果的多样性和质量。</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-comment"># 对概率分布进行降序排序，并获取排序后的概率和索引</span><br>    probs_sort, probs_idx = torch.sort(probs, dim=-<span class="hljs-number">1</span>, descending=<span class="hljs-literal">True</span>)<br>    <span class="hljs-comment"># 计算概率分布的累积和</span><br>    probs_sum = torch.cumsum(probs_sort, dim=-<span class="hljs-number">1</span>)<br>    <span class="hljs-comment"># 创建掩码，标记概率累积值超过 p 的 token</span><br>    mask = probs_sum - probs_sort &gt; p<br>    <span class="hljs-comment"># 将掩码对应的概率置为 0</span><br>    probs_sort[mask] = <span class="hljs-number">0.0</span><br>    <span class="hljs-comment"># 对剩余的概率进行归一化</span><br>    probs_sort.div_(probs_sort.<span class="hljs-built_in">sum</span>(dim=-<span class="hljs-number">1</span>, keepdim=<span class="hljs-literal">True</span>))<br>    <span class="hljs-comment"># 从归一化后的概率分布中进行多项式采样</span><br>    next_token = torch.multinomial(probs_sort, num_samples=<span class="hljs-number">1</span>)<br>    <span class="hljs-comment"># 根据采样结果获取原始 token 索引</span><br>    next_token = torch.gather(probs_idx, -<span class="hljs-number">1</span>, next_token)<br>    <span class="hljs-keyword">return</span> next_token<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="详细解释-2"><a href="#详细解释-2" class="headerlink" title="详细解释"></a><strong>详细解释</strong></h3><h4 id="1-输入参数"><a href="#1-输入参数" class="headerlink" title="1. 输入参数"></a><strong>1. 输入参数</strong></h4><ul>
+<li><strong><code>probs</code></strong>: 概率分布张量，形状为 <code>(batch_size, vocab_size)</code>，表示每个 token 的概率。</li>
+<li><strong><code>p</code></strong>: top-p 采样的概率阈值，取值范围为 <code>(0, 1]</code>。例如，<code>p=0.9</code> 表示从概率累积值超过 0.9 的最小 token 集合中采样。</li>
+</ul>
+<h4 id="2-概率排序"><a href="#2-概率排序" class="headerlink" title="2. 概率排序"></a><strong>2. 概率排序</strong></h4><ul>
+<li><strong><code>torch.sort</code></strong>: 对概率分布进行降序排序，返回排序后的概率 <code>probs_sort</code> 和对应的索引 <code>probs_idx</code>。</li>
+</ul>
+<h4 id="3-计算累积和"><a href="#3-计算累积和" class="headerlink" title="3. 计算累积和"></a><strong>3. 计算累积和</strong></h4><ul>
+<li><strong><code>torch.cumsum</code></strong>: 计算排序后概率的累积和 <code>probs_sum</code>。</li>
+</ul>
+<h4 id="4-创建掩码"><a href="#4-创建掩码" class="headerlink" title="4. 创建掩码"></a><strong>4. 创建掩码</strong></h4><ul>
+<li><strong><code>mask</code></strong>: 标记概率累积值超过 <code>p</code> 的 token。例如，如果 <code>p=0.9</code>，则掩码标记概率累积值超过 0.9 的 token。</li>
+</ul>
+<h4 id="5-概率置零"><a href="#5-概率置零" class="headerlink" title="5. 概率置零"></a><strong>5. 概率置零</strong></h4><ul>
+<li><strong><code>probs_sort[mask] = 0.0</code></strong>: 将掩码对应的概率置为 0，排除概率累积值超过 <code>p</code> 的 token。</li>
+</ul>
+<h4 id="6-归一化"><a href="#6-归一化" class="headerlink" title="6. 归一化"></a><strong>6. 归一化</strong></h4><ul>
+<li><strong><code>probs_sort.div_</code></strong>: 对剩余的概率进行归一化，使其总和为 1。</li>
+</ul>
+<h4 id="7-多项式采样"><a href="#7-多项式采样" class="headerlink" title="7. 多项式采样"></a><strong>7. 多项式采样</strong></h4><ul>
+<li><strong><code>torch.multinomial</code></strong>: 从归一化后的概率分布中进行多项式采样，返回采样得到的 token 索引。</li>
+</ul>
+<h4 id="8-获取原始索引"><a href="#8-获取原始索引" class="headerlink" title="8. 获取原始索引"></a><strong>8. 获取原始索引</strong></h4><ul>
+<li><strong><code>torch.gather</code></strong>: 根据采样结果获取原始 token 索引。</li>
+</ul>
+<h4 id="9-返回结果"><a href="#9-返回结果" class="headerlink" title="9. 返回结果"></a><strong>9. 返回结果</strong></h4><ul>
+<li><strong><code>next_token</code></strong>: 采样得到的 token 索引，形状为 <code>(batch_size, 1)</code>。</li>
+</ul>
+<hr>
+<h3 id="示例-2"><a href="#示例-2" class="headerlink" title="示例"></a><strong>示例</strong></h3><p>假设有以下概率分布和参数：</p>
+<ul>
+<li><strong><code>probs</code></strong>: <code>[[0.1, 0.4, 0.2, 0.3]]</code>，形状为 <code>(1, 4)</code>。</li>
+<li><strong><code>p</code></strong>: <code>0.9</code>。</li>
+</ul>
+<h4 id="执行步骤"><a href="#执行步骤" class="headerlink" title="执行步骤"></a><strong>执行步骤</strong></h4><ol>
+<li><strong>排序</strong>:<ul>
+<li><code>probs_sort</code>: <code>[[0.4, 0.3, 0.2, 0.1]]</code>。</li>
+<li><code>probs_idx</code>: <code>[[1, 3, 2, 0]]</code>。</li>
+</ul>
+</li>
+<li><strong>计算累积和</strong>:<ul>
+<li><code>probs_sum</code>: <code>[[0.4, 0.7, 0.9, 1.0]]</code>。</li>
+</ul>
+</li>
+<li><strong>创建掩码</strong>:<ul>
+<li><code>mask</code>: <code>[[False, False, True, True]]</code>。</li>
+</ul>
+</li>
+<li><strong>概率置零</strong>:<ul>
+<li><code>probs_sort</code>: <code>[[0.4, 0.3, 0.0, 0.0]]</code>。</li>
+</ul>
+</li>
+<li><strong>归一化</strong>:<ul>
+<li><code>probs_sort</code>: <code>[[0.57, 0.43, 0.0, 0.0]]</code>。</li>
+</ul>
+</li>
+<li><strong>多项式采样</strong>:<ul>
+<li><code>next_token</code>: <code>[[1]]</code>（假设采样结果为 1）。</li>
+</ul>
+</li>
+<li><strong>获取原始索引</strong>:<ul>
+<li><code>next_token</code>: <code>[[3]]</code>。</li>
+</ul>
+</li>
+</ol>
+<h4 id="返回结果"><a href="#返回结果" class="headerlink" title="返回结果"></a><strong>返回结果</strong></h4><ul>
+<li><code>next_token</code>: <code>[[3]]</code>。</li>
+</ul>
+<hr>
+<h3 id="总结-3"><a href="#总结-3" class="headerlink" title="总结"></a><strong>总结</strong></h3><p><code>sample_top_p</code> 函数实现了 top-p 采样（nucleus sampling），用于从概率分布中选择 token。通过控制概率阈值 <code>p</code>，可以灵活调整生成结果的多样性和质量。该函数是 Llama 3 模型生成过程的核心组件之一。</p>
+<p>文章合集：<a target="_blank" rel="noopener" href="https://github.com/chongzicbo/ReadWriteThink/tree/main">chongzicbo&#x2F;ReadWriteThink: 博学而笃志，切问而近思 (github.com)</a></p>
+<p>个人博客：<a href="https://chongzicbo.github.io/">程博仕</a></p>
+<p>微信公众号：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg" srcset="/img/loading.gif" lazyload alt="微信公众号"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" class="category-chain-item">人工智能</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/" class="category-chain-item">nlp</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/" class="category-chain-item">llm</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/nlp/" class="print-no-link">#nlp</a>
+      
+        <a href="/tags/llm/" class="print-no-link">#llm</a>
+      
+        <a href="/tags/llama/" class="print-no-link">#llama</a>
+      
+        <a href="/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="print-no-link">#源码解析</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>llama3源码解析-04：generation.py模块解析</div>
+      <div>https://chongzicbo.github.io/2024/12/30/人工智能/nlp/llm/源码解析：llama3源码解析-04：generation.py模块解析/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>程博</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>December 30, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/30/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-03%EF%BC%9Amodel.py%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/" title="llama3源码解析-03：model.py模块解析">
+                        <span class="hidden-mobile">llama3源码解析-03：model.py模块解析</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="人工智能"
+        id="heading-f068f0dad74789bee210163c40a4b50d" role="tab" data-toggle="collapse" href="#collapse-f068f0dad74789bee210163c40a4b50d"
+        aria-expanded="true"
+      >
+        人工智能
+        <span class="list-group-count">(10)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-f068f0dad74789bee210163c40a4b50d"
+           role="tabpanel" aria-labelledby="heading-f068f0dad74789bee210163c40a4b50d">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="computer-vision"
+        id="heading-a82f3db817c535a4bae230a7ce1aebdd" role="tab" data-toggle="collapse" href="#collapse-a82f3db817c535a4bae230a7ce1aebdd"
+        aria-expanded="false"
+      >
+        computer-vision
+        <span class="list-group-count">(3)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-a82f3db817c535a4bae230a7ce1aebdd"
+           role="tabpanel" aria-labelledby="heading-a82f3db817c535a4bae230a7ce1aebdd">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV010-YOLO%20V10%E8%AF%A6%E8%A7%A3/" title="YOLO V10 详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">YOLO V10 详解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV007-YOLO11%E8%AF%A6%E8%A7%A3/" title="YOLO11 详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">YOLO11 详解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV008-%E8%AF%84%E4%BC%B0%20YOLO%20%EF%BC%88You%20Only%20Look%20Once%EF%BC%89%20%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%BC%94%E5%8F%98%EF%BC%9AYOLO11%20%E5%8F%8A%E5%85%B6%E5%89%8D%E8%BA%AB%E7%9A%84%E5%85%A8%E9%9D%A2%E5%9F%BA%E5%87%86%E7%A0%94%E7%A9%B6/" title="YOLO模型的全面综述"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">YOLO模型的全面综述</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="multi-modal"
+        id="heading-8bef24fd03b0b8fe8de0c18ea7f6c1fe" role="tab" data-toggle="collapse" href="#collapse-8bef24fd03b0b8fe8de0c18ea7f6c1fe"
+        aria-expanded="false"
+      >
+        multi-modal
+        <span class="list-group-count">(2)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-8bef24fd03b0b8fe8de0c18ea7f6c1fe"
+           role="tabpanel" aria-labelledby="heading-8bef24fd03b0b8fe8de0c18ea7f6c1fe">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/20/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB14%EF%BC%9AMiniCPM%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90/" title="MiniCPM详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">MiniCPM详解</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="OCR"
+        id="heading-f529c51ee65a122778f148485732aee5" role="tab" data-toggle="collapse" href="#collapse-f529c51ee65a122778f148485732aee5"
+        aria-expanded="false"
+      >
+        OCR
+        <span class="list-group-count">(1)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-f529c51ee65a122778f148485732aee5"
+           role="tabpanel" aria-labelledby="heading-f529c51ee65a122778f148485732aee5">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/17/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/OCR/%E5%A4%9A%E6%A8%A1%E6%80%81003%EF%BC%9AOCR%E7%AE%97%E6%B3%95%E3%80%81%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0/" title="OCR算法、模型综述"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">OCR算法、模型综述</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="nlp"
+        id="heading-4c5adbed16b4c9d16698f71cca4218cb" role="tab" data-toggle="collapse" href="#collapse-4c5adbed16b4c9d16698f71cca4218cb"
+        aria-expanded="true"
+      >
+        nlp
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-4c5adbed16b4c9d16698f71cca4218cb"
+           role="tabpanel" aria-labelledby="heading-4c5adbed16b4c9d16698f71cca4218cb">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/NLP025-huggingface%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E9%9B%86%E5%92%8C%E6%A8%A1%E5%9E%8B%E4%B8%8B%E8%BD%BD%E5%AD%98%E5%82%A8%E7%9B%AE%E5%BD%95/" title="transformers自定义数据集"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">transformers自定义数据集</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="llm"
+        id="heading-dae1be85dab3650eb56b87c4e3390387" role="tab" data-toggle="collapse" href="#collapse-dae1be85dab3650eb56b87c4e3390387"
+        aria-expanded="true"
+      >
+        llm
+        <span class="list-group-count">(4)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-dae1be85dab3650eb56b87c4e3390387"
+           role="tabpanel" aria-labelledby="heading-dae1be85dab3650eb56b87c4e3390387">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/26/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-01%EF%BC%9A%E6%95%B4%E4%BD%93%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84%E5%8F%8A%E6%A8%A1%E5%9D%97%E5%8A%9F%E8%83%BD/" title="llama3源码解析-01：整体代码结构及模块功能"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">llama3源码解析-01：整体代码结构及模块功能</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/26/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-02%EF%BC%9Atokenizer%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/" title="llama3源码解析-02：tokenizer模块解析"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">llama3源码解析-02：tokenizer模块解析</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/30/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-03%EF%BC%9Amodel.py%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/" title="llama3源码解析-03：model.py模块解析"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">llama3源码解析-03：model.py模块解析</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/30/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-04%EF%BC%9Ageneration.py%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/" title="llama3源码解析-04：generation.py模块解析"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">llama3源码解析-04：generation.py模块解析</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/chongzicbo" target="_blank" rel="nofollow noopener"><span>Github</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,1978 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/daxiong.jpg">
+  <link rel="icon" href="/img/daxiong.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="程博">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="整体model.py 模块是 Llama 3 模型的核心实现部分，主要负责定义和实现 Transformer 模型的结构及其相关组件。 1. 模型参数定义 (ModelArgs 类) ModelArgs 类是一个数据类，用于定义和存储模型的各种超参数，例如： dim: 模型的维度。 n_layers: Transformer 的层数。 n_heads: 注意力机制中的头数。 vocab_size">
+<meta property="og:type" content="article">
+<meta property="og:title" content="llama3源码解析-03：model.py模块解析">
+<meta property="og:url" content="https://chongzicbo.github.io/2024/12/30/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-03%EF%BC%9Amodel.py%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="程博仕">
+<meta property="og:description" content="整体model.py 模块是 Llama 3 模型的核心实现部分，主要负责定义和实现 Transformer 模型的结构及其相关组件。 1. 模型参数定义 (ModelArgs 类) ModelArgs 类是一个数据类，用于定义和存储模型的各种超参数，例如： dim: 模型的维度。 n_layers: Transformer 的层数。 n_heads: 注意力机制中的头数。 vocab_size">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/Llama3_Repo.jpeg">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241230114851133.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
+<meta property="article:published_time" content="2024-12-30T04:00:00.000Z">
+<meta property="article:modified_time" content="2024-12-30T03:49:30.874Z">
+<meta property="article:author" content="程博">
+<meta property="article:tag" content="nlp">
+<meta property="article:tag" content="llm">
+<meta property="article:tag" content="llama">
+<meta property="article:tag" content="源码解析">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/Llama3_Repo.jpeg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>llama3源码解析-03：model.py模块解析 - 程博仕</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":"3841b375bfdd5627f0f840e1e289416e","google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?3841b375bfdd5627f0f840e1e289416e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>程博仕</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>人工智能</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/asr" target="_self">
+                    
+                    <span>语音识别</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>开发</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91" target="_self">
+                    
+                    <span>音视频</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/web&#39;" target="_self">
+                    
+                    <span>Web开发</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>文章分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>时间轴</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="llama3源码解析-03：model.py模块解析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        程博
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-30 12:00" pubdate>
+          December 30, 2024 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.3k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          53 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">llama3源码解析-03：model.py模块解析</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    Last updated on December 30, 2024 am
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/Llama3_Repo.jpeg" srcset="/img/loading.gif" lazyload alt="llama"></p>
+<h2 id="整体"><a href="#整体" class="headerlink" title="整体"></a>整体</h2><p><code>model.py</code> 模块是 Llama 3 模型的核心实现部分，主要负责定义和实现 Transformer 模型的结构及其相关组件。</p>
+<h3 id="1-模型参数定义-ModelArgs-类"><a href="#1-模型参数定义-ModelArgs-类" class="headerlink" title="1. 模型参数定义 (ModelArgs 类)"></a>1. <strong>模型参数定义 (<code>ModelArgs</code> 类)</strong></h3><ul>
+<li><code>ModelArgs</code> 类是一个数据类，用于定义和存储模型的各种超参数，例如：<ul>
+<li><code>dim</code>: 模型的维度。</li>
+<li><code>n_layers</code>: Transformer 的层数。</li>
+<li><code>n_heads</code>: 注意力机制中的头数。</li>
+<li><code>vocab_size</code>: 词汇表大小。</li>
+<li><code>max_batch_size</code>: 最大批处理大小。</li>
+<li><code>max_seq_len</code>: 最大序列长度。</li>
+</ul>
+</li>
+<li>这些参数在模型初始化时被使用，决定了模型的结构和行为。</li>
+</ul>
+<h3 id="2-RMSNorm-层-RMSNorm-类"><a href="#2-RMSNorm-层-RMSNorm-类" class="headerlink" title="2. RMSNorm 层 (RMSNorm 类)"></a>2. <strong>RMSNorm 层 (<code>RMSNorm</code> 类)</strong></h3><ul>
+<li><code>RMSNorm</code> 是一个自定义的归一化层，用于替代传统的 LayerNorm。它通过对输入进行<strong>均方根归一化</strong>来稳定训练过程。</li>
+<li>该层在 Transformer 的每个子层（如注意力机制和前馈网络）之后使用。</li>
+</ul>
+<h3 id="3-RoPE-Rotary-Positional-Embedding"><a href="#3-RoPE-Rotary-Positional-Embedding" class="headerlink" title="3. RoPE (Rotary Positional Embedding)"></a>3. <strong>RoPE (Rotary Positional Embedding)</strong></h3><ul>
+<li>该模块实现了旋转位置编码（RoPE），用于为输入序列中的每个位置生成位置编码。RoPE 通过将位置信息嵌入到注意力机制中，帮助模型捕捉序列中的位置关系。</li>
+<li><code>precompute_freqs_cis</code> 函数预计算了频率矩阵，<code>apply_rotary_emb</code> 函数将旋转<strong>位置编码应用到查询和键向量上。</strong></li>
+</ul>
+<h3 id="4-注意力机制-Attention-类"><a href="#4-注意力机制-Attention-类" class="headerlink" title="4. 注意力机制 (Attention 类)"></a>4. <strong>注意力机制 (<code>Attention</code> 类)</strong></h3><ul>
+<li><code>Attention</code> 类实现了多头注意力机制（Multi-Head Attention），这是 Transformer 模型的核心组件之一。</li>
+<li>它使用 <code>ColumnParallelLinear</code> 和 <code>RowParallelLinear</code> 来实现并行的线性变换，支持模型并行化。</li>
+<li>该模块还实现了键值缓存（KV Cache），用于在生成过程中缓存先前的键和值，以减少重复计算。</li>
+</ul>
+<h3 id="5-前馈网络-FeedForward-类"><a href="#5-前馈网络-FeedForward-类" class="headerlink" title="5. 前馈网络 (FeedForward 类)"></a>5. <strong>前馈网络 (<code>FeedForward</code> 类)</strong></h3><ul>
+<li><code>FeedForward</code> 类实现了 Transformer 中的前馈神经网络（FFN），通常由两个线性变换和一个激活函数（如 SiLU）组成。</li>
+<li>该模块也支持模型并行化，使用 <code>ColumnParallelLinear</code> 和 <code>RowParallelLinear</code> 来实现并行的线性变换。</li>
+</ul>
+<h3 id="6-Transformer-块-TransformerBlock-类"><a href="#6-Transformer-块-TransformerBlock-类" class="headerlink" title="6. Transformer 块 (TransformerBlock 类)"></a>6. <strong>Transformer 块 (<code>TransformerBlock</code> 类)</strong></h3><ul>
+<li><code>TransformerBlock</code> 类将注意力机制和前馈网络组合在一起，形成一个完整的 Transformer 层。</li>
+<li>每个 Transformer 块包含一个注意力层和一个前馈网络层，并且在每个子层之后应用 RMSNorm 进行归一化。</li>
+</ul>
+<h3 id="7-Transformer-模型-Transformer-类"><a href="#7-Transformer-模型-Transformer-类" class="headerlink" title="7. Transformer 模型 (Transformer 类)"></a>7. <strong>Transformer 模型 (<code>Transformer</code> 类)</strong></h3><ul>
+<li><code>Transformer</code> 类是整个模型的核心，它由多个 <code>TransformerBlock</code> 组成，形成一个深层的 Transformer 网络。</li>
+<li>该模块还负责处理输入嵌入、位置编码、以及最终的输出线性变换。</li>
+<li><code>forward</code> 方法实现了模型的前向传播过程，包括嵌入、位置编码、多层 Transformer 块的处理以及最终的输出生成。</li>
+</ul>
+<h3 id="8-模型并行化"><a href="#8-模型并行化" class="headerlink" title="8. 模型并行化"></a>8. <strong>模型并行化</strong></h3><ul>
+<li>该模块使用了 <code>fairscale</code> 库中的 <code>ColumnParallelLinear</code> 和 <code>RowParallelLinear</code> 来实现模型并行化，允许模型在多个 GPU 上分布计算，从而提高训练和推理的效率。</li>
+</ul>
+<h3 id="9-推理模式"><a href="#9-推理模式" class="headerlink" title="9. 推理模式"></a>9. <strong>推理模式</strong></h3><ul>
+<li>在推理模式下，模型使用 <code>torch.inference_mode()</code> 来禁用梯度计算，从而提高推理速度并减少内存占用。</li>
+</ul>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><p><code>model.py</code> 模块定义了 Llama 3 模型的核心架构，包括 Transformer 的各个组件（如注意力机制、前馈网络、归一化层等），并实现了模型并行化和推理优化。它是整个 Llama 3 模型的基础，负责处理输入数据并生成输出。</p>
+<h2 id="模型详细流程图"><a href="#模型详细流程图" class="headerlink" title="模型详细流程图"></a>模型详细流程图</h2><pre><code class=" mermaid">graph TD
+    A[输入 tokens] --&gt; B[Token Embedding]
+    B --&gt; C[添加位置编码 freqs_cis]
+    C --&gt; D[初始化 mask]
+    D --&gt; E[进入 Transformer 层]
+    E --&gt; F[Transformer Block 1]
+    E --&gt; G[Transformer Block 2]
+    E --&gt; H[...]
+    E --&gt; I[Transformer Block N]
+    F --&gt; J[输出 logits]
+    G --&gt; J
+    H --&gt; J
+    I --&gt; J
+
+    subgraph Transformer Block
+        direction TB
+        K[输入] --&gt; L[RMSNorm]
+        L --&gt; M[Attention]
+        M --&gt; N[Add &amp; Norm]
+        N --&gt; O[FeedForward]
+        O --&gt; P[Add &amp; Norm]
+        P --&gt; Q[输出]
+    end
+
+    F --&gt; K
+    G --&gt; K
+    I --&gt; K
+</code></pre>
+
+<ol>
+<li><p><strong>输入 tokens</strong>  </p>
+<ul>
+<li>输入是一个批次的 token IDs，形状为 <code>(batch_size, seq_len)</code>。</li>
+</ul>
+</li>
+<li><p><strong>Token Embedding</strong>  </p>
+<ul>
+<li>通过 <code>tok_embeddings</code> 将 token IDs 转换为嵌入向量，形状为 <code>(batch_size, seq_len, dim)</code>。</li>
+</ul>
+</li>
+<li><p><strong>添加位置编码 freqs_cis</strong>  </p>
+<ul>
+<li>使用预计算的 <code>freqs_cis</code> 为嵌入向量添加旋转位置编码，帮助模型捕捉序列中的位置信息。</li>
+</ul>
+</li>
+<li><p><strong>初始化 mask</strong>  </p>
+<ul>
+<li>根据 <code>seq_len</code> 和 <code>start_pos</code> 生成注意力掩码 <code>mask</code>，用于防止模型看到未来的 token。</li>
+</ul>
+</li>
+<li><p><strong>进入 Transformer 层</strong>  </p>
+<ul>
+<li>嵌入向量和位置编码进入多层 Transformer 块进行处理。</li>
+</ul>
+</li>
+<li><p><strong>Transformer Block 1 到 N</strong>  </p>
+<ul>
+<li>每个 Transformer 块包含以下步骤：<ul>
+<li><strong>RMSNorm</strong>: 对输入进行归一化。</li>
+<li><strong>Attention</strong>: 应用多头注意力机制，生成注意力输出。</li>
+<li><strong>RMSNorm</strong>: 对注意力输出进行归一化。</li>
+<li><strong>FeedForward</strong>: 应用前馈网络，生成最终的 Transformer 块输出。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>应用 RMSNorm</strong>  </p>
+<ul>
+<li>在所有 Transformer 块处理完成后，对最终输出应用 RMSNorm 进行归一化。</li>
+</ul>
+</li>
+<li><p><strong>输出线性变换</strong>  </p>
+<ul>
+<li>通过 <code>output</code> 线性层将归一化后的输出映射到词汇表空间，形状为 <code>(batch_size, seq_len, vocab_size)</code>。</li>
+</ul>
+</li>
+<li><p><strong>输出 logits</strong>  </p>
+<ul>
+<li>返回最终的 logits，表示每个 token 的概率分布。</li>
+</ul>
+</li>
+</ol>
+<h2 id="class-ModelArgs"><a href="#class-ModelArgs" class="headerlink" title="class ModelArgs"></a><code>class ModelArgs</code></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-meta">@dataclass</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ModelArgs</span>:<br>    dim: <span class="hljs-built_in">int</span> = <span class="hljs-number">4096</span>  <span class="hljs-comment"># 模型的维度，即每个token的向量表示的大小</span><br>    n_layers: <span class="hljs-built_in">int</span> = <span class="hljs-number">32</span>  <span class="hljs-comment"># 模型的层数，即Transformer的层数</span><br>    n_heads: <span class="hljs-built_in">int</span> = <span class="hljs-number">32</span>  <span class="hljs-comment"># 注意力机制中的头数</span><br>    n_kv_heads: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">int</span>] = <span class="hljs-literal">None</span>  <span class="hljs-comment"># 键值头的数量，如果为None，则与n_heads相同</span><br>    vocab_size: <span class="hljs-built_in">int</span> = -<span class="hljs-number">1</span>  <span class="hljs-comment"># 词汇表的大小，通常由tokenizer决定</span><br>    multiple_of: <span class="hljs-built_in">int</span> = <span class="hljs-number">256</span>  <span class="hljs-comment"># SwiGLU激活函数中隐藏层大小的倍数，确保是256的倍数</span><br>    ffn_dim_multiplier: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">float</span>] = <span class="hljs-literal">None</span>  <span class="hljs-comment"># 前馈网络维度的乘数，用于调整隐藏层大小</span><br>    norm_eps: <span class="hljs-built_in">float</span> = <span class="hljs-number">1e-5</span>  <span class="hljs-comment"># Layer Normalization中的epsilon值，用于数值稳定性</span><br>    rope_theta: <span class="hljs-built_in">float</span> = <span class="hljs-number">500000</span>  <span class="hljs-comment"># RoPE（Rotary Position Embedding）中的theta参数</span><br><br>    max_batch_size: <span class="hljs-built_in">int</span> = <span class="hljs-number">32</span>  <span class="hljs-comment"># 最大批处理大小</span><br>    max_seq_len: <span class="hljs-built_in">int</span> = <span class="hljs-number">2048</span>  <span class="hljs-comment"># 最大序列长度</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="class-RMSNorm"><a href="#class-RMSNorm" class="headerlink" title="class RMSNorm"></a><code>class RMSNorm</code></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">RMSNorm</span>(torch.nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, dim: <span class="hljs-built_in">int</span>, eps: <span class="hljs-built_in">float</span> = <span class="hljs-number">1e-6</span></span>):<br>        <span class="hljs-built_in">super</span>().__init__()<br>        <span class="hljs-variable language_">self</span>.eps = eps  <span class="hljs-comment"># 用于数值稳定性的小值，防止除以零</span><br>        <span class="hljs-variable language_">self</span>.weight = nn.Parameter(torch.ones(dim))  <span class="hljs-comment"># 可学习的缩放参数，初始化为1</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_norm</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-comment"># 计算RMS（Root Mean Square）归一化，对输入x进行归一化处理</span><br>        <span class="hljs-keyword">return</span> x * torch.rsqrt(x.<span class="hljs-built_in">pow</span>(<span class="hljs-number">2</span>).mean(-<span class="hljs-number">1</span>, keepdim=<span class="hljs-literal">True</span>) + <span class="hljs-variable language_">self</span>.eps)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-comment"># 前向传播函数，先对输入x进行归一化，然后乘以可学习的缩放参数</span><br>        output = <span class="hljs-variable language_">self</span>._norm(x.<span class="hljs-built_in">float</span>()).type_as(x)  <span class="hljs-comment"># 归一化并保持与输入x相同的数据类型</span><br>        <span class="hljs-keyword">return</span> output * <span class="hljs-variable language_">self</span>.weight  <span class="hljs-comment"># 乘以缩放参数</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="解释："><a href="#解释：" class="headerlink" title="解释："></a>解释：</h3><ol>
+<li><p><strong><code>ModelArgs</code></strong>:</p>
+<ul>
+<li>这是一个数据类，用于存储模型的配置参数。它定义了模型的结构和超参数，如模型的维度、层数、注意力头数等。</li>
+<li><code>dim</code> 是每个token的向量表示的大小，<code>n_layers</code> 是Transformer的层数，<code>n_heads</code> 是注意力机制中的头数。</li>
+<li><code>vocab_size</code> 是词汇表的大小，通常由tokenizer决定。</li>
+<li><code>multiple_of</code> 和 <code>ffn_dim_multiplier</code> 用于调整前馈网络的隐藏层大小。</li>
+<li><code>norm_eps</code> 是Layer Normalization中的epsilon值，用于数值稳定性。</li>
+<li><code>rope_theta</code> 是RoPE（Rotary Position Embedding）中的theta参数，用于位置编码。</li>
+<li><code>max_batch_size</code> 和 <code>max_seq_len</code> 分别定义了模型的最大批处理大小和最大序列长度。</li>
+</ul>
+</li>
+<li><p><strong><code>RMSNorm</code></strong>:</p>
+<ul>
+<li>这是一个自定义的归一化层，类似于Layer Normalization，但使用了RMS（Root Mean Square）归一化。</li>
+<li><code>_norm</code> 方法计算输入的RMS归一化值，<code>forward</code> 方法在前向传播时对输入进行归一化并乘以可学习的缩放参数。</li>
+<li><code>eps</code> 是一个小值，用于防止除以零的情况，<code>weight</code> 是可学习的缩放参数，初始化为1。</li>
+</ul>
+</li>
+</ol>
+<p>这两个类在模型中分别用于定义模型的结构和实现归一化操作，是Transformer模型的重要组成部分。</p>
+<hr>
+<h2 id="旋转位置编码"><a href="#旋转位置编码" class="headerlink" title="旋转位置编码"></a>旋转位置编码</h2><h3 id="precompute-freqs-cis"><a href="#precompute-freqs-cis" class="headerlink" title="precompute_freqs_cis"></a><strong><code>precompute_freqs_cis</code></strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">precompute_freqs_cis</span>(<span class="hljs-params">dim: <span class="hljs-built_in">int</span>, end: <span class="hljs-built_in">int</span>, theta: <span class="hljs-built_in">float</span> = <span class="hljs-number">10000.0</span></span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    预计算旋转位置编码的频率矩阵 (freqs_cis)。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    旋转位置编码 (Rotary Positional Embedding, RoPE) 是一种将位置信息嵌入到注意力机制中的方法。</span><br><span class="hljs-string">    它通过将位置信息编码为复数形式，应用到查询和键向量上。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    参数:</span><br><span class="hljs-string">        dim (int): 模型的维度（通常是注意力头的维度）。</span><br><span class="hljs-string">        end (int): 序列的最大长度。</span><br><span class="hljs-string">        theta (float): 控制频率的基数，默认为 10000.0。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    返回:</span><br><span class="hljs-string">        freqs_cis (torch.Tensor): 预计算的频率矩阵，形状为 (end, dim // 2)，数据类型为 complex64。</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-comment"># 计算频率向量</span><br>    freqs = <span class="hljs-number">1.0</span> / (theta ** (torch.arange(<span class="hljs-number">0</span>, dim, <span class="hljs-number">2</span>)[: (dim // <span class="hljs-number">2</span>)].<span class="hljs-built_in">float</span>() / dim))<br>    <span class="hljs-comment"># 生成位置向量</span><br>    t = torch.arange(end, device=freqs.device, dtype=torch.float32)<br>    <span class="hljs-comment"># 计算外积，得到频率矩阵</span><br>    freqs = torch.outer(t, freqs)<br>    <span class="hljs-comment"># 将频率矩阵转换为复数形式（极坐标表示）</span><br>    freqs_cis = torch.polar(torch.ones_like(freqs), freqs)  <span class="hljs-comment"># complex64</span><br>    <span class="hljs-keyword">return</span> freqs_cis<br></code></pre></td></tr></table></figure>
+
+<h4 id="解释：-1"><a href="#解释：-1" class="headerlink" title="解释："></a>解释：</h4><ul>
+<li><strong>作用</strong>: 预计算旋转位置编码的频率矩阵 <code>freqs_cis</code>，用于将位置信息嵌入到查询和键向量中。</li>
+<li><strong>输入</strong>:<ul>
+<li><code>dim</code>: 模型的维度，通常是注意力头的维度。</li>
+<li><code>end</code>: 序列的最大长度。</li>
+<li><code>theta</code>: 控制频率的基数，默认为 10000.0。</li>
+</ul>
+</li>
+<li><strong>输出</strong>:<ul>
+<li><code>freqs_cis</code>: 预计算的频率矩阵，形状为 <code>(end, dim // 2)</code>，数据类型为 <code>complex64</code>。</li>
+</ul>
+</li>
+<li><strong>关键点</strong>:<ul>
+<li>使用 <code>torch.outer</code> 计算位置向量和频率向量的外积，得到频率矩阵。</li>
+<li>通过 <code>torch.polar</code> 将频率矩阵转换为复数形式，表示极坐标。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="reshape-for-broadcast"><a href="#reshape-for-broadcast" class="headerlink" title="reshape_for_broadcast"></a><strong><code>reshape_for_broadcast</code></strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">reshape_for_broadcast</span>(<span class="hljs-params">freqs_cis: torch.Tensor, x: torch.Tensor</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    将频率矩阵 `freqs_cis` 重塑为适合广播的形状，以便与查询或键向量进行逐元素操作。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    参数:</span><br><span class="hljs-string">        freqs_cis (torch.Tensor): 频率矩阵，形状为 (seq_len, dim // 2)。</span><br><span class="hljs-string">        x (torch.Tensor): 查询或键向量，形状为 (batch_size, seq_len, n_heads, head_dim)。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    返回:</span><br><span class="hljs-string">        freqs_cis (torch.Tensor): 重塑后的频率矩阵，形状为 (1, seq_len, 1, dim // 2)。</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    ndim = x.ndim<br>    <span class="hljs-keyword">assert</span> <span class="hljs-number">0</span> &lt;= <span class="hljs-number">1</span> &lt; ndim<br>    <span class="hljs-keyword">assert</span> freqs_cis.shape == (x.shape[<span class="hljs-number">1</span>], x.shape[-<span class="hljs-number">1</span>])<br>    <span class="hljs-comment"># 重塑频率矩阵，使其形状为 (1, seq_len, 1, dim // 2)</span><br>    shape = [d <span class="hljs-keyword">if</span> i == <span class="hljs-number">1</span> <span class="hljs-keyword">or</span> i == ndim - <span class="hljs-number">1</span> <span class="hljs-keyword">else</span> <span class="hljs-number">1</span> <span class="hljs-keyword">for</span> i, d <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(x.shape)]<br>    <span class="hljs-keyword">return</span> freqs_cis.view(*shape)<br></code></pre></td></tr></table></figure>
+
+<h4 id="解释：-2"><a href="#解释：-2" class="headerlink" title="解释："></a>解释：</h4><ul>
+<li><strong>作用</strong>: 将频率矩阵 <code>freqs_cis</code> 重塑为适合广播的形状，以便与查询或键向量进行逐元素操作。</li>
+<li><strong>输入</strong>:<ul>
+<li><code>freqs_cis</code>: 频率矩阵，形状为 <code>(seq_len, dim // 2)</code>。</li>
+<li><code>x</code>: 查询或键向量，形状为 <code>(batch_size, seq_len, n_heads, head_dim)</code>。</li>
+</ul>
+</li>
+<li><strong>输出</strong>:<ul>
+<li>重塑后的频率矩阵，形状为 <code>(1, seq_len, 1, dim // 2)</code>。</li>
+</ul>
+</li>
+<li><strong>关键点</strong>:<ul>
+<li>通过 <code>view</code> 方法将频率矩阵重塑为适合广播的形状，使其能够与查询或键向量进行逐元素操作。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="apply-rotary-emb"><a href="#apply-rotary-emb" class="headerlink" title="apply_rotary_emb"></a><strong><code>apply_rotary_emb</code></strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">apply_rotary_emb</span>(<span class="hljs-params"></span><br><span class="hljs-params">    xq: torch.Tensor,</span><br><span class="hljs-params">    xk: torch.Tensor,</span><br><span class="hljs-params">    freqs_cis: torch.Tensor,</span><br><span class="hljs-params"></span>) -&gt; <span class="hljs-type">Tuple</span>[torch.Tensor, torch.Tensor]:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    将旋转位置编码应用到查询和键向量上。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    旋转位置编码通过将位置信息嵌入到查询和键向量中，帮助模型捕捉序列中的位置关系。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    参数:</span><br><span class="hljs-string">        xq (torch.Tensor): 查询向量，形状为 (batch_size, seq_len, n_heads, head_dim)。</span><br><span class="hljs-string">        xk (torch.Tensor): 键向量，形状为 (batch_size, seq_len, n_heads, head_dim)。</span><br><span class="hljs-string">        freqs_cis (torch.Tensor): 频率矩阵，形状为 (1, seq_len, 1, head_dim // 2)。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    返回:</span><br><span class="hljs-string">        xq_out (torch.Tensor): 应用旋转位置编码后的查询向量。</span><br><span class="hljs-string">        xk_out (torch.Tensor): 应用旋转位置编码后的键向量。</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    <span class="hljs-comment"># 将查询和键向量转换为复数形式</span><br>    xq_ = torch.view_as_complex(xq.<span class="hljs-built_in">float</span>().reshape(*xq.shape[:-<span class="hljs-number">1</span>], -<span class="hljs-number">1</span>, <span class="hljs-number">2</span>))<br>    xk_ = torch.view_as_complex(xk.<span class="hljs-built_in">float</span>().reshape(*xk.shape[:-<span class="hljs-number">1</span>], -<span class="hljs-number">1</span>, <span class="hljs-number">2</span>))<br>    <span class="hljs-comment"># 重塑频率矩阵以匹配查询和键向量的形状</span><br>    freqs_cis = reshape_for_broadcast(freqs_cis, xq_)<br>    <span class="hljs-comment"># 应用旋转位置编码</span><br>    xq_out = torch.view_as_real(xq_ * freqs_cis).flatten(<span class="hljs-number">3</span>)<br>    xk_out = torch.view_as_real(xk_ * freqs_cis).flatten(<span class="hljs-number">3</span>)<br>    <span class="hljs-keyword">return</span> xq_out.type_as(xq), xk_out.type_as(xk)<br></code></pre></td></tr></table></figure>
+
+<h4 id="解释：-3"><a href="#解释：-3" class="headerlink" title="解释："></a>解释：</h4><ul>
+<li><p><strong>作用</strong>: 将旋转位置编码应用到查询和键向量上，帮助模型捕捉序列中的位置关系。</p>
+</li>
+<li><p><strong>输入</strong>:</p>
+<ul>
+<li><code>xq</code>: 查询向量，形状为 <code>(batch_size, seq_len, n_heads, head_dim)</code>。</li>
+<li><code>xk</code>: 键向量，形状为 <code>(batch_size, seq_len, n_heads, head_dim)</code>。</li>
+<li><code>freqs_cis</code>: 频率矩阵，形状为 <code>(1, seq_len, 1, head_dim // 2)</code>。</li>
+</ul>
+</li>
+<li><p><strong>输出</strong>:</p>
+<ul>
+<li><code>xq_out</code>: 应用旋转位置编码后的查询向量。</li>
+<li><code>xk_out</code>: 应用旋转位置编码后的键向量。</li>
+</ul>
+</li>
+<li><p><strong>关键点</strong>:</p>
+<ul>
+<li>使用 <code>torch.view_as_complex</code> 将查询和键向量转换为复数形式。</li>
+<li>通过逐元素乘法将频率矩阵应用到查询和键向量上。</li>
+<li>使用 <code>torch.view_as_real</code> 将结果转换回实数形式。</li>
+</ul>
+<p>这些函数共同实现了旋转位置编码（RoPE）</p>
+<h3 id="总结：-1"><a href="#总结：-1" class="headerlink" title="总结："></a>总结：</h3><ul>
+<li><strong><code>precompute_freqs_cis</code></strong>: 预计算旋转位置编码的频率矩阵。</li>
+<li><strong><code>reshape_for_broadcast</code></strong>: 将频率矩阵重塑为适合广播的形状。</li>
+<li><strong><code>apply_rotary_emb</code></strong>: 将旋转位置编码应用到查询和键向量上。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="repeat-kv"><a href="#repeat-kv" class="headerlink" title="repeat_kv"></a><strong><code>repeat_kv</code></strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">repeat_kv</span>(<span class="hljs-params">x: torch.Tensor, n_rep: <span class="hljs-built_in">int</span></span>) -&gt; torch.Tensor:<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    重复键或值向量，以匹配查询向量的头数。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    在分组注意力机制中，键和值向量的头数可能少于查询向量的头数，因此需要重复键和值向量以匹配查询向量的头数。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    参数:</span><br><span class="hljs-string">        x (torch.Tensor): 键或值向量，形状为 (batch_size, seq_len, n_kv_heads, head_dim)。</span><br><span class="hljs-string">        n_rep (int): 重复次数，通常为查询头数与键值头数的比值。</span><br><span class="hljs-string"></span><br><span class="hljs-string">    返回:</span><br><span class="hljs-string">        torch.Tensor: 重复后的键或值向量，形状为 (batch_size, seq_len, n_kv_heads * n_rep, head_dim)。</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    bs, slen, n_kv_heads, head_dim = x.shape<br>    <span class="hljs-keyword">if</span> n_rep == <span class="hljs-number">1</span>:<br>        <span class="hljs-keyword">return</span> x<br>    <span class="hljs-keyword">return</span> (<br>        x[:, :, :, <span class="hljs-literal">None</span>, :]<br>        .expand(bs, slen, n_kv_heads, n_rep, head_dim)<br>        .reshape(bs, slen, n_kv_heads * n_rep, head_dim)<br>    )<br></code></pre></td></tr></table></figure>
+
+<h4 id="解释：-4"><a href="#解释：-4" class="headerlink" title="解释："></a>解释：</h4><ul>
+<li><strong>作用</strong>: 重复键或值向量，以匹配查询向量的头数。</li>
+<li><strong>输入</strong>:<ul>
+<li><code>x</code>: 键或值向量，形状为 <code>(batch_size, seq_len, n_kv_heads, head_dim)</code>。</li>
+<li><code>n_rep</code>: 重复次数，通常为查询头数与键值头数的比值。</li>
+</ul>
+</li>
+<li><strong>输出</strong>:<ul>
+<li>重复后的键或值向量，形状为 <code>(batch_size, seq_len, n_kv_heads * n_rep, head_dim)</code>。</li>
+</ul>
+</li>
+<li><strong>关键点</strong>:<ul>
+<li>使用 <code>expand</code> 和 <code>reshape</code> 方法重复键或值向量，使其头数与查询向量匹配。</li>
+</ul>
+</li>
+</ul>
+<h2 id="class-Attention"><a href="#class-Attention" class="headerlink" title="class Attention"></a><code>class Attention</code></h2><p><code>class Attention</code> 实现了 Transformer 中的 <strong>多头注意力机制（Multi-Head Attention）</strong>，它是 Transformer 模型的核心组件之一。以下是该类的详细解释：</p>
+<h4 id="主要功能："><a href="#主要功能：" class="headerlink" title="主要功能："></a><strong>主要功能</strong>：</h4><ol>
+<li><p><strong>多头注意力机制</strong>：</p>
+<ul>
+<li>将输入向量拆分为多个头，每个头独立计算注意力分数。</li>
+<li>通过并行计算，捕捉输入序列中不同位置之间的关系。</li>
+</ul>
+</li>
+<li><p><strong>键值缓存（KV Cache）</strong>：</p>
+<ul>
+<li>在生成任务中，缓存先前的键和值，避免重复计算，提高效率。</li>
+</ul>
+</li>
+<li><p><strong>模型并行化</strong>：</p>
+<ul>
+<li>使用 <code>ColumnParallelLinear</code> 和 <code>RowParallelLinear</code> 实现并行的线性变换，支持多 GPU 计算。</li>
+</ul>
+</li>
+</ol>
+<h4 id="关键组件："><a href="#关键组件：" class="headerlink" title="关键组件："></a><strong>关键组件</strong>：</h4><ol>
+<li><p><strong>线性变换</strong>：</p>
+<ul>
+<li><code>wq</code>、<code>wk</code>、<code>wv</code>：分别对输入进行线性变换，生成查询（Query）、键（Key）和值（Value）向量。</li>
+<li><code>wo</code>：将多头注意力的输出进行线性变换，合并为最终输出。</li>
+</ul>
+</li>
+<li><p><strong>键值缓存</strong>：</p>
+<ul>
+<li><code>cache_k</code> 和 <code>cache_v</code>：用于缓存先前的键和值，形状为 <code>(batch_size, max_seq_len, n_local_kv_heads, head_dim)</code>。</li>
+</ul>
+</li>
+<li><p><strong>旋转位置编码（RoPE）</strong>：</p>
+<ul>
+<li>通过 <code>apply_rotary_emb</code> 将位置信息嵌入到查询和键向量中。</li>
+</ul>
+</li>
+<li><p><strong>注意力分数计算</strong>：</p>
+<ul>
+<li>计算查询和键的点积，除以 <code>sqrt(head_dim)</code> 进行缩放，然后应用 Softmax 得到注意力分数。</li>
+</ul>
+</li>
+<li><p><strong>输出计算</strong>：</p>
+<ul>
+<li>使用注意力分数对值向量进行加权求和，得到多头注意力的输出。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="流程图"><a href="#流程图" class="headerlink" title="&#96;流程图"></a><strong>&#96;流程图</strong></h3><pre><code class=" mermaid">graph TD
+    A[输入 x] --&gt; B[线性变换]
+    B --&gt; C[生成 Query]
+    B --&gt; D[生成 Key]
+    B --&gt; E[生成 Value]
+    C --&gt; F[应用旋转位置编码]
+    D --&gt; F
+    F --&gt; G[更新键值缓存]
+    G --&gt; H[计算注意力分数]
+    H --&gt; I[应用 Softmax]
+    I --&gt; J[加权求和]
+    J --&gt; K[线性变换]
+    K --&gt; L[输出]
+</code></pre>
+
+<h3 id="详细步骤说明："><a href="#详细步骤说明：" class="headerlink" title="详细步骤说明："></a><strong>详细步骤说明</strong>：</h3><ol>
+<li><p><strong>输入 x</strong>  </p>
+<ul>
+<li>输入是一个批次的嵌入向量，形状为 <code>(batch_size, seq_len, dim)</code>。</li>
+</ul>
+</li>
+<li><p><strong>线性变换</strong>  </p>
+<ul>
+<li>通过 <code>wq</code>、<code>wk</code>、<code>wv</code> 分别对输入进行线性变换，生成查询（Query）、键（Key）和值（Value）向量。</li>
+</ul>
+</li>
+<li><p><strong>生成 Query、Key、Value</strong>  </p>
+<ul>
+<li>查询向量形状为 <code>(batch_size, seq_len, n_local_heads, head_dim)</code>。</li>
+<li>键和值向量形状为 <code>(batch_size, seq_len, n_local_kv_heads, head_dim)</code>。</li>
+</ul>
+</li>
+<li><p><strong>应用旋转位置编码</strong>  </p>
+<ul>
+<li>使用 <code>apply_rotary_emb</code> 将旋转位置编码应用到查询和键向量上。</li>
+</ul>
+</li>
+<li><p><strong>更新键值缓存</strong>  </p>
+<ul>
+<li>将当前的键和值向量缓存到 <code>cache_k</code> 和 <code>cache_v</code> 中。</li>
+</ul>
+</li>
+<li><p><strong>计算注意力分数</strong>  </p>
+<ul>
+<li>计算查询和键的点积，除以 <code>sqrt(head_dim)</code> 进行缩放，得到注意力分数。</li>
+</ul>
+</li>
+<li><p><strong>应用 Softmax</strong>  </p>
+<ul>
+<li>对注意力分数应用 Softmax，得到归一化的注意力权重。</li>
+</ul>
+</li>
+<li><p><strong>加权求和</strong>  </p>
+<ul>
+<li>使用注意力权重对值向量进行加权求和，得到多头注意力的输出。</li>
+</ul>
+</li>
+<li><p><strong>线性变换</strong>  </p>
+<ul>
+<li>通过 <code>wo</code> 对多头注意力的输出进行线性变换，合并为最终输出。</li>
+</ul>
+</li>
+<li><p><strong>输出</strong>  </p>
+<ul>
+<li>返回最终的输出，形状为 <code>(batch_size, seq_len, dim)</code>。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="代码实现的关键点："><a href="#代码实现的关键点：" class="headerlink" title="代码实现的关键点："></a><strong>代码实现的关键点</strong>：</h3><ol>
+<li><p><strong>并行化</strong>：</p>
+<ul>
+<li>使用 <code>ColumnParallelLinear</code> 和 <code>RowParallelLinear</code> 实现并行的线性变换，支持多 GPU 计算。</li>
+</ul>
+</li>
+<li><p><strong>键值缓存</strong>：</p>
+<ul>
+<li>在生成任务中，缓存先前的键和值，避免重复计算，提高效率。</li>
+</ul>
+</li>
+<li><p><strong>旋转位置编码</strong>：</p>
+<ul>
+<li>通过 <code>apply_rotary_emb</code> 将位置信息嵌入到查询和键向量中，帮助模型捕捉序列中的位置关系。</li>
+</ul>
+</li>
+<li><p><strong>注意力分数计算</strong>：</p>
+<ul>
+<li>使用点积计算注意力分数，并通过 Softmax 进行归一化。</li>
+</ul>
+</li>
+<li><p><strong>输出计算</strong>：</p>
+<ul>
+<li>使用注意力权重对值向量进行加权求和，得到多头注意力的输出。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="总结：-2"><a href="#总结：-2" class="headerlink" title="总结："></a><strong>总结</strong>：</h3><p><code>class Attention</code> 实现了 Transformer 中的多头注意力机制，通过并行化、键值缓存和旋转位置编码等技术，高效地捕捉输入序列中的关系。</p>
+<h2 id="FeedForward"><a href="#FeedForward" class="headerlink" title="FeedForward"></a><code>FeedForward</code></h2><pre><code class=" mermaid">graph TD
+    A[输入 x] --&gt; B[线性变换 W1]
+    B --&gt; C[激活函数 SiLU]
+    C --&gt; D[线性变换 W3]
+    D --&gt; E[逐元素乘法]
+    E --&gt; F[线性变换 W2]
+    F --&gt; G[输出]
+</code></pre>
+
+<h3 id="详细步骤说明：-1"><a href="#详细步骤说明：-1" class="headerlink" title="详细步骤说明："></a><strong>详细步骤说明</strong>：</h3><ol>
+<li><p><strong>输入 x</strong>  </p>
+<ul>
+<li>输入是一个批次的向量，形状为 <code>(batch_size, seq_len, dim)</code>。</li>
+</ul>
+</li>
+<li><p><strong>线性变换 W1</strong>  </p>
+<ul>
+<li>通过 <code>w1</code> 对输入进行线性变换，生成中间向量，形状为 <code>(batch_size, seq_len, hidden_dim)</code>。</li>
+</ul>
+</li>
+<li><p><strong>激活函数 SiLU</strong>  </p>
+<ul>
+<li><p>对线性变换后的结果应用 SiLU（Sigmoid Linear Unit）激活函数，公式为：  </p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241230114851133.png" srcset="/img/loading.gif" lazyload></p>
+</li>
+</ul>
+</li>
+<li><p><strong>线性变换 W3</strong>  </p>
+<ul>
+<li>通过 <code>w3</code> 对输入进行另一个线性变换，生成中间向量，形状为 <code>(batch_size, seq_len, hidden_dim)</code>。</li>
+</ul>
+</li>
+<li><p><strong>逐元素乘法</strong>  </p>
+<ul>
+<li>将 <code>SiLU(W1(x))</code> 和 <code>W3(x)</code> 进行逐元素乘法，生成加权后的中间向量。</li>
+</ul>
+</li>
+<li><p><strong>线性变换 W2</strong>  </p>
+<ul>
+<li>通过 <code>w2</code> 对加权后的中间向量进行线性变换，生成最终输出，形状为 <code>(batch_size, seq_len, dim)</code>。</li>
+</ul>
+</li>
+<li><p><strong>输出</strong>  </p>
+<ul>
+<li>返回最终的输出，作为前馈网络的结果。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="代码实现的关键点：-1"><a href="#代码实现的关键点：-1" class="headerlink" title="代码实现的关键点："></a><strong>代码实现的关键点</strong>：</h3><ol>
+<li><p><strong>并行化</strong>：</p>
+<ul>
+<li>使用 <code>ColumnParallelLinear</code> 和 <code>RowParallelLinear</code> 实现并行的线性变换，支持多 GPU 计算。</li>
+</ul>
+</li>
+<li><p><strong>激活函数</strong>：</p>
+<ul>
+<li>使用 SiLU 激活函数，结合了 Sigmoid 和线性变换的优点，增强了模型的非线性表达能力。</li>
+</ul>
+</li>
+<li><p><strong>逐元素乘法</strong>：</p>
+<ul>
+<li>将两个线性变换的结果进行逐元素乘法，生成加权后的中间向量。</li>
+</ul>
+</li>
+<li><p><strong>输出计算</strong>：</p>
+<ul>
+<li>通过 <code>w2</code> 对加权后的中间向量进行线性变换，生成最终输出。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="总结：-3"><a href="#总结：-3" class="headerlink" title="总结："></a><strong>总结</strong>：</h3><p><code>FeedForward</code> 类实现了 Transformer 中的前馈网络，通过线性变换、激活函数和逐元素乘法等技术，增强了模型的非线性表达能力。</p>
+<h2 id="TransformerBlock"><a href="#TransformerBlock" class="headerlink" title="TransformerBlock"></a><code>TransformerBlock</code></h2><pre><code class=" mermaid">graph TD
+    A[输入 x] --&gt; B[RMSNorm]
+    B --&gt; C[Attention]
+    C --&gt; D[Add &amp; Norm]
+    D --&gt; E[FeedForward]
+    E --&gt; F[Add &amp; Norm]
+    F --&gt; G[输出]
+</code></pre>
+
+<h3 id="详细步骤说明：-2"><a href="#详细步骤说明：-2" class="headerlink" title="详细步骤说明："></a><strong>详细步骤说明</strong>：</h3><ol>
+<li><p><strong>输入 x</strong>  </p>
+<ul>
+<li>输入是一个批次的向量，形状为 <code>(batch_size, seq_len, dim)</code>。</li>
+</ul>
+</li>
+<li><p><strong>RMSNorm</strong>  </p>
+<ul>
+<li>对输入进行 RMSNorm 归一化，公式为：<br>[<br>\text{RMSNorm}(x) &#x3D; \frac{x}{\sqrt{\text{mean}(x^2) + \epsilon}} \cdot \gamma<br>]<br>其中，(\gamma) 是可学习的缩放参数，(\epsilon) 是防止除零的小常数。</li>
+</ul>
+</li>
+<li><p><strong>Attention</strong>  </p>
+<ul>
+<li>将归一化后的输入传递给 <code>Attention</code> 模块，计算多头注意力机制的输出。</li>
+</ul>
+</li>
+<li><p><strong>Add &amp; Norm</strong>  </p>
+<ul>
+<li>将注意力输出与输入进行残差连接，然后再次应用 RMSNorm 归一化。</li>
+</ul>
+</li>
+<li><p><strong>FeedForward</strong>  </p>
+<ul>
+<li>将归一化后的结果传递给 <code>FeedForward</code> 模块，计算前馈网络的输出。</li>
+</ul>
+</li>
+<li><p><strong>Add &amp; Norm</strong>  </p>
+<ul>
+<li>将前馈网络输出与上一层的输出进行残差连接，然后再次应用 RMSNorm 归一化。</li>
+</ul>
+</li>
+<li><p><strong>输出</strong>  </p>
+<ul>
+<li>返回最终的输出，作为 Transformer 块的结果。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="代码实现的关键点：-2"><a href="#代码实现的关键点：-2" class="headerlink" title="代码实现的关键点："></a><strong>代码实现的关键点</strong>：</h3><ol>
+<li><p><strong>残差连接</strong>：</p>
+<ul>
+<li>在注意力机制和前馈网络之后，分别使用残差连接，将输入与输出相加，缓解梯度消失问题。</li>
+</ul>
+</li>
+<li><p><strong>归一化</strong>：</p>
+<ul>
+<li>使用 RMSNorm 对输入和输出进行归一化，稳定训练过程。</li>
+</ul>
+</li>
+<li><p><strong>注意力机制</strong>：</p>
+<ul>
+<li>通过 <code>Attention</code> 模块计算多头注意力机制的输出，捕捉输入序列中的关系。</li>
+</ul>
+</li>
+<li><p><strong>前馈网络</strong>：</p>
+<ul>
+<li>通过 <code>FeedForward</code> 模块增强模型的非线性表达能力。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="总结：-4"><a href="#总结：-4" class="headerlink" title="总结："></a><strong>总结</strong>：</h3><p><code>TransformerBlock</code> 类实现了 Transformer 中的一个完整块，包括注意力机制、前馈网络、残差连接和归一化操作。</p>
+<h2 id="class-Transformer"><a href="#class-Transformer" class="headerlink" title="class Transformer"></a><code>class Transformer</code></h2><pre><code class=" mermaid">graph TD
+    A[输入 tokens] --&gt; B[Token Embedding]
+    B --&gt; C[添加位置编码 freqs_cis]
+    C --&gt; D[初始化 mask]
+    D --&gt; E[进入 Transformer 层]
+    E --&gt; F[Transformer Block 1]
+    E --&gt; G[Transformer Block 2]
+    E --&gt; H[...]
+    E --&gt; I[Transformer Block N]
+    F --&gt; J[RMSNorm]
+    G --&gt; J
+    H --&gt; J
+    I --&gt; J
+    J --&gt; K[输出线性变换]
+    K --&gt; L[输出 logits]
+
+    subgraph Transformer Block
+        direction TB
+        M[输入] --&gt; N[RMSNorm]
+        N --&gt; O[Attention]
+        O --&gt; P[Add &amp; Norm]
+        P --&gt; Q[FeedForward]
+        Q --&gt; R[Add &amp; Norm]
+        R --&gt; S[输出]
+    end
+
+    F --&gt; M
+    G --&gt; M
+    I --&gt; M
+</code></pre>
+
+<h3 id="详细步骤说明：-3"><a href="#详细步骤说明：-3" class="headerlink" title="详细步骤说明："></a><strong>详细步骤说明</strong>：</h3><h4 id="整体流程："><a href="#整体流程：" class="headerlink" title="整体流程："></a><strong>整体流程</strong>：</h4><ol>
+<li><p><strong>输入 tokens</strong>  </p>
+<ul>
+<li>输入是一个批次的 token IDs，形状为 <code>(batch_size, seq_len)</code>。</li>
+</ul>
+</li>
+<li><p><strong>Token Embedding</strong>  </p>
+<ul>
+<li>通过 <code>tok_embeddings</code> 将 token IDs 转换为嵌入向量，形状为 <code>(batch_size, seq_len, dim)</code>。</li>
+</ul>
+</li>
+<li><p><strong>添加位置编码 freqs_cis</strong>  </p>
+<ul>
+<li>使用预计算的 <code>freqs_cis</code> 为嵌入向量添加旋转位置编码，帮助模型捕捉序列中的位置信息。</li>
+</ul>
+</li>
+<li><p><strong>初始化 mask</strong>  </p>
+<ul>
+<li>根据 <code>seq_len</code> 和 <code>start_pos</code> 生成注意力掩码 <code>mask</code>，用于防止模型看到未来的 token。</li>
+</ul>
+</li>
+<li><p><strong>进入 Transformer 层</strong>  </p>
+<ul>
+<li>嵌入向量和位置编码进入多层 Transformer 块进行处理。</li>
+</ul>
+</li>
+<li><p><strong>Transformer Block 1 到 N</strong>  </p>
+<ul>
+<li>每个 Transformer 块内部执行子图中的流程。</li>
+</ul>
+</li>
+<li><p><strong>RMSNorm</strong>  </p>
+<ul>
+<li>在所有 Transformer 块处理完成后，对最终输出应用 RMSNorm 进行归一化。</li>
+</ul>
+</li>
+<li><p><strong>输出线性变换</strong>  </p>
+<ul>
+<li>通过 <code>output</code> 线性层将归一化后的输出映射到词汇表空间，形状为 <code>(batch_size, seq_len, vocab_size)</code>。</li>
+</ul>
+</li>
+<li><p><strong>输出 logits</strong>  </p>
+<ul>
+<li>返回最终的 logits，表示每个 token 的概率分布。</li>
+</ul>
+</li>
+</ol>
+<h4 id="Transformer-Block-子流程："><a href="#Transformer-Block-子流程：" class="headerlink" title="Transformer Block 子流程："></a><strong>Transformer Block 子流程</strong>：</h4><ol>
+<li><p><strong>输入</strong>  </p>
+<ul>
+<li>接收来自上一层的输入。</li>
+</ul>
+</li>
+<li><p><strong>RMSNorm</strong>  </p>
+<ul>
+<li>对输入进行归一化。</li>
+</ul>
+</li>
+<li><p><strong>Attention</strong>  </p>
+<ul>
+<li>应用多头注意力机制，生成注意力输出。</li>
+</ul>
+</li>
+<li><p><strong>Add &amp; Norm</strong>  </p>
+<ul>
+<li>将注意力输出与输入进行残差连接，并再次应用 RMSNorm 进行归一化。</li>
+</ul>
+</li>
+<li><p><strong>FeedForward</strong>  </p>
+<ul>
+<li>应用前馈网络，生成前馈输出。</li>
+</ul>
+</li>
+<li><p><strong>Add &amp; Norm</strong>  </p>
+<ul>
+<li>将前馈输出与上一层的输出进行残差连接，并再次应用 RMSNorm 进行归一化。</li>
+</ul>
+</li>
+<li><p><strong>输出</strong>  </p>
+<ul>
+<li>返回当前 Transformer 块的输出，作为下一层的输入。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="代码实现的关键点：-3"><a href="#代码实现的关键点：-3" class="headerlink" title="代码实现的关键点："></a><strong>代码实现的关键点</strong>：</h3><ol>
+<li><p><strong>嵌入和位置编码</strong>：</p>
+<ul>
+<li>使用 <code>tok_embeddings</code> 将 token IDs 转换为嵌入向量，并通过 <code>freqs_cis</code> 添加位置信息。</li>
+</ul>
+</li>
+<li><p><strong>注意力掩码</strong>：</p>
+<ul>
+<li>生成注意力掩码 <code>mask</code>，防止模型看到未来的 token。</li>
+</ul>
+</li>
+<li><p><strong>多层 Transformer 块</strong>：</p>
+<ul>
+<li>通过多个 Transformer 块处理输入，每个块包含注意力机制、前馈网络、残差连接和归一化操作。</li>
+</ul>
+</li>
+<li><p><strong>输出生成</strong>：</p>
+<ul>
+<li>对最终输出进行归一化和线性变换，生成 logits。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="总结：-5"><a href="#总结：-5" class="headerlink" title="总结："></a><strong>总结</strong>：</h3><p><code>class Transformer</code> 实现了完整的 Transformer 模型，包括嵌入、位置编码、多层 Transformer 块的处理以及最终的输出生成。</p>
+<h2 id="示例解析"><a href="#示例解析" class="headerlink" title="示例解析"></a>示例解析</h2><h3 id="示例输入"><a href="#示例输入" class="headerlink" title="示例输入"></a><strong>示例输入</strong></h3><p>假设我们有以下输入：</p>
+<ul>
+<li><strong>输入 tokens</strong>: <code>[[1, 2, 3]]</code>，形状为 <code>(batch_size=1, seq_len=3)</code>。</li>
+<li><strong>模型参数</strong>:<ul>
+<li><code>dim=4</code>（模型维度）。</li>
+<li><code>n_heads=2</code>（注意力头数）。</li>
+<li><code>vocab_size=10</code>（词汇表大小）。</li>
+<li><code>max_seq_len=8</code>（最大序列长度）。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a><strong>执行流程</strong></h3><h4 id="1-Token-Embedding"><a href="#1-Token-Embedding" class="headerlink" title="1. Token Embedding"></a>1. <strong>Token Embedding</strong></h4><ul>
+<li><strong>输入</strong>: <code>tokens = [[1, 2, 3]]</code>，形状为 <code>(1, 3)</code>。</li>
+<li><strong>操作</strong>: 将 token IDs 转换为嵌入向量。</li>
+<li><strong>输出</strong>: 嵌入向量，形状为 <code>(1, 3, 4)</code>。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 假设嵌入矩阵为：</span><br>embedding_matrix = [<br>    [<span class="hljs-number">0.1</span>, <span class="hljs-number">0.2</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.4</span>],  <span class="hljs-comment"># token 1</span><br>    [<span class="hljs-number">0.5</span>, <span class="hljs-number">0.6</span>, <span class="hljs-number">0.7</span>, <span class="hljs-number">0.8</span>],  <span class="hljs-comment"># token 2</span><br>    [<span class="hljs-number">0.9</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">1.1</span>, <span class="hljs-number">1.2</span>],  <span class="hljs-comment"># token 3</span><br>]<br><span class="hljs-comment"># 输出：</span><br>h = [<br>    [[<span class="hljs-number">0.1</span>, <span class="hljs-number">0.2</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.4</span>],  <span class="hljs-comment"># token 1</span><br>     [<span class="hljs-number">0.5</span>, <span class="hljs-number">0.6</span>, <span class="hljs-number">0.7</span>, <span class="hljs-number">0.8</span>],  <span class="hljs-comment"># token 2</span><br>     [<span class="hljs-number">0.9</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">1.1</span>, <span class="hljs-number">1.2</span>]]  <span class="hljs-comment"># token 3</span><br>]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="2-添加位置编码"><a href="#2-添加位置编码" class="headerlink" title="2. 添加位置编码"></a>2. <strong>添加位置编码</strong></h4><ul>
+<li><strong>输入</strong>: 嵌入向量 <code>h</code>，形状为 <code>(1, 3, 4)</code>。</li>
+<li><strong>操作</strong>: 使用 <code>freqs_cis</code> 添加旋转位置编码。</li>
+<li><strong>输出</strong>: 添加位置编码后的向量，形状为 <code>(1, 3, 4)</code>。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 假设 freqs_cis 为：</span><br>freqs_cis = [<br>    [<span class="hljs-number">1.0</span>, <span class="hljs-number">1.0</span>],  <span class="hljs-comment"># 位置 1</span><br>    [<span class="hljs-number">1.1</span>, <span class="hljs-number">1.1</span>],  <span class="hljs-comment"># 位置 2</span><br>    [<span class="hljs-number">1.2</span>, <span class="hljs-number">1.2</span>],  <span class="hljs-comment"># 位置 3</span><br>]<br><span class="hljs-comment"># 输出：</span><br>h_with_pos = [<br>    [[<span class="hljs-number">0.1</span>, <span class="hljs-number">0.2</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">1.0</span>],  <span class="hljs-comment"># token 1</span><br>     [<span class="hljs-number">0.5</span>, <span class="hljs-number">0.6</span>, <span class="hljs-number">1.1</span>, <span class="hljs-number">1.1</span>],  <span class="hljs-comment"># token 2</span><br>     [<span class="hljs-number">0.9</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">1.2</span>, <span class="hljs-number">1.2</span>]]  <span class="hljs-comment"># token 3</span><br>]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="3-初始化-mask"><a href="#3-初始化-mask" class="headerlink" title="3. 初始化 mask"></a>3. <strong>初始化 mask</strong></h4><ul>
+<li><strong>输入</strong>: 序列长度 <code>seq_len=3</code>。</li>
+<li><strong>操作</strong>: 生成注意力掩码，防止模型看到未来的 token。</li>
+<li><strong>输出</strong>: 注意力掩码，形状为 <code>(3, 3)</code>。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 输出：</span><br>mask = [<br>    [<span class="hljs-number">0</span>, -inf, -inf],  <span class="hljs-comment"># 位置 1</span><br>    [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, -inf],     <span class="hljs-comment"># 位置 2</span><br>    [<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>]         <span class="hljs-comment"># 位置 3</span><br>]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="4-进入-Transformer-层"><a href="#4-进入-Transformer-层" class="headerlink" title="4. 进入 Transformer 层"></a>4. <strong>进入 Transformer 层</strong></h4><ul>
+<li><strong>输入</strong>: 添加位置编码后的向量 <code>h_with_pos</code>，形状为 <code>(1, 3, 4)</code>。</li>
+<li><strong>操作</strong>: 通过多层 Transformer 块处理输入。</li>
+</ul>
+<hr>
+<h4 id="5-Transformer-Block-1"><a href="#5-Transformer-Block-1" class="headerlink" title="5. Transformer Block 1"></a>5. <strong>Transformer Block 1</strong></h4><ul>
+<li><strong>输入</strong>: <code>h_with_pos</code>，形状为 <code>(1, 3, 4)</code>。</li>
+<li><strong>操作</strong>:<ol>
+<li><strong>RMSNorm</strong>: 对输入进行归一化。</li>
+<li><strong>Attention</strong>: 计算多头注意力机制。</li>
+<li><strong>Add &amp; Norm</strong>: 残差连接和归一化。</li>
+<li><strong>FeedForward</strong>: 计算前馈网络。</li>
+<li><strong>Add &amp; Norm</strong>: 残差连接和归一化。</li>
+</ol>
+</li>
+<li><strong>输出</strong>: Transformer 块的输出，形状为 <code>(1, 3, 4)</code>。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 假设输出为：</span><br>h_block1 = [<br>    [[<span class="hljs-number">0.2</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">1.1</span>, <span class="hljs-number">1.1</span>],  <span class="hljs-comment"># token 1</span><br>     [<span class="hljs-number">0.6</span>, <span class="hljs-number">0.7</span>, <span class="hljs-number">1.2</span>, <span class="hljs-number">1.2</span>],  <span class="hljs-comment"># token 2</span><br>     [<span class="hljs-number">1.0</span>, <span class="hljs-number">1.1</span>, <span class="hljs-number">1.3</span>, <span class="hljs-number">1.3</span>]]  <span class="hljs-comment"># token 3</span><br>]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="6-Transformer-Block-N"><a href="#6-Transformer-Block-N" class="headerlink" title="6. Transformer Block N"></a>6. <strong>Transformer Block N</strong></h4><ul>
+<li><strong>输入</strong>: 上一层的输出，形状为 <code>(1, 3, 4)</code>。</li>
+<li><strong>操作</strong>: 重复 Transformer 块的处理。</li>
+<li><strong>输出</strong>: 最后一层 Transformer 块的输出，形状为 <code>(1, 3, 4)</code>。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 假设输出为：</span><br>h_blockN = [<br>    [[<span class="hljs-number">0.3</span>, <span class="hljs-number">0.4</span>, <span class="hljs-number">1.2</span>, <span class="hljs-number">1.2</span>],  <span class="hljs-comment"># token 1</span><br>     [<span class="hljs-number">0.7</span>, <span class="hljs-number">0.8</span>, <span class="hljs-number">1.3</span>, <span class="hljs-number">1.3</span>],  <span class="hljs-comment"># token 2</span><br>     [<span class="hljs-number">1.1</span>, <span class="hljs-number">1.2</span>, <span class="hljs-number">1.4</span>, <span class="hljs-number">1.4</span>]]  <span class="hljs-comment"># token 3</span><br>]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="7-RMSNorm"><a href="#7-RMSNorm" class="headerlink" title="7. RMSNorm"></a>7. <strong>RMSNorm</strong></h4><ul>
+<li><strong>输入</strong>: 最后一层 Transformer 块的输出，形状为 <code>(1, 3, 4)</code>。</li>
+<li><strong>操作</strong>: 对输出进行归一化。</li>
+<li><strong>输出</strong>: 归一化后的输出，形状为 <code>(1, 3, 4)</code>。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 假设输出为：</span><br>h_norm = [<br>    [[<span class="hljs-number">0.4</span>, <span class="hljs-number">0.5</span>, <span class="hljs-number">1.3</span>, <span class="hljs-number">1.3</span>],  <span class="hljs-comment"># token 1</span><br>     [<span class="hljs-number">0.8</span>, <span class="hljs-number">0.9</span>, <span class="hljs-number">1.4</span>, <span class="hljs-number">1.4</span>],  <span class="hljs-comment"># token 2</span><br>     [<span class="hljs-number">1.2</span>, <span class="hljs-number">1.3</span>, <span class="hljs-number">1.5</span>, <span class="hljs-number">1.5</span>]]  <span class="hljs-comment"># token 3</span><br>]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="8-输出线性变换"><a href="#8-输出线性变换" class="headerlink" title="8. 输出线性变换"></a>8. <strong>输出线性变换</strong></h4><ul>
+<li><strong>输入</strong>: 归一化后的输出，形状为 <code>(1, 3, 4)</code>。</li>
+<li><strong>操作</strong>: 通过线性层将输出映射到词汇表空间。</li>
+<li><strong>输出</strong>: logits，形状为 <code>(1, 3, vocab_size=10)</code>。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># 假设输出为：</span><br>logits = [<br>    [[<span class="hljs-number">0.1</span>, <span class="hljs-number">0.2</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.4</span>, <span class="hljs-number">0.5</span>, <span class="hljs-number">0.6</span>, <span class="hljs-number">0.7</span>, <span class="hljs-number">0.8</span>, <span class="hljs-number">0.9</span>, <span class="hljs-number">1.0</span>],  <span class="hljs-comment"># token 1</span><br>     [<span class="hljs-number">0.2</span>, <span class="hljs-number">0.3</span>, <span class="hljs-number">0.4</span>, <span class="hljs-number">0.5</span>, <span class="hljs-number">0.6</span>, <span class="hljs-number">0.7</span>, <span class="hljs-number">0.8</span>, <span class="hljs-number">0.9</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">1.1</span>],  <span class="hljs-comment"># token 2</span><br>     [<span class="hljs-number">0.3</span>, <span class="hljs-number">0.4</span>, <span class="hljs-number">0.5</span>, <span class="hljs-number">0.6</span>, <span class="hljs-number">0.7</span>, <span class="hljs-number">0.8</span>, <span class="hljs-number">0.9</span>, <span class="hljs-number">1.0</span>, <span class="hljs-number">1.1</span>, <span class="hljs-number">1.2</span>]]  <span class="hljs-comment"># token 3</span><br>]<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="最终输出"><a href="#最终输出" class="headerlink" title="最终输出"></a><strong>最终输出</strong></h3><ul>
+<li><strong>输出</strong>: logits，形状为 <code>(1, 3, 10)</code>。</li>
+<li><strong>解释</strong>: 每个 token 的输出是一个长度为 <code>vocab_size=10</code> 的向量，表示每个 token 的概率分布。</li>
+</ul>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><ul>
+<li><strong>输入</strong>: <code>tokens = [[1, 2, 3]]</code>，形状为 <code>(1, 3)</code>。</li>
+<li><strong>输出</strong>: logits，形状为 <code>(1, 3, 10)</code>。</li>
+<li><strong>中间步骤</strong>:<ol>
+<li>Token Embedding：<code>(1, 3) -&gt; (1, 3, 4)</code>。</li>
+<li>添加位置编码：<code>(1, 3, 4) -&gt; (1, 3, 4)</code>。</li>
+<li>初始化 mask：<code>(3, 3)</code>。</li>
+<li>多层 Transformer 块：<code>(1, 3, 4) -&gt; (1, 3, 4)</code>。</li>
+<li>RMSNorm：<code>(1, 3, 4) -&gt; (1, 3, 4)</code>。</li>
+<li>输出线性变换：<code>(1, 3, 4) -&gt; (1, 3, 10)</code>。</li>
+</ol>
+</li>
+</ul>
+<p>文章合集：<a target="_blank" rel="noopener" href="https://github.com/chongzicbo/ReadWriteThink/tree/main">chongzicbo&#x2F;ReadWriteThink: 博学而笃志，切问而近思 (github.com)</a></p>
+<p>个人博客：<a href="https://chongzicbo.github.io/">程博仕</a></p>
+<p>微信公众号：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg" srcset="/img/loading.gif" lazyload alt="微信公众号"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" class="category-chain-item">人工智能</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/" class="category-chain-item">nlp</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/" class="category-chain-item">llm</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/nlp/" class="print-no-link">#nlp</a>
+      
+        <a href="/tags/llm/" class="print-no-link">#llm</a>
+      
+        <a href="/tags/llama/" class="print-no-link">#llama</a>
+      
+        <a href="/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="print-no-link">#源码解析</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>llama3源码解析-03：model.py模块解析</div>
+      <div>https://chongzicbo.github.io/2024/12/30/人工智能/nlp/llm/源码解析：llama3源码解析-03：model.py模块解析/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>程博</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>December 30, 2024</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/30/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-04%EF%BC%9Ageneration.py%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/" title="llama3源码解析-04：generation.py模块解析">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">llama3源码解析-04：generation.py模块解析</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/26/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-01%EF%BC%9A%E6%95%B4%E4%BD%93%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84%E5%8F%8A%E6%A8%A1%E5%9D%97%E5%8A%9F%E8%83%BD/" title="llama3源码解析-01：整体代码结构及模块功能">
+                        <span class="hidden-mobile">llama3源码解析-01：整体代码结构及模块功能</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="人工智能"
+        id="heading-f068f0dad74789bee210163c40a4b50d" role="tab" data-toggle="collapse" href="#collapse-f068f0dad74789bee210163c40a4b50d"
+        aria-expanded="true"
+      >
+        人工智能
+        <span class="list-group-count">(10)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-f068f0dad74789bee210163c40a4b50d"
+           role="tabpanel" aria-labelledby="heading-f068f0dad74789bee210163c40a4b50d">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="computer-vision"
+        id="heading-a82f3db817c535a4bae230a7ce1aebdd" role="tab" data-toggle="collapse" href="#collapse-a82f3db817c535a4bae230a7ce1aebdd"
+        aria-expanded="false"
+      >
+        computer-vision
+        <span class="list-group-count">(3)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-a82f3db817c535a4bae230a7ce1aebdd"
+           role="tabpanel" aria-labelledby="heading-a82f3db817c535a4bae230a7ce1aebdd">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV010-YOLO%20V10%E8%AF%A6%E8%A7%A3/" title="YOLO V10 详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">YOLO V10 详解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV007-YOLO11%E8%AF%A6%E8%A7%A3/" title="YOLO11 详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">YOLO11 详解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV008-%E8%AF%84%E4%BC%B0%20YOLO%20%EF%BC%88You%20Only%20Look%20Once%EF%BC%89%20%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%BC%94%E5%8F%98%EF%BC%9AYOLO11%20%E5%8F%8A%E5%85%B6%E5%89%8D%E8%BA%AB%E7%9A%84%E5%85%A8%E9%9D%A2%E5%9F%BA%E5%87%86%E7%A0%94%E7%A9%B6/" title="YOLO模型的全面综述"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">YOLO模型的全面综述</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="multi-modal"
+        id="heading-8bef24fd03b0b8fe8de0c18ea7f6c1fe" role="tab" data-toggle="collapse" href="#collapse-8bef24fd03b0b8fe8de0c18ea7f6c1fe"
+        aria-expanded="false"
+      >
+        multi-modal
+        <span class="list-group-count">(2)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-8bef24fd03b0b8fe8de0c18ea7f6c1fe"
+           role="tabpanel" aria-labelledby="heading-8bef24fd03b0b8fe8de0c18ea7f6c1fe">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/20/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB14%EF%BC%9AMiniCPM%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90/" title="MiniCPM详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">MiniCPM详解</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="OCR"
+        id="heading-f529c51ee65a122778f148485732aee5" role="tab" data-toggle="collapse" href="#collapse-f529c51ee65a122778f148485732aee5"
+        aria-expanded="false"
+      >
+        OCR
+        <span class="list-group-count">(1)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-f529c51ee65a122778f148485732aee5"
+           role="tabpanel" aria-labelledby="heading-f529c51ee65a122778f148485732aee5">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/17/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/OCR/%E5%A4%9A%E6%A8%A1%E6%80%81003%EF%BC%9AOCR%E7%AE%97%E6%B3%95%E3%80%81%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0/" title="OCR算法、模型综述"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">OCR算法、模型综述</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="nlp"
+        id="heading-4c5adbed16b4c9d16698f71cca4218cb" role="tab" data-toggle="collapse" href="#collapse-4c5adbed16b4c9d16698f71cca4218cb"
+        aria-expanded="true"
+      >
+        nlp
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-4c5adbed16b4c9d16698f71cca4218cb"
+           role="tabpanel" aria-labelledby="heading-4c5adbed16b4c9d16698f71cca4218cb">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/NLP025-huggingface%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E9%9B%86%E5%92%8C%E6%A8%A1%E5%9E%8B%E4%B8%8B%E8%BD%BD%E5%AD%98%E5%82%A8%E7%9B%AE%E5%BD%95/" title="transformers自定义数据集"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">transformers自定义数据集</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="llm"
+        id="heading-dae1be85dab3650eb56b87c4e3390387" role="tab" data-toggle="collapse" href="#collapse-dae1be85dab3650eb56b87c4e3390387"
+        aria-expanded="true"
+      >
+        llm
+        <span class="list-group-count">(4)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-dae1be85dab3650eb56b87c4e3390387"
+           role="tabpanel" aria-labelledby="heading-dae1be85dab3650eb56b87c4e3390387">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/26/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-01%EF%BC%9A%E6%95%B4%E4%BD%93%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84%E5%8F%8A%E6%A8%A1%E5%9D%97%E5%8A%9F%E8%83%BD/" title="llama3源码解析-01：整体代码结构及模块功能"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">llama3源码解析-01：整体代码结构及模块功能</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/26/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-02%EF%BC%9Atokenizer%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/" title="llama3源码解析-02：tokenizer模块解析"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">llama3源码解析-02：tokenizer模块解析</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/30/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-03%EF%BC%9Amodel.py%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/" title="llama3源码解析-03：model.py模块解析"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">llama3源码解析-03：model.py模块解析</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/30/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-04%EF%BC%9Ageneration.py%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/" title="llama3源码解析-04：generation.py模块解析"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">llama3源码解析-04：generation.py模块解析</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/chongzicbo" target="_blank" rel="nofollow noopener"><span>Github</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
