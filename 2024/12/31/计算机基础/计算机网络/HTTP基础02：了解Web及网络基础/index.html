@@ -19,12 +19,12 @@
   <meta name="author" content="程博">
   <meta name="keywords" content="">
   
-    <meta name="description" content="了解Web及网络基础1.1 使用HTTP协议访问Web URL输入与页面显示：当用户在浏览器地址栏中输入URL时，浏览器会向指定的Web服务器发送请求，获取相应的资源（如HTML文件、图片等），并将这些资源渲染成用户可见的Web页面。   客户端与服务器：浏览器作为客户端，负责向服务器发送请求并接收响应。服务器则存储资源并响应客户端的请求。这种请求-响应模式是Web通信的基础。     HTTP协">
+    <meta name="description" content="了解Web及网络基础1. 使用HTTP协议访问Web URL输入与页面显示：当用户在浏览器地址栏中输入URL时，浏览器会向指定的Web服务器发送请求，获取相应的资源（如HTML文件、图片等），并将这些资源渲染成用户可见的Web页面。   客户端与服务器：浏览器作为客户端，负责向服务器发送请求并接收响应。服务器则存储资源并响应客户端的请求。这种请求-响应模式是Web通信的基础。     HTTP协议">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HTTP基础02：了解Web及网络基础">
 <meta property="og:url" content="https://chongzicbo.github.io/2024/12/31/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP%E5%9F%BA%E7%A1%8002%EF%BC%9A%E4%BA%86%E8%A7%A3Web%E5%8F%8A%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="程博仕">
-<meta property="og:description" content="了解Web及网络基础1.1 使用HTTP协议访问Web URL输入与页面显示：当用户在浏览器地址栏中输入URL时，浏览器会向指定的Web服务器发送请求，获取相应的资源（如HTML文件、图片等），并将这些资源渲染成用户可见的Web页面。   客户端与服务器：浏览器作为客户端，负责向服务器发送请求并接收响应。服务器则存储资源并响应客户端的请求。这种请求-响应模式是Web通信的基础。     HTTP协">
+<meta property="og:description" content="了解Web及网络基础1. 使用HTTP协议访问Web URL输入与页面显示：当用户在浏览器地址栏中输入URL时，浏览器会向指定的Web服务器发送请求，获取相应的资源（如HTML文件、图片等），并将这些资源渲染成用户可见的Web页面。   客户端与服务器：浏览器作为客户端，负责向服务器发送请求并接收响应。服务器则存储资源并响应客户端的请求。这种请求-响应模式是Web通信的基础。     HTTP协议">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241231135527092.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241231135627239.png">
@@ -37,7 +37,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241231141751459.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
 <meta property="article:published_time" content="2024-12-31T04:00:00.000Z">
-<meta property="article:modified_time" content="2024-12-31T06:34:02.408Z">
+<meta property="article:modified_time" content="2025-01-02T03:45:49.925Z">
 <meta property="article:author" content="程博">
 <meta property="article:tag" content="计算机网络">
 <meta property="article:tag" content="计算机基础">
@@ -478,7 +478,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    Last updated on December 31, 2024 pm
+                    Last updated on January 2, 2025 am
                   
                 
               </p>
@@ -486,7 +486,7 @@
             
               <div class="markdown-body">
                 
-                <h2 id="了解Web及网络基础"><a href="#了解Web及网络基础" class="headerlink" title="了解Web及网络基础"></a>了解Web及网络基础</h2><h3 id="1-1-使用HTTP协议访问Web"><a href="#1-1-使用HTTP协议访问Web" class="headerlink" title="1.1 使用HTTP协议访问Web"></a>1.1 使用HTTP协议访问Web</h3><ul>
+                <h2 id="了解Web及网络基础"><a href="#了解Web及网络基础" class="headerlink" title="了解Web及网络基础"></a>了解Web及网络基础</h2><h3 id="1-使用HTTP协议访问Web"><a href="#1-使用HTTP协议访问Web" class="headerlink" title="1. 使用HTTP协议访问Web"></a>1. 使用HTTP协议访问Web</h3><ul>
 <li><p><strong>URL输入与页面显示</strong>：当用户在浏览器地址栏中输入URL时，浏览器会向指定的Web服务器发送请求，获取相应的资源（如HTML文件、图片等），并将这些资源渲染成用户可见的Web页面。</p>
 <p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241231135527092.png" srcset="/img/loading.gif" lazyload alt="image-20241231135527092"></p>
 </li>
@@ -497,7 +497,7 @@
 <ul>
 <li><strong>HTTP协议</strong>：HTTP（超文本传输协议）是Web通信的核心协议，定义了客户端和服务器之间的通信规则。它基于请求-响应模型，客户端发送请求，服务器返回响应。HTTP协议是无状态的，意味着每次请求都是独立的，服务器不会保留之前的请求信息。</li>
 </ul>
-<h3 id="1-2-HTTP的诞生"><a href="#1-2-HTTP的诞生" class="headerlink" title="1.2 HTTP的诞生"></a>1.2 HTTP的诞生</h3><ul>
+<h3 id="2-HTTP的诞生"><a href="#2-HTTP的诞生" class="headerlink" title="2. HTTP的诞生"></a>2. HTTP的诞生</h3><ul>
 <li><strong>背景</strong>：1989年，Tim Berners-Lee在CERN提出了WWW（万维网）的概念，旨在通过互联网实现全球知识共享。他提出了超文本（HyperText）的概念，即文档之间可以通过链接相互关联，形成一个巨大的信息网络。</li>
 <li><strong>WWW构建技术</strong>：WWW的构建依赖于三大核心技术：<ul>
 <li><strong>HTML</strong>（超文本标记语言）：用于创建和格式化Web页面。</li>
@@ -514,7 +514,7 @@
 </ul>
 </li>
 </ul>
-<h3 id="1-3-网络基础TCP-IP"><a href="#1-3-网络基础TCP-IP" class="headerlink" title="1.3 网络基础TCP&#x2F;IP"></a>1.3 网络基础TCP&#x2F;IP</h3><ul>
+<h3 id="3-网络基础TCP-IP"><a href="#3-网络基础TCP-IP" class="headerlink" title="3. 网络基础TCP&#x2F;IP"></a>3. 网络基础TCP&#x2F;IP</h3><ul>
 <li><strong>TCP&#x2F;IP协议族</strong>：TCP&#x2F;IP是互联网的基础协议族，定义了计算机如何在网络上进行通信。HTTP协议是TCP&#x2F;IP协议族的一部分，依赖于TCP&#x2F;IP进行数据传输。</li>
 </ul>
 <p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241231135723889.png" srcset="/img/loading.gif" lazyload alt="image-20241231135723889"></p>
@@ -564,7 +564,7 @@
 <li><p>这种把数据信息包装起来的做法称为封装（encapsulate）。</p>
 </li>
 </ul>
-<h3 id="1-4-与HTTP关系密切的协议：IP、TCP和DNS"><a href="#1-4-与HTTP关系密切的协议：IP、TCP和DNS" class="headerlink" title="1.4 与HTTP关系密切的协议：IP、TCP和DNS"></a>1.4 与HTTP关系密切的协议：IP、TCP和DNS</h3><ul>
+<h3 id="4-与HTTP关系密切的协议：IP、TCP和DNS"><a href="#4-与HTTP关系密切的协议：IP、TCP和DNS" class="headerlink" title="4. 与HTTP关系密切的协议：IP、TCP和DNS"></a>4. 与HTTP关系密切的协议：IP、TCP和DNS</h3><ul>
 <li><strong>IP协议</strong>：IP（网际协议）位于网络层，负责将数据包从源地址传输到目的地址。IP协议依赖于IP地址和MAC地址进行通信。IP地址是逻辑地址，可以变化，而MAC地址是物理地址，通常不变。IP协议使用ARP（地址解析协议）来根据IP地址查找对应的MAC地址。</li>
 <li><strong>TCP协议</strong>：TCP（传输控制协议）位于传输层，提供可靠的字节流服务。它将大数据分割成小的报文段进行传输，并通过三次握手确保数据的可靠传输。TCP还提供了流量控制、拥塞控制等机制，确保数据传输的稳定性。</li>
 <li><strong>DNS服务</strong>：DNS（域名系统）位于应用层，负责将域名解析为IP地址。用户通常使用域名访问网站，而不是直接使用IP地址，因为域名更易于记忆。DNS服务通过域名查找IP地址，或从IP地址反查域名。</li>
@@ -617,12 +617,12 @@
 <li>最后，发 送端再回传一个带 ACK 标志的数据包，代表“握手”结束。</li>
 </ul>
 <p>若在握手过程中某个阶段莫名中断，TCP 协议会再次以相同的顺序发 送相同的数据包。</p>
-<h3 id="1-5-负责域名解析的DNS服务"><a href="#1-5-负责域名解析的DNS服务" class="headerlink" title="1.5 负责域名解析的DNS服务"></a>1.5 负责域名解析的DNS服务</h3><p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241231141657984.png" srcset="/img/loading.gif" lazyload alt="image-20241231141657984"></p>
+<h3 id="5-负责域名解析的DNS服务"><a href="#5-负责域名解析的DNS服务" class="headerlink" title="5. 负责域名解析的DNS服务"></a>5. 负责域名解析的DNS服务</h3><p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241231141657984.png" srcset="/img/loading.gif" lazyload alt="image-20241231141657984"></p>
 <ul>
 <li><strong>DNS功能</strong>：DNS的主要功能是将人类可读的域名转换为计算机可识别的IP地址。例如，当用户输入<code>www.example.com</code>时，DNS会将其解析为对应的IP地址，如<code>192.0.2.1</code>，以便浏览器能够与服务器建立连接。</li>
 <li><strong>用户习惯</strong>：用户通常使用域名访问网站，因为域名比IP地址更容易记忆。DNS服务使得用户无需记住复杂的IP地址，只需输入简单的域名即可访问资源。</li>
 </ul>
-<h3 id="1-6-各种协议与HTTP协议的关系"><a href="#1-6-各种协议与HTTP协议的关系" class="headerlink" title="1.6 各种协议与HTTP协议的关系"></a>1.6 各种协议与HTTP协议的关系</h3><p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241231141751459.png" srcset="/img/loading.gif" lazyload alt="image-20241231141751459"></p>
+<h3 id="6-各种协议与HTTP协议的关系"><a href="#6-各种协议与HTTP协议的关系" class="headerlink" title="6. 各种协议与HTTP协议的关系"></a>6. 各种协议与HTTP协议的关系</h3><p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20241231141751459.png" srcset="/img/loading.gif" lazyload alt="image-20241231141751459"></p>
 <ul>
 <li><strong>HTTP通信过程</strong>：当用户访问一个Web页面时，首先通过DNS解析域名获取IP地址，然后通过IP协议找到目标服务器，接着通过TCP协议建立可靠的连接，最后通过HTTP协议发送请求并接收响应。整个过程涉及多个协议的协同工作。</li>
 <li><strong>协议协作</strong>：DNS负责域名解析，IP协议负责寻址，TCP协议确保数据传输的可靠性，HTTP协议则负责生成请求和处理响应。这些协议共同构成了Web通信的基础。</li>
@@ -632,7 +632,7 @@
 <li><strong>URI格式</strong>：URI的格式包括协议方案、登录信息、服务器地址、端口号、文件路径、查询字符串和片段标识符。例如，<code>http://user:password@www.example.com:80/path/to/resource?query=string#fragment</code>。</li>
 <li><strong>RFC标准</strong>：HTTP协议通常遵循RFC（Request for Comments）标准，RFC是互联网技术标准文档。虽然大多数应用程序遵循RFC标准，但某些应用程序可能会扩展或偏离标准，导致兼容性问题。</li>
 </ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本章详细介绍了Web的基础技术，特别是HTTP协议的诞生、发展及其与TCP&#x2F;IP协议族的关系。通过了解IP、TCP、DNS等协议，可以更好地理解HTTP在Web通信中的作用。URI和URL的概念及其格式也是Web开发中的重要基础知识。</p>
+<h3 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a>7. 总结</h3><p>本章详细介绍了Web的基础技术，特别是HTTP协议的诞生、发展及其与TCP&#x2F;IP协议族的关系。通过了解IP、TCP、DNS等协议，可以更好地理解HTTP在Web通信中的作用。URI和URL的概念及其格式也是Web开发中的重要基础知识。</p>
 <p>参考：《图解HTTP》第一章</p>
 <p>文章合集：<a target="_blank" rel="noopener" href="https://github.com/chongzicbo/ReadWriteThink/tree/main">chongzicbo&#x2F;ReadWriteThink: 博学而笃志，切问而近思 (github.com)</a></p>
 <p>个人博客：<a href="https://chongzicbo.github.io/">程博仕</a></p>
@@ -739,6 +739,12 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2025/01/02/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP%E5%9F%BA%E7%A1%8003%EF%BC%9A%E7%AE%80%E5%8D%95%E7%9A%84%20HTTP%E5%8D%8F%E8%AE%AE/" title="HTTP基础03：简单的HTTP协议">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">HTTP基础03：简单的HTTP协议</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
@@ -782,7 +788,7 @@
         aria-expanded="true"
       >
         计算机基础
-        <span class="list-group-count">(2)</span>
+        <span class="list-group-count">(3)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
@@ -809,7 +815,7 @@
         aria-expanded="true"
       >
         计算机网络
-        <span class="list-group-count">(2)</span>
+        <span class="list-group-count">(3)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
@@ -836,6 +842,15 @@
            class="list-group-item list-group-item-action
            active">
           <span class="category-post">HTTP基础02：了解Web及网络基础</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/01/02/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/HTTP%E5%9F%BA%E7%A1%8003%EF%BC%9A%E7%AE%80%E5%8D%95%E7%9A%84%20HTTP%E5%8D%8F%E8%AE%AE/" title="HTTP基础03：简单的HTTP协议"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">HTTP基础03：简单的HTTP协议</span>
         </a>
       
     
