@@ -21,8 +21,8 @@
   
     <meta name="description" content="1.如何让大模型输出合法的Json格式后处理最容易想到的当然是重试机制，在 Prompt 中要求 LLM 输出 json，拿到 LLM 的完整输出，判断是否是合法的 json。如果不是，则再重新生成一遍。 当然这里也有优化空间，比如可以通过 json parser 来判断解析到哪里出错了，重试的时候不需要从头输出了，而只需要从出错的地方往后输出即可。 比如 strict-json 库就采用的这种方">
 <meta property="og:type" content="article">
-<meta property="og:title" content="“看图学”试题合集">
-<meta property="og:url" content="https://chongzicbo.github.io/2025/02/10/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98001%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86/index.html">
+<meta property="og:title" content="公众号“看图学”试题合集（1）">
+<meta property="og:url" content="https://chongzicbo.github.io/2025/02/10/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98001%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%881%EF%BC%89/index.html">
 <meta property="og:site_name" content="程博仕">
 <meta property="og:description" content="1.如何让大模型输出合法的Json格式后处理最容易想到的当然是重试机制，在 Prompt 中要求 LLM 输出 json，拿到 LLM 的完整输出，判断是否是合法的 json。如果不是，则再重新生成一遍。 当然这里也有优化空间，比如可以通过 json parser 来判断解析到哪里出错了，重试的时候不需要从头输出了，而只需要从出错的地方往后输出即可。 比如 strict-json 库就采用的这种方">
 <meta property="og:locale" content="en_US">
@@ -40,8 +40,34 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739158832564-18.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739158866210-21.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739159014703-24.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739161335729-3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739161348936-6.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739161438387-9-1739161450559-11.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739166471278-13.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739166602571-16.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739166616383-19.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739166627734-22.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739177211969-25.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178333249-28.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178343104-31.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178357700-34.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178365880-37.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178375014-40.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178383645-43.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178392218-46.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178576834-49.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178587734-52.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178595626-55.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178604755-58.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250210171029299.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178645077-61.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178652942-64.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178660819-67.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178671965-70.gif">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250210173040749.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
 <meta property="article:published_time" content="2025-02-10T04:00:00.000Z">
-<meta property="article:modified_time" content="2025-02-10T03:56:43.444Z">
+<meta property="article:modified_time" content="2025-02-11T07:44:58.781Z">
 <meta property="article:author" content="程博">
 <meta property="article:tag" content="nlp">
 <meta property="article:tag" content="笔试面试">
@@ -53,7 +79,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>“看图学”试题合集 - 程博仕</title>
+  <title>公众号“看图学”试题合集（1） - 程博仕</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -443,7 +469,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="“看图学”试题合集"></span>
+            <span id="subtitle" data-typed-text="公众号“看图学”试题合集（1）"></span>
           
         </div>
 
@@ -471,7 +497,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          6.6k words
+          9.9k words
         
       </span>
     
@@ -482,7 +508,7 @@
         
         
         
-          55 mins
+          83 mins
         
       </span>
     
@@ -541,12 +567,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">“看图学”试题合集</h1>
+            <h1 id="seo-header">公众号“看图学”试题合集（1）</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    Last updated on February 10, 2025 am
+                    Last updated on February 11, 2025 pm
                   
                 
               </p>
@@ -781,6 +807,163 @@
 <p>但是这个评测有一点需要注意，那就是<strong>一个刚进入系统的新模型，可能会因为对战的数据不足导致测评结果有偏差</strong>。比如 Claude 2 刚进系统的时候，评分要比 Claude 1 要低，但是随着对战次数的增加，效果就越来越好了。</p>
 <p>然后这个榜单还有一些细分选项，比如 Style-controlled ranking。让模型生成一些有约束的风格，比如长度，格式等。这时每个模型等排名会发生变化，也挺有意思。</p>
 <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/bBCndI-cSuJI_5myzb74vA">字节一面：大模型如何评测以及当前测评的困境</a></p>
+<h1 id="12-Transformers-为什么采用-QKV-Attention？"><a href="#12-Transformers-为什么采用-QKV-Attention？" class="headerlink" title="12.Transformers 为什么采用 QKV Attention？"></a>12.Transformers 为什么采用 QKV Attention？</h1><p>Transformers 的论文在讲述 Attention 这一部分时并没有讲的特别细，尤其是关于 Query， Key 和 Value 的设计似乎是突然就水灵灵的出现了。而且最终的形式比以往的 Attention 都要简略很多。</p>
+<p>在论文中没有找到答案，那只能看看同时期的论文有没有类似的研究。最终在一篇《Frustratingly Short Attention Spans In Neural Language Modeling》的论文找到了类似的结构。我们来看看这篇文章时怎么说的。</p>
+<p>这篇论文是基于最早的 Bahdanau Attention (Bahdanau et al., 2014) 进行改进的。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739161335729-3.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739161348936-6.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>这篇论文认为当时的 Attention , <strong>隐向量至少承担了3个功能</strong>：</p>
+<ul>
+<li>计算 attention score</li>
+<li>计算 context vector</li>
+<li>作为 hidden state 来进行 RNN 的计算。</li>
+</ul>
+<p>这一个向量的任务实在有些繁重。为了更好的适配任务，作者参考了 Memory Netorkds，一次输出了 3个 隐向量， 一个是 key, 一个是 value，还有一个是 predict。这3个隐向量来计算 Attention， 功能如下：</p>
+<ul>
+<li>key 用来计算 attention score.</li>
+<li>value 用来和 Atention score 相乘。</li>
+<li>predict 用于预测词的分布。</li>
+</ul>
+<p>其中 predict 可以先不管。公式如下</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739161438387-9-1739161450559-11.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>看公式就可以知道，value 在这里作用和 Transformers 中的 Attention 的 value 是完全一致的。</p>
+<p>那怎么没有 query 呢？<strong>实际上 query 被隐藏在了 key 之中</strong>。在那个  Attention is all your need 之前的时代， Attention 和 RNN 依然是深度绑定的。</p>
+<p>作者在这里用了时刻 t 的 key 向量，和时刻 t 之前的 key 向量做了 Attention，因为作者假设时刻 t 之前的 key 和 value 是 Memory。</p>
+<p>所以 query 就是 k_t, 而 t 时刻前面的就是 key。</p>
+<p>虽然写法不一样，<strong>但是 Transformers 的 qkv Attention 的设计和这篇论文的设计的整体框架是一样的</strong>。细微之处的不同点列举如下：</p>
+<ol>
+<li>Transformers 由于丢弃了 RNN，所以可以更好的并行，采用了矩阵运算的形式。</li>
+<li>Transformers 采用了 dot Attention，应该是参考了 Luong Attention。而这篇文章依然采用了 Bahdanau Attention 所使用的  Addition Attention</li>
+<li>Transformers 的 Attention 是全连接图，而这里是 causal 形式的 Attention。</li>
+</ol>
+<p>虽然原始论文没有细说，但是这应该就是 qkv Attention 的由来的一个解释。</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/9xPFK3yRwFMciTwrCnYpGw">“Transformers 为什么采用 QKV Attention？” 大模型面经</a></p>
+<h1 id="13-Attention-为什么使用-Multi-Head"><a href="#13-Attention-为什么使用-Multi-Head" class="headerlink" title="13. Attention 为什么使用 Multi Head ?"></a>13. Attention 为什么使用 Multi Head ?</h1><p>Multi Head Attention 最早可以追溯到 《A STRUCTURED SELF-ATTENTIVE SENTENCE EMBEDDING》 (Lin et al., 2017) 这篇论文。</p>
+<p>从题目就可以看出，是用 Multi Head Attention 来做表示学习。</p>
+<p>作者参考了 Bahdanau Attention， 只不过在计算 attention score 的时候，输入从 $h_j$、$s_i$改成了双向 LSTM 的两个方向的 hidden states。</p>
+<ul>
+<li>Encoder</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739166471278-13.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>从公式明显可以看出，Self Attention 计算 Score 的设计明显是参考了 Bahdanau Attention 的计算方法。</p>
+<p>上面的计算是单个 Attention 的计算方法。然后借鉴一下卷积网络的多个 kernel 的思想，作者设计了多个 Attention，期望不同的 Attention 学习到不同的注意力，从而更好的提取特征。<strong>这种一个不行就上多个到方法在深度学习中经常使用，比如 CNN 多 kernel， MultiHead Attention， Mixture of Experts 等。</strong></p>
+<p>基于这个思路，作者提出了 Attention 的矩阵运算形式。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739166602571-16.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>这其实就是MultiHead 了，在公式中是通过 r来体现的。</p>
+<p>然后这个矩阵相乘 AH已经和 Transformers 最终形态的 Attention$AV&#x3D;\text{softmax}(\frac{QK^\top}{\sqrt{d}})V$</p>
+<p>有点类似了。</p>
+<p>文中也对比了随着 head 数量增多后，在具体任务上的表现，如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739166616383-19.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>后来又有学者认为，当前的 MHA 的形式，同一层的 Head 之间没有任何关联，想建立关联得到下一层了，这样的效果可能不如多层的 Single Head。然后做了一些实验，也确实证明了多层 Single Head 比浅层的 MHA 效果好，具体见《<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2106.09650%E3%80%8B%E3%80%82">https://arxiv.org/pdf/2106.09650》。</a></p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739166627734-22.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>那为什么没有流行起来呢？核心还是 MHA 可以非常方便的并行计算，而采用 Single Head 的话，层与层之间有诸多的非线性操作还有 norm 等，不如 MHA 直接做一些视图变换然后直接矩阵相乘效率高。</p>
+<h1 id="14-为什么-LLM-推理时通常采用-left-padding？"><a href="#14-为什么-LLM-推理时通常采用-left-padding？" class="headerlink" title="14. 为什么 LLM 推理时通常采用 left padding？"></a>14. 为什么 LLM 推理时通常采用 left padding？</h1><p>其实在几年前，NLP 的大部分任务都是 right padding 的，因为哪个时候 Encoder 的架构是主流。</p>
+<p>现在的 tokenizer 都会提供 padding 操作，但是当采用 right padding 做tokenize，然后用现在的大模型推理的时候，就会得到如下的警告：</p>
+<figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs smalltalk">logger.warning(<br>    <span class="hljs-comment">&quot;A decoder-only architecture is being used, but right-padding was detected! For correct &quot;</span><br>    <span class="hljs-comment">&quot;generation results, please set `padding_side=&#x27;left&#x27;` when initializing the tokenizer.&quot;</span><br>)<br></code></pre></td></tr></table></figure>
+
+<p>原因就是目前的大模型基本清一色都是 Decoder Only 的架构，当采用 left padding 的时候，<strong>一个 batch 内的所有样本预测的就恰好是下一个词。</strong></p>
+<p>举一个例子，对于一个 tensor</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs inform7"><span class="hljs-comment">[</span><br><span class="hljs-comment"> <span class="hljs-comment">[1,2,3]</span>,</span><br><span class="hljs-comment"> <span class="hljs-comment">[1,2,3,4,5,6]</span></span><br><span class="hljs-comment">]</span><br></code></pre></td></tr></table></figure>
+
+<p>如果采用 0 作为 pad_id, 则 padding 后为</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs inform7"><span class="hljs-comment">[</span><br><span class="hljs-comment"> <span class="hljs-comment">[0,0,0,1,2,3]</span>,</span><br><span class="hljs-comment"> <span class="hljs-comment">[1,2,3,4,5,6]</span></span><br><span class="hljs-comment">]</span><br></code></pre></td></tr></table></figure>
+
+<p>这个时候预测的下一个 token 直接拼接上就行。</p>
+<p>如果采用 right padding， 则需要进行特殊处理。right padding 后为</p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs inform7"><span class="hljs-comment">[</span><br><span class="hljs-comment"> <span class="hljs-comment">[1,2,3,0,0,0]</span>,</span><br><span class="hljs-comment"> <span class="hljs-comment">[1,2,3,4,5,6]</span></span><br><span class="hljs-comment">]</span><br></code></pre></td></tr></table></figure>
+
+<p>这个时候第一个样本显然不能从最后的位置开始预测，而是要从3后面的位置开始推理。</p>
+<p>所以对于不等长的输入，<strong>right padding 要从最短的序列位置开始推理。</strong></p>
+<p>但是对于其他样本来说，其实是不需要预测的，因为本来就是输入，但是机制问题，必须要从最短的位置开始预测。<strong>其他的样本在哪些不需要预测的位置，其实也预测了，但是把结果丢掉了，这就造成计算资源的浪费。</strong></p>
+<p>最早 llama 发布的时候，就给出了通过 right padding 来进行预测的代码，可以清晰的看到其流程如上所述。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/meta-llama/llama/blob/ea9f33d6d3ea8ed7d560d270986407fd6c2e52b7/llama/generation.py#L106">https://github.com/meta-llama/llama/blob/ea9f33d6d3ea8ed7d560d270986407fd6c2e52b7/llama/generation.py#L106</a></p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739177211969-25.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>那又有人问了，为什么要做 padding？哪些填充的字符不也是白白占了显存和计算资源？串行计算可不可以？</p>
+<p>padding 却是会占用一部分，但是因为 GPU 针对矩阵运算有加速，所以带来的加速效果是远超扔掉 padding 然后串行的。</p>
+<p>这个道理就跟 causal attention 计算的时候，<strong>明明有一半的 score 不需要计算，但是仍旧采用先算完然后在 mask 的位置 fill zero 是一样的道理</strong>。</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/3joYPklFAIffxsNg6Fjurg">“现在大模型为什么都用 left padding？” 字节实习一面，学姐的面经</a></p>
+<h1 id="15-ROC-AUC-的值代表了什么？"><a href="#15-ROC-AUC-的值代表了什么？" class="headerlink" title="15. ROC-AUC 的值代表了什么？"></a>15. ROC-AUC 的值代表了什么？</h1><p>这个问题其实完全可以通过数学来推算出来，这里先说结论：</p>
+<p><strong>AUC的值，就是从样本中任意取一个正例和一个负例，分类器给正例的得分大于给负例得分的概率。</strong></p>
+<p>下面是详细的证明：</p>
+<p>如果把ROC曲线看成是TPR对FPR的函数，TPR&#x3D;F(x)。我们对这个函数进行积分。如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178333249-28.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>则有</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178343104-31.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>假设样本label为y，模型预测得分为s，阈值为t，正例的概率密度函数为  （图中红色部分）,负例的概率密度函数为  （图中蓝色部分）.则有 </p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178357700-34.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>这两个公式就对应之前 TPR 和 FPR 的计算公式。</p>
+<p>其实就是下面两个动图。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178365880-37.gif" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178375014-40.gif" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>从公式上可以看出，x是t的积分上限函数，根据积分上限函数的性质，得到：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178383645-43.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>带入 AUC 的公式，则有</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178392218-46.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>上面推导需要解释一下：</p>
+<p>第二行，因为FPR的取值范围从0到1，对应着阈值是从大到小的变化。可以从动图中看出，只不过动图中阈值是从小到大，FPR是从1到0</p>
+<p>第五行， 的含义就是该样本为负例，得分为t的概率。加引号是为了和正例区分。</p>
+<p>第七行，该积分相当于是遍历阈值t,同时负例得分和t相同，也就是负例遍历所有可能的得分情况。</p>
+<p>所以最终得到这么一个结论：<strong>AUC的值，就是从样本中任意取一个正例和一个负例，分类器给正例得分大于负例得分的概率。</strong></p>
+<p>正因为这个性质，AUC 在推荐排序中也经常使用。</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/o8d5q3efILZOwt5CzVD3xQ">算法岗面试八股必问：“ROC-AUC 的值代表了什么？”</a></p>
+<h1 id="16-ROC-AUC-曲线是什么？怎么计算？"><a href="#16-ROC-AUC-曲线是什么？怎么计算？" class="headerlink" title="16. ROC-AUC 曲线是什么？怎么计算？"></a>16. ROC-AUC 曲线是什么？怎么计算？</h1><p>先看两个图，来感受一下 ROC 到底是啥。如果看不明白，后面有解释。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178576834-49.gif" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178587734-52.gif" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>‍ROC曲线(Receiver operating characteristic curve) 最早用在雷达系统中，前面单词中所谓Receiver就是雷达接收器。后来又广泛应用在医学领域，然后又在数据统计和机器学习中担任了重要角色。</p>
+<p>雷达的操作员(Radar operator)也是花钱雇的，那不得打个绩效。<strong>ROC 就相当于雷达操作员的绩效，用来衡量雷达操作员的识别能力。</strong></p>
+<p>根据雷达的波形，操作员会判断是否出现敌机，当时正处于二战时期，主要就是来识别是不是日本的战斗机。</p>
+<p>如果日本的战斗机真的飞过来了：</p>
+<ul>
+<li>操作员判断是真的飞过来了，此时叫做：正例预测对(**True Positive)**，有时也叫真阳性。</li>
+<li>否则叫做：正例预测错(<strong>False Negtative</strong>)，有时候也叫假阴性。</li>
+</ul>
+<p>如果日本的战斗机没有飞过来：</p>
+<ul>
+<li>操作员判断战斗机没飞过来，此时叫做：负例预测对(<strong>True Negative</strong>)， 有时候也叫真阴性。</li>
+<li>否则叫做：负例预测错(<strong>False Positive</strong>)，有时候也叫假阳性。</li>
+</ul>
+<p>做成图像如下：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178595626-55.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>那么怎么给操作员打绩效呢？当时的科学家们提出了两个概念：</p>
+<p><strong>TPR(True Positive Rate)，表示操作员从真正的战斗机中识别出的比例，一个更常用的名称叫召回率。</strong> </p>
+<p><strong>FPR(False Positive Rate)， 表示操作员在没有战斗机的事件中误报的比例。</strong></p>
+<p>这两个指标的计算公式见上图。</p>
+<p>然后以 FPR 为横坐标，以 TPR 为纵坐标，在对应位置打一个点，就是这个操作员实际能力的可视化。</p>
+<p>比如有5个操作员打的点如下图：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178604755-58.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>在这个图里面，我们肯定是希望 误判(FPR) 越小越好，召回(TPR) 越大越好，所以 D &gt; B &gt; C</p>
+<p>A 和 B 各有千秋，没法硬比。D 实际上是整个图里的最优点。</p>
+<p>还有一点需要注意的就是，虚线代表了随机猜测。因为当我们随机猜测为正的概率为 p 时， 假设 N 个正例，M 个负例。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250210171029299.png" srcset="/img/loading.gif" lazyload alt="image-20250210171029299"></p>
+<p><strong>所以当点落到虚线上时，就代表了随机猜测。而 TPR &gt; FPR 则代表了比随机猜测要好，否则则比随机猜测还差。</strong></p>
+<p>前面几个指标，比如 Accuracy， Precision， Recall 等，当 TPR &#x3D; FPR + δ 时，只要 δ &gt; 0, 都会变大。具体的证明只需要带入公式计算就可以了，这里不再赘述。</p>
+<h3 id="当操作员每次的输出是一个概率时"><a href="#当操作员每次的输出是一个概率时" class="headerlink" title="当操作员每次的输出是一个概率时"></a><strong>当操作员每次的输出是一个概率时</strong></h3><p>之前操作员要么判对，要么判错，在二位平面上就一个点。</p>
+<p>但是有时候操作员也拿不准，输出一个概率时，我们可以自己设置阈值来把操作员的每个 (FPR, TPR) 点画出来， 此时就得到了一条 ROC 曲线。</p>
+<p>计算如下，左图的区域闪烁对应同样闪烁的右侧的公式部分。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178645077-61.gif" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>TPR 可视化</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178652942-64.gif" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>FPR 可视化</p>
+<p>当遍历阈值（移动的竖线）时，即可得到ROC曲线。如下图：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178660819-67.gif" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>下面是当分类器的能力变得越来越好时，ROC 曲线的变化情况：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739178671965-70.gif" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>可以看到，当分类器能力越来越好时，曲线会往左上角（最优点）靠拢。<strong>此时可以用曲线下的面积来表示分类器的能力， 叫做 AUC</strong>， AUC是ROC曲线下的面积( Area Under the ROC Curve)。</p>
+<p>虽然大家都知道 AUC 越大越好，但是 AUC 的值到底代表了什么呢？这个放在下期更新。</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/kEim7SOvyTktWBKnUIgqKQ">“ROC-AUC 曲线是什么？怎么计算？” 小米一面，问的贼细</a></p>
+<h1 id="17-Qwen-从头开始训练的初始-loss-大概是多少？"><a href="#17-Qwen-从头开始训练的初始-loss-大概是多少？" class="headerlink" title="17.Qwen 从头开始训练的初始 loss 大概是多少？"></a>17.Qwen 从头开始训练的初始 loss 大概是多少？</h1><p>我们在训练模型的时候，会观测很多指标。诸多指标中， loss 肯定是最重要的指标之一。所以训练模型的第一件事，往往都是看 loss 算的对不对。</p>
+<p>这个经验很重要，尤其是现在模型越来越大，训练时经常要做一些 Tensor Parallelism 或者 Pipeline Parallelism。那么有没有正常训练？这个时候看一下 loss 是否符合预期，以防止白白浪费算力。</p>
+<p>那么从零开始训练的初始的 loss 大概是多少呢？</p>
+<p>这个完全可以推算一下。</p>
+<p>这里有一个假设，就是参数随机的情况下，假设预测下一个 token 的概率符合均匀分布，也就是所有 token 的概率是相同的。</p>
+<p>如果词表的大小是 |V|, 那么第 i 个词的概率都是$\frac1{|V|}$</p>
+<p>由于采用交叉熵损失，label 又是 onehot 的， 那么下一个词的 loss 为：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250210173040749.png" srcset="/img/loading.gif" lazyload alt="image-20250210173040749"></p>
+<p>Qwen 的词表大小为 152064， 所以其初始 loss 大概为 $\log152064&#x3D;11.932$</p>
+<p>文章合集：<a target="_blank" rel="noopener" href="https://github.com/chongzicbo/ReadWriteThink/tree/main">chongzicbo&#x2F;ReadWriteThink: 博学而笃志，切问而近思 (github.com)</a></p>
+<p>个人博客：<a href="https://chongzicbo.github.io/">程博仕</a></p>
+<p>微信公众号：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg" srcset="/img/loading.gif" lazyload alt="微信公众号"></p>
 
                 
               </div>
@@ -844,8 +1027,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>“看图学”试题合集</div>
-      <div>https://chongzicbo.github.io/2025/02/10/笔试面试/AI算法/nlp/AI笔试面试题001：公众号“看图学”题目合集/</div>
+      <div>公众号“看图学”试题合集（1）</div>
+      <div>https://chongzicbo.github.io/2025/02/10/笔试面试/AI算法/nlp/AI笔试面试题001：公众号“看图学”题目合集（1）/</div>
     </div>
     <div class="license-meta">
       
@@ -888,6 +1071,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2025/02/11/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98002%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%882%EF%BC%89/" title="公众号“看图学”试题合集（2）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">公众号“看图学”试题合集（2）</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
@@ -932,7 +1121,7 @@
         aria-expanded="true"
       >
         笔试面试
-        <span class="list-group-count">(1)</span>
+        <span class="list-group-count">(2)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
@@ -959,7 +1148,7 @@
         aria-expanded="true"
       >
         AI算法
-        <span class="list-group-count">(1)</span>
+        <span class="list-group-count">(2)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
@@ -986,7 +1175,7 @@
         aria-expanded="true"
       >
         nlp
-        <span class="list-group-count">(1)</span>
+        <span class="list-group-count">(2)</span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
@@ -1000,10 +1189,19 @@
     
       
       
-        <a href="/2025/02/10/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98001%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86/" title="“看图学”试题合集"
+        <a href="/2025/02/10/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98001%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%881%EF%BC%89/" title="公众号“看图学”试题合集（1）"
            class="list-group-item list-group-item-action
            active">
-          <span class="category-post">“看图学”试题合集</span>
+          <span class="category-post">公众号“看图学”试题合集（1）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/02/11/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98002%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%882%EF%BC%89/" title="公众号“看图学”试题合集（2）"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">公众号“看图学”试题合集（2）</span>
         </a>
       
     

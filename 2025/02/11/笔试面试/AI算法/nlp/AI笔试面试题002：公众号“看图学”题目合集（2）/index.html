@@ -1,0 +1,1312 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/daxiong.jpg">
+  <link rel="icon" href="/img/daxiong.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="程博">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. 大模型的参数量为什么设计成 7B，13B，33B，65B 等如此怪异的数字？1.1 从推理出发很多答案都是从推理出发，认为之所以这么设计，是为了适配常见的显卡。 比如,采用半精度的话  7B 的模型参数占14G, 可以放到16G 的 T4 上 13B 的模型参数占26G， 可以放到 32G 的 V100 上 33B 的模型参数占66G， 可以放到 80G 的 A100 上 65B 的模型参数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="公众号“看图学”试题合集（2）">
+<meta property="og:url" content="https://chongzicbo.github.io/2025/02/11/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98002%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%882%EF%BC%89/index.html">
+<meta property="og:site_name" content="程博仕">
+<meta property="og:description" content="1. 大模型的参数量为什么设计成 7B，13B，33B，65B 等如此怪异的数字？1.1 从推理出发很多答案都是从推理出发，认为之所以这么设计，是为了适配常见的显卡。 比如,采用半精度的话  7B 的模型参数占14G, 可以放到16G 的 T4 上 13B 的模型参数占26G， 可以放到 32G 的 V100 上 33B 的模型参数占66G， 可以放到 80G 的 A100 上 65B 的模型参数">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/ac629514f0af77c4aa8ade45c81d7f0c.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739262190331-6.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739262337169-8.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/537ada0f171fe620741015f4c00fa22c.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739263333379-12.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/28d16e38349c6afee2a7ee7dd79d9912.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739263467021-28.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739263459253-25.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739263445888-22.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739263437386-19.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739263428022-16.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
+<meta property="article:published_time" content="2025-02-11T07:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-11T08:45:00.689Z">
+<meta property="article:author" content="程博">
+<meta property="article:tag" content="nlp">
+<meta property="article:tag" content="笔试面试">
+<meta property="article:tag" content="算法面试">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/ac629514f0af77c4aa8ade45c81d7f0c.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>公众号“看图学”试题合集（2） - 程博仕</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":"3841b375bfdd5627f0f840e1e289416e","google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?3841b375bfdd5627f0f840e1e289416e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>程博仕</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>笔试面试</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>计算机基础</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F" target="_self">
+                    
+                    <span>操作系统</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C" target="_self">
+                    
+                    <span>计算机网络</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>人工智能</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/asr" target="_self">
+                    
+                    <span>语音识别</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>开发</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91" target="_self">
+                    
+                    <span>音视频</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/web&#39;" target="_self">
+                    
+                    <span>Web开发</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>文章分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>时间轴</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="公众号“看图学”试题合集（2）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        程博
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-11 15:00" pubdate>
+          February 11, 2025 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.6k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          47 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">公众号“看图学”试题合集（2）</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    Last updated on February 11, 2025 pm
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-大模型的参数量为什么设计成-7B，13B，33B，65B-等如此怪异的数字？"><a href="#1-大模型的参数量为什么设计成-7B，13B，33B，65B-等如此怪异的数字？" class="headerlink" title="1. 大模型的参数量为什么设计成 7B，13B，33B，65B 等如此怪异的数字？"></a>1. 大模型的参数量为什么设计成 7B，13B，33B，65B 等如此怪异的数字？</h1><h3 id="1-1-从推理出发"><a href="#1-1-从推理出发" class="headerlink" title="1.1 从推理出发"></a>1.1 从推理出发</h3><p>很多答案都是从推理出发，认为之所以这么设计，是为了适配常见的显卡。</p>
+<p>比如,采用半精度的话</p>
+<ul>
+<li>7B 的模型参数占14G, 可以放到16G 的 T4 上</li>
+<li>13B 的模型参数占26G， 可以放到 32G 的 V100 上</li>
+<li>33B 的模型参数占66G， 可以放到 80G 的 A100 上</li>
+<li>65B 的模型参数占130G， 可以放到两张 80G 的 A100 上</li>
+</ul>
+<p>剩余的显存可以用来放 KV Cache， 还有其他的一些功能性显存占用，比如 beam search 等。</p>
+<p><strong>这么回答也算合理，****但是只能算是回答了一个方面，而且不是最重要的方面。</strong></p>
+<h3 id="1-2-沿用GPT3的参数标准"><a href="#1-2-沿用GPT3的参数标准" class="headerlink" title="1.2 沿用GPT3的参数标准"></a>1.2 沿用GPT3的参数标准</h3><p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/ac629514f0af77c4aa8ade45c81d7f0c.png" srcset="/img/loading.gif" lazyload alt="GPT3参数"></p>
+<p>GPT 3 当时选定了 6.7B， 13B， 和 175 B。<strong>后面复现的人得做对比实验吧，那自然要对标 GPT 3</strong>，不然一个 6.7 B，一个 10 B，那对比起来也没什么意义。</p>
+<p>所以这些参数的设定可以说是从 GPT 3 传下来的，因为大家都想和 GPT 3 PK 一下。所以那个时候很多模型都是 7B 和 13 B 左右，但是略有差异，也许是 6B，也许是 14B。</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/y3UUtPB1_fkWr8gfLSN8cQ">字节校招一面：“大模型的参数量为什么设计成 7B，13B，33B，65B 等如此怪异的数字？”</a></p>
+<h1 id="2-为什么-Qwen-设计成-72B？"><a href="#2-为什么-Qwen-设计成-72B？" class="headerlink" title="2. 为什么 Qwen 设计成 72B？"></a>2. 为什么 Qwen 设计成 72B？</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/7sVvvbaViYJtSL15JeE8XA">校招面试：”为什么 Qwen 设计成 72B？”</a></p>
+<h1 id="3-torch-no-grad-和-torch-inference-mode-的区别？"><a href="#3-torch-no-grad-和-torch-inference-mode-的区别？" class="headerlink" title="3. torch.no_grad() 和 torch.inference_mode() 的区别？"></a>3. torch.no_grad() 和 torch.inference_mode() 的区别？</h1><p><code>torch.no_grad()</code> 和 <code>torch.inference_mode()</code> 都在推理的时候禁用了梯度计算。</p>
+<p>虽然从功能上两者类似，但是这两者的实现有很大的不同。</p>
+<p><code>torch.no_grad()</code> 属于是在 pytorch 原有的机制上禁用了梯度的计算，<strong>底层还是有梯度计算的框架(autograd)，属于可以算，但是逻辑上不进行计算</strong>。</p>
+<p>但是 <code>torch.inference_mode()</code> 的是完全另起炉灶，完全脱离了 autograd 系统，而且把 View Tracking（视图追踪）和 Version Counter Bumps（版本计数器更新）同样砍掉了。<strong>从底层上就完全放弃了梯度计算的逻辑。</strong></p>
+<p>举一个不太恰当的例子，为了追求更快的推理速度，<code>torch.no_grad()</code> 的选择是加入少林寺，远离俗世的一切联系，专心推理，但是还是可以还俗的。而 <code>torch.inference_mode()</code> 则是练了辟邪剑谱，从根本上断绝了俗世的干扰。</p>
+<p>那你说谁的推理速度快，当然是练了辟邪剑谱的更快。</p>
+<h2 id="代码演示"><a href="#代码演示" class="headerlink" title="代码演示"></a><strong>代码演示</strong></h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><br>x = torch.tensor([[<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>], [<span class="hljs-number">4.0</span>, <span class="hljs-number">5.0</span>, <span class="hljs-number">6.0</span>]], requires_grad=<span class="hljs-literal">True</span>)<br>x.retain_grad()<br><br><span class="hljs-keyword">with</span> torch.inference_mode():<br><span class="hljs-comment"># with torch.no_grad():</span><br>    y = x * <span class="hljs-number">2</span><br><br><span class="hljs-comment"># Check Version Counter Bumps, 第一个 fail 的点</span><br><span class="hljs-built_in">print</span>(y._version)  <span class="hljs-comment"># will fail here</span><br><br><span class="hljs-comment"># Check View Tracking, 第二个 fail 的点</span><br>yy = y.view(<span class="hljs-number">6</span>)<br>y.add_(<span class="hljs-number">1</span>)  <span class="hljs-comment"># will fail here</span><br><br><span class="hljs-comment"># Check autograd, 第三个 fail 的点</span><br>y.requires_grad = <span class="hljs-literal">True</span> <span class="hljs-comment"># will fail</span><br></code></pre></td></tr></table></figure>
+
+<p>上述代码中，如果采用 <code>torch.no_grad()</code>, 则可以正常运行。但是如果采用 <code>torch.inference_mode()</code>, 则在三个检查点都会 fail。</p>
+<p>第一个检查点是 Version Counter Bumps。因为有时候 tensor 会在原地修改以避免内存的拷贝，加快运行速度。所以每个 tensor 都有一个 version。</p>
+<p>第二个检查点是 View Tracking， 这个主要是 tensor 当作一些 视图（view） 上的变化，比如view()、reshape()、transpose() 等，这些虽然呈现为不同的形状，但是底层的内存是共享的。这就要有一个机制来追踪这些视图。</p>
+<p>第三个检查点则是 Autograd。因为 <code>torch.inference_mode()</code> 压根就没有 Autograd 的梯度计算机制，所以当试图修改梯度计算状态的时候也会失败。</p>
+<h1 id="4-model-eval-会像-torch-no-grad-那样停止中间激活的保存么？"><a href="#4-model-eval-会像-torch-no-grad-那样停止中间激活的保存么？" class="headerlink" title="4. model.eval() 会像 torch.no_grad() 那样停止中间激活的保存么？"></a>4. model.eval() 会像 torch.no_grad() 那样停止中间激活的保存么？</h1><p>不会。<code>model.eval()</code> 和梯度的计算是正交的，各算个的，可以认为完全没有任何关系。</p>
+<p>上周的一篇：《<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzUyOTA5OTcwMg==&mid=2247486758&idx=1&sn=8e64261fdf0fb0478d293e8eb1762ab1&chksm=fa6773ffcd10fae917ab0b1c719a7b0ede88feca309504090798eb1348a83517cfd00cb1691f&scene=21#wechat_redirect">学妹问：“model.train() 和 model.eval() 什么作用？” 我给她分享了个bug</a>》发布后，有朋友私信说 <code>model.eval()</code> 是否和 <code>torch.no_grad()</code> 类似，停止中间激活的保存？因为推理也用不到反向传播。</p>
+<p>然而事实是 <code>model.eval()</code> 除了上篇文章中说的适配训练和预测的不一致性以外，再也没有做更多事情了。</p>
+<p>像是停止中间激活的计算，禁用反向传播，节省内存等等，都是<strong>大家根据 eval 这个名字臆想出来功能。****就跟川普要当总统了，然后股民看到“川大智胜”疯狂买入导致涨停是一样的。</strong></p>
+<p>至于 <code>torch.no_grad()</code> 则是将该上下文中的所有变量都不在参与梯度的计算，所以中间激活，梯度都都不需要保存了，自然可以省一些显存。</p>
+<p>但是一定要注意，<code>torch.no_grad()</code> 虽然不计算中间激活和梯度，<strong>但是 autograd 的计算图还是在的。</strong></p>
+<p>当退出 <code>torch.no_grad()</code> 后，后续的代码依然运行在 autograd 的计算图上。如下面的小例子。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">from</span> torchviz <span class="hljs-keyword">import</span> make_dot<br><br>x = torch.tensor([<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, <span class="hljs-number">3.0</span>], requires_grad=<span class="hljs-literal">True</span>)<br>x.retain_grad()<br><br><span class="hljs-keyword">with</span> torch.no_grad():<br>    y = x * <span class="hljs-number">2</span><br><br><span class="hljs-comment"># y.requires_grad = True # 可以赋值</span><br><br>z = (y + <span class="hljs-number">1</span>).requires_grad_()<br>z.retain_grad()<br><br>loss = z.<span class="hljs-built_in">sum</span>()<br>loss.backward()<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;x是否需要梯度:&quot;</span>, x.requires_grad)  <span class="hljs-comment"># 预期输出: True</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;y是否需要梯度:&quot;</span>, y.requires_grad)  <span class="hljs-comment"># 预期输出: False</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;z是否需要梯度:&quot;</span>, z.requires_grad)  <span class="hljs-comment"># 预期输出: True</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;x的梯度:&quot;</span>, x.grad)  <span class="hljs-comment"># 预期输出: None</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;y的梯度:&quot;</span>, y.grad)  <span class="hljs-comment"># 预期输出: None</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;z的梯度:&quot;</span>, z.grad)  <span class="hljs-comment"># 预期输出: tensor([1., 1., 1.])</span><br><br><span class="hljs-comment"># 使用 make_dot 生成计算图</span><br>dot = make_dot(loss, params=&#123;<span class="hljs-string">&quot;x&quot;</span>: x, <span class="hljs-string">&quot;y&quot;</span>: y, <span class="hljs-string">&quot;z&quot;</span>: z, <span class="hljs-string">&quot;loss&quot;</span>: loss&#125;)<br><br><span class="hljs-comment"># 保存图像</span><br>dot.render(<span class="hljs-string">&quot;autograd_graph&quot;</span>, <span class="hljs-built_in">format</span>=<span class="hljs-string">&quot;png&quot;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>在退出计算图后，执行 <code>y.requires_grad = True</code> 是可以的，因为整个的 Autograd 体系还在。</p>
+<p>当设置 y 处在 <code>torch.no_grad()</code> 的上下文后，y 之前的梯度都没有了，即使 x 设置了 <code>requires_grad</code> 为 True。</p>
+<p>但是 y 之后的 z 则可以正常的求导。<strong>整个求导过程在 y 就被熔断了</strong>。</p>
+<h1 id="5-model-train-和-model-eval-什么作用？"><a href="#5-model-train-和-model-eval-什么作用？" class="headerlink" title="5. model.train() 和 model.eval() 什么作用？"></a>5. model.train() 和 model.eval() 什么作用？</h1><p>model.train() 会让模型进入 train mode，而 model.eval() 会让模型进入 eval mode。</p>
+<p>为什么要有这两种模式呢？<strong>是因为模型中的有些模块在训练和预测不一致导致的</strong>。典型的模块就是 Batch Norm 和 Dropout。</p>
+<h3 id="Batch-Norm"><a href="#Batch-Norm" class="headerlink" title="Batch Norm"></a><strong>Batch Norm</strong></h3><p>对于 Batch Norm 来说，训练的时候其实并不关心整体样本的均值和方差，我只需要在我这个 batch 内稳定训练就可以了。</p>
+<p>但是预测的时候，我们也必须得找一个均值和方差。那最好的选择就是通过整体的样本来进行估计了。</p>
+<p>但是这里面又有一些细节，比如<strong>原始论文中训练时方差用的是有偏估计，但是推理的时候用的是无偏估计</strong>。这个问题在几年前一直是个讨论的热点。甚至 github 上有个 2017年的 issue，7年了，到现在还没 close。<a target="_blank" rel="noopener" href="https://github.com/pytorch/pytorch/issues/1410">https://github.com/pytorch/pytorch/issues/1410</a></p>
+<h3 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a><strong>Dropout</strong></h3><p>Dropout 的训练和预测也不一致。</p>
+<p>训练的时候会随机 drop 一些神经元，但是预测的时候则是使用全部的神经元然后进行缩放。</p>
+<p>正是由于这种训练和预测的不一致性，就导致我们必须要告诉模型，什么时候是训练的状态，什么时候是预测的状态。</p>
+<p>我之前还写过一个目前还有印象的bug，就是 model.train() 写了在 for 循环迭代外面，结果 for 循环里面调用了一个评估函数，在评估函数里面会执行 model.eval()，结果就导致 model 基本全程处于 eval 状态。</p>
+<h2 id="适配-train-和-eval"><a href="#适配-train-和-eval" class="headerlink" title="适配 train 和 eval"></a><strong>适配 train 和 eval</strong></h2><p>有时候我们自己写模型，可能也会存在训练和预测不一致的情况，怎么适配 model.train() 和 model.eval() 的接口？</p>
+<p>只需要改变 torch.nn.Module 的 is_training 状态即可，比如下面的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">SimpleModel</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">super</span>(SimpleModel, <span class="hljs-variable language_">self</span>).__init__()<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):<br>        <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.training:<br>            <span class="hljs-keyword">return</span> x * <span class="hljs-number">2</span><br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">return</span> x<br><br><br>model = SimpleModel()<br><br>model.train()<br><span class="hljs-built_in">print</span>(model(<span class="hljs-number">107</span>))<br><br>model.<span class="hljs-built_in">eval</span>()<br><span class="hljs-built_in">print</span>(model(<span class="hljs-number">116</span>))<br><br>model.train()<br><span class="hljs-built_in">print</span>(model(<span class="hljs-number">120</span>))<br></code></pre></td></tr></table></figure>
+
+<p>就是这么简单。</p>
+<h1 id="6-如何防止-Checkpoint-注入代码攻击？"><a href="#6-如何防止-Checkpoint-注入代码攻击？" class="headerlink" title="6. 如何防止 Checkpoint 注入代码攻击？"></a>6. 如何防止 Checkpoint 注入代码攻击？</h1><h3 id="答案"><a href="#答案" class="headerlink" title="答案"></a><strong>答案</strong></h3><p>使用 safetensors 存储和加载。<strong>攻击原理和防范方法还有代码演示见后面</strong>。</p>
+<p>但是<strong>这个方案也只能是防君子不防小人</strong>。只要一个人想干坏事，有太多的方法来实现了。但是对于公司来说，还是提高一些做坏事的门槛比较好。</p>
+<h3 id="攻击原理和防范"><a href="#攻击原理和防范" class="headerlink" title="攻击原理和防范"></a><strong>攻击原理和防范</strong></h3><p>稍微说一下利用 checkpoint 进行攻击的原理。</p>
+<p>其实也并不是什么特别高明的技术，核心就是 <strong>pytorch 的开发人员偷懒，在保存和加载模型的时候，采用了 pickle 格式，而 pickle 格式本身就是不安全的</strong>。</p>
+<p>更具体一点来说，pickle 设计的初衷是为了方便的序列化和反序列化数据。而为了方便用户自定义自己的序列化方式，开放了一个 <code>__reduce__</code> 的接口，而这个 <code>__reduce__</code> 接口则可以让用户为所欲为，如果有足够的权限，用户甚至可以在里面执行 <code>rm -rf /</code>。</p>
+<p>所以后来 huggingface 推出了 safetensors 的格式。这个格式就是一份数据，不能执行代码。而且优化了加载速度，还可以在不加载权重的情况下就获取数据的 meta 信息，比如模型的网络结构等。所以以后大家尽量用 safetensors 就好了。</p>
+<p>下面的代码，加载模型后进行代码注入(<strong>这里以让系统 echo hello world 为例，如果load模型后系统打印了Hello World，则表示攻击cheng g</strong>)，然后使用使用 pytorch 来存储和加载模型，可以发现用torch.load 被注入代码的模型后，打印了 Hello world。而采用 safetensors 则没有任何问题。</p>
+<p>为了防止攻击代码的恶意扩散，下面的代码中具体的注入方式被隐藏。想学习完整代码可以看文末的付费专栏，日后要是惹出祸事，不要说是我教的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> pickle<br><span class="hljs-keyword">import</span> torch<br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn<br><span class="hljs-keyword">from</span> safetensors.torch <span class="hljs-keyword">import</span> load_model, save_model<br><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">SimpleModel</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self</span>):<br>        <span class="hljs-built_in">super</span>().__init__()<br>        <span class="hljs-variable language_">self</span>.linear1 = nn.Linear(<span class="hljs-number">107</span>, <span class="hljs-number">116</span>)<br>        <span class="hljs-variable language_">self</span>.linear2 = nn.Linear(<span class="hljs-number">116</span>, <span class="hljs-number">120</span>)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x</span>):<br>        x = <span class="hljs-variable language_">self</span>.linear1(x)<br>        <span class="hljs-keyword">return</span> <span class="hljs-variable language_">self</span>.linear2(x)<br><br><span class="hljs-comment"># 创建模型实例</span><br>model = SimpleModel()<br><br><span class="hljs-comment"># 正常保存模型</span><br>torch.save(model, <span class="hljs-string">&#x27;simple_model.pth&#x27;</span>)<br><br><span class="hljs-meta">... </span>注入 os.system(<span class="hljs-string">&#x27;echo Hello World&#x27;</span>)。<br><span class="hljs-meta">... </span>注入为了防止该方法恶意扩散，这里省略具体的注入方法。<br><br><span class="hljs-comment"># 加载原始模型</span><br><span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;simple_model.pth&#x27;</span>, <span class="hljs-string">&#x27;rb&#x27;</span>) <span class="hljs-keyword">as</span> f:<br>    original_model = torch.load(f)<br><br><span class="hljs-comment"># 插入恶意代码</span><br>original_model ... 为了防止该方法恶意扩散，这里省略具体的注入方法。<br><br><span class="hljs-comment"># 保存被污染的模型</span><br>torch.save(original_model, <span class="hljs-string">&#x27;poisoned_model.pth&#x27;</span>)<br>save_model(original_model, <span class="hljs-string">&#x27;safe_model.safetensor&#x27;</span>)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;load by torch.load...&#x27;</span>)<br>poisoned_model = torch.load(<span class="hljs-string">&#x27;poisoned_model.pth&#x27;</span>)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;load by safetensors...&#x27;</span>)<br>load_model(original_model, <span class="hljs-string">&#x27;safe_model.safetensor&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<h1 id="7-分布式训练常用的通信后端都有什么？应该怎么选？"><a href="#7-分布式训练常用的通信后端都有什么？应该怎么选？" class="headerlink" title="7. 分布式训练常用的通信后端都有什么？应该怎么选？"></a>7. 分布式训练常用的通信后端都有什么？应该怎么选？</h1><p>目前最流行的深度学习框架当属 Pytorch ，Pytorch 支持3个通信框架：MPI，Gloo，NCCL。</p>
+<p>但是也有很多自研的框架，比如阿里的 ACCL, 微软的MSCCL, Intel 的 oneCCL， AMD 的 RCCL， 华为的 HCCL 等。</p>
+<p>通过名字大概可以看出，这些<strong>通信框架大致分为两类， MPI 和 xCCL。</strong></p>
+<p>MPI 的全称是 Message Passing Interface。而 CCL 的全称是 Communication Collectives Library。然后前面还会加一个代号，来区分是哪家公司的。比如 NCCL 就是 Nvidia Communication Collectives Library， 阿里的就是 Alibaba Communication Collectives Library，也有不是公司名的，比如 Intel 和 AMD 分别用了 one 和 ROCm。</p>
+<p>下面分别简单介绍一下这些框架。</p>
+<h3 id="MPI"><a href="#MPI" class="headerlink" title="MPI"></a><strong>MPI</strong></h3><p>经典的分布式通信框架。当年在百度的时候，经常用 MPI 版的逻辑回归。那个时候刚出校门，没见过世面，感觉分布式训练贼牛逼。</p>
+<p>在 NCCL 出现之前，MPI 在 CPU 和 GPU 分布式框架中都占据主导地位。不过自从 NCCL 出现后， MPI 目前只用在 CPU 的通信场景中了。</p>
+<h3 id="Gloo"><a href="#Gloo" class="headerlink" title="Gloo"></a><strong>Gloo</strong></h3><p>Gloo 是 Facebook 的开源框架。对 CPU 和 GPU 的通信都做了一些优化。早期的时候，优化的算法不太多，现在也加了很多优化算法，具体见：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/facebookincubator/gloo/blob/main/docs/algorithms.md">https://github.com/facebookincubator/gloo/blob/main/docs/algorithms.md</a></p>
+<p>但是在 GPU 上，效果依然没有 NCCL 好，所以目前只要用 Nvidia 的 GPU，基本上都会把通信后端设置为 NCCL。</p>
+<h3 id="NCCL"><a href="#NCCL" class="headerlink" title="NCCL"></a><strong>NCCL</strong></h3><p>NCCL 是英伟达开发的。当时的起因是 MPI 虽然也对 GPU 做了优化，但是并没有完全发挥出性能，所以英伟达亲自下场，在传输和计算的 overlap 上做了很多优化工作。</p>
+<p>一经发布，就成了业界扛把子。只要用 Nvidia 的卡，用 NCCL 就行。</p>
+<p>NCCL 会自动根据网络拓扑和通信协议来自动选择算法，比如 Ring based, Tree based 或者 CollNet，选择一个最快的来运行。</p>
+<p>体感上来看，NCCL 在最开始通信的时候由于有一些前置步骤，所以第一次通信的时候很慢，但是只要开始通信之后，就非常快了。所以测速度的时候千万不要把第一次通信的时间当作结果。</p>
+<p>英伟达也并没有想着要取代 MPI，而是采用了共存共荣的策略，只在 GPU 上优化。</p>
+<h3 id="MSCCL"><a href="#MSCCL" class="headerlink" title="MSCCL"></a><strong>MSCCL</strong></h3><p>MSCCL 是微软开发的，可以认为 NCCL 的一个扩展。关键是可以兼容 NCCL 的 API，pytorch 只需要将 backend 做一下替换即可。</p>
+<p>MSCCL 提供了更灵活和可定制的集体通信算法，引入了一个 chunk-oriented dataflow language， 叫 DSL。同时还有个编译器，用来编译和优化数据如何在 GPU 之间进行流动。这个工作还是比较硬核的，光编译原理估计大部分人就看不懂。</p>
+<p>根据他们的测试报告，MSCCL 在推理上可以加速1.22x–1.29x， MoE 的训练可以加速 1.10x–1.89x 。</p>
+<h3 id="ACCL"><a href="#ACCL" class="headerlink" title="ACCL"></a><strong>ACCL</strong></h3><p>阿里针对阿里云的环境进行的优化。其官网上是这么写的：</p>
+<ul>
+<li>修复了对应NCCL社区开源版本的BUG；</li>
+<li>对集合通信不同算子和不同消息区间进行了调优，使其相比开源NCCL拥有更好的性能；</li>
+<li>支持训练过程中集合通信统计分析，可用于诊断训练过程中设备故障导致的计算&#x2F;通信Slow（慢）和Hang（挂起）等问题，配合阿里云PAI的AIMaster：弹性自动容错引擎和C4D：模型训练任务问题诊断工具，可以快速的进行任务的异常检测和自动容错；</li>
+<li>支持多路径传输和负载均衡功能，在训练集群中降低甚至消除哈希不均导致的拥塞问题，提升整体训练性能；</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://help.aliyun.com/zh/pai/user-guide/accl-alibaba-high-performance-collective-communication-library">https://help.aliyun.com/zh/pai/user-guide/accl-alibaba-high-performance-collective-communication-library</a></p>
+<h3 id="HCCL"><a href="#HCCL" class="headerlink" title="HCCL"></a><strong>HCCL</strong></h3><p>华为开发的，基于昇腾硬件的高性能集合通信库。现在很多公司已经在采购昇腾的卡了。</p>
+<p>现在老美一直打压我们，那天要是 Nvidia 的卡不让用了，只能用这个了。</p>
+<h3 id="oneCCL-RCCL"><a href="#oneCCL-RCCL" class="headerlink" title="oneCCL&#x2F;RCCL"></a><strong>oneCCL&#x2F;RCCL</strong></h3><p>oneCCL 是 Intel 开发的，RCCL 是 AMD 开发的。</p>
+<p>看这两家的背景就知道，这两个库在更底层上进行优化，所以对InfiniBand、以太网有很好的支持。</p>
+<h2 id="到底用什么"><a href="#到底用什么" class="headerlink" title="到底用什么"></a><strong>到底用什么</strong></h2><p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739262190331-6.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>之前有人对 MPI， NCCL 和 Gloo 做了测评，结论是：</p>
+<ol>
+<li>当 tensor 比较小时，MPI 的性能更好，而且集群数量越大，MPI 效果越好。</li>
+<li>当 tensor 比较大时，NCCL 性能最好，而且跟集群没有关系。</li>
+</ol>
+<p>最终的结论就是：</p>
+<ol>
+<li>用什么型号的 GPU，就用对应的 CCL。比如 N 卡就用 NCCL，阿里的就用 ACCL，昇腾的就用 HCCL。</li>
+<li>如果是 CPU，最简单的就用 Gloo。爱折腾就用 oneCCL 或者 RCCL。</li>
+</ol>
+<p>当然 pytorch 官方也给出了使用建议，请看：<a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/distributed.html#which-backend-to-use">https://pytorch.org/docs/stable/distributed.html#which-backend-to-use</a></p>
+<h1 id="8-Beam-Search-的缺点？"><a href="#8-Beam-Search-的缺点？" class="headerlink" title="8. Beam Search 的缺点？"></a>8. Beam Search 的缺点？</h1><p>Beam Search 大大提升了推理的速度，但是其自身也有很多缺点。下面分别说明</p>
+<h3 id="缺点1-Beam-Search-本身并不能保证找到最优解。"><a href="#缺点1-Beam-Search-本身并不能保证找到最优解。" class="headerlink" title="缺点1: Beam Search 本身并不能保证找到最优解。"></a><strong>缺点1: Beam Search 本身并不能保证找到最优解。</strong></h3><p>当 beam size 为1时， Beam Search 就退化为 Greedy Search，当 beam size 趋向于无穷时，则变成暴力穷举，这个时候才能保证最优解。</p>
+<p>当 beam size 变大时，<strong>找到最优解的概率会提升，但是收益是递减的</strong>。</p>
+<h3 id="缺点2-Beam-Search-趋近完美且中庸，但没有惊喜"><a href="#缺点2-Beam-Search-趋近完美且中庸，但没有惊喜" class="headerlink" title="缺点2: Beam Search 趋近完美且中庸，但没有惊喜"></a><strong>缺点2: Beam Search 趋近完美且中庸，但没有惊喜</strong></h3><p>之前有人问余华 AI 是否对作家构成威胁。余华老师估计不太懂 AI 的底层原理，但是他却给出了一个非常接近本质的结论。</p>
+<p>余华认为：<strong>生活是不按常理出牌的，AI 写作可以写出中庸的小说，但写不出个性的小说</strong>。人脑总要犯错误，用人脑写作的“伟大文学作品都有败笔”，但这也是人脑最可贵之处。</p>
+<p>需要注意：中庸并不是一个贬义词，讲究的是不偏不倚，折中调和。</p>
+<p>通过对人类文本和 Beam search 生成的文本的困惑度进行对比，也验证了这一点：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739262337169-8.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>所以 AI 生成的文本往往比较枯燥，没有带来惊喜。甚至在某些情况下，会陷入  positive feedback loop， 倾向于重复的输出一些高概率的词。</p>
+<h3 id="缺点3-Beam-Search-对长序列不友好"><a href="#缺点3-Beam-Search-对长序列不友好" class="headerlink" title="缺点3: Beam Search 对长序列不友好"></a><strong>缺点3: Beam Search 对长序列不友好</strong></h3><p>由于 Beam Search 的概率是累乘的，由于概率又小于1，所以随着长度的增加，句子的概率会越来小。</p>
+<p>这也就造成一个长度为 5 的句子的概率，天然就大于长度为100 的概率。所以 Beam Search 更喜欢短句子。</p>
+<p>通常需要对 Beam Search 进行 Length Normalization。</p>
+<h3 id="缺点4-Beam-Search-会耗费额外的资源"><a href="#缺点4-Beam-Search-会耗费额外的资源" class="headerlink" title="缺点4: Beam Search 会耗费额外的资源"></a><strong>缺点4: Beam Search 会耗费额外的资源</strong></h3><p>尤其是当 beam size 很大和序列长度很大的时候，beam search 会耗费不少的内存。比如 KV Cache 的存储。</p>
+<p>当然可以通过 Trie 树等来进一步优化。</p>
+<h1 id="9-Beam-Search-最坏时间复杂度是多少？"><a href="#9-Beam-Search-最坏时间复杂度是多少？" class="headerlink" title="9. Beam Search 最坏时间复杂度是多少？"></a>9. Beam Search 最坏时间复杂度是多少？</h1><h3 id="答案-1"><a href="#答案-1" class="headerlink" title="答案"></a><strong>答案</strong></h3><p>Beam Search 相信大家都知道怎么回事，这里不再赘述。本文探究一下 Beamsearch 的时间复杂度。</p>
+<p>假设大模型的词表个数为|V|,我们要预测  个 token，beam search 的 beam size 为k, 那么beam search 的时间复杂度是多少呢？</p>
+<p>我们先看下 beam search 的搜索路径，如下图所示(beam size &#x3D; 2)：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/537ada0f171fe620741015f4c00fa22c.png" srcset="/img/loading.gif" lazyload alt="537ada0f171fe620741015f4c00fa22c">第一个 token 时从|V|中选择 k个概率最大的 token ，剩下的都是从 k|V|个候选 token 选择k个概率最大的。</p>
+<p>从N个数字中选择k个最大的数，经典的 topk 问题。</p>
+<p>top k 问题也经常作为算法面试题出现，但是能完全答对的真不多。这里给出 4 个选项:<br>$$<br>\begin{aligned}&amp;\bullet\text{ А.}O(N\log N)\&amp;\bullet\text{ В.}O(N\log k)\&amp;\bullet\text{ С.}O(N)\&amp;\bullet\text{ D.}O(N^2)\end{aligned}<br>$$<br>可以先选择一下再给答案。评论区可以发一下自己的答案:)</p>
+<p>下面分别说明</p>
+<ul>
+<li>O(NlogN)</li>
+</ul>
+<p>这个时间复杂度肯定可以完全解决，只需要将 数组排序，然后选择最大的 k 个即可,排序的时间复杂度为 O(NlogN)。但是并不是最优的。少数排序算法可以达到O(N)，但是ROI不一定实用。</p>
+<ul>
+<li>O(Nlogk)</li>
+</ul>
+<p>可以维护一个大小为 k 的小顶堆，然后遍历 N 个数，每次更新小顶堆的时间复杂度为 logk,整体为Nlogk. 最后堆内的元素就是答案。</p>
+<ul>
+<li>O(N)</li>
+</ul>
+<p>参考 quicksort，每次选一个 pivot 进行重新排列。但是我每次并不 sort，而是 select，把问题变成 quick select.</p>
+<p>只要我知道了第 k 大的数字，再 O(N) 的遍历一遍，就得到了 TopK 的数字了。</p>
+<p>N个数一次 parition 的时间复杂度为 O(N), 下一次处理的数量期望是当前数量的一半。所以整体期望的时间复杂度为 $O(N)+O(N&#x2F;2)+O(N&#x2F;4)+\ldots&#x3D;O(2N)&#x3D;O(N)$</p>
+<p>但是注意，这只是期望是 O(N).</p>
+<p>如果下一次处理的数量并不是一半，而是只少了一个，那么最坏的时间复杂度则变成 .</p>
+<p>其实回答到这里，基本就可以了，下面的是加分项。</p>
+<p>但是实际上，quick select 可以进一步转化为使用 Median of medians 算法来求解 TopK。</p>
+<p>而 Median of medians 算法是一个真正的线性算法，可以最坏 O(N)的时间复杂度来找到第 k 大的元素。</p>
+<p>虽然理论上， Median of medians 的最坏时间复杂度是O(N),但是<strong>它的渐近常数有点大，实际使用中其实和 quick select 差异并没有那么大</strong>。它的意义就是<strong>保证了 TopK 的最坏时间复杂度为线性</strong>。</p>
+<p>Median of medians 算法也很简单，这里就不写了，感兴趣的可以看下面的付费资料。</p>
+<h3 id="Beam-Search-的时间复杂度"><a href="#Beam-Search-的时间复杂度" class="headerlink" title="Beam Search 的时间复杂度"></a><strong>Beam Search 的时间复杂度</strong></h3><p>回到 Beam Search 的问题上，由于每次是从k|V|个元素中选择 k 个，这种选择进行了 n 次，<strong>所以 Beam Search 的时间复杂度为</strong>O(nk|V|)</p>
+<p>当k&#x3D;1的时候, 退化为 greed search。</p>
+<p>当$k&#x3D;\infty $  的时候，不能直接带入到式子里面，因为k 虽然可以无限，但是刚开始的搜索步骤还是有限制的。这时候相当于 全局搜索，时间复杂度为 $|V|^n$</p>
+<h1 id="10-为什么-sigmoid-采用的是-e-的负-x-次方，而不是别的数的负-x-次方？"><a href="#10-为什么-sigmoid-采用的是-e-的负-x-次方，而不是别的数的负-x-次方？" class="headerlink" title="10. 为什么 sigmoid 采用的是 e 的负 x 次方，而不是别的数的负 x 次方？"></a>10. 为什么 sigmoid 采用的是 e 的负 x 次方，而不是别的数的负 x 次方？</h1><p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739263333379-12.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>不同 k 值的函数图像如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/28d16e38349c6afee2a7ee7dd79d9912.png" srcset="/img/loading.gif" lazyload alt="28d16e38349c6afee2a7ee7dd79d9912"></p>
+<p>看到这里我大概意识到<strong>不同的 k 只是对 sigmoid 做了不同的拉伸</strong>，其实都属于 S 形函数。</p>
+<p><strong>这类函数不仅函数相似，其导数也高度相似</strong>。然后我决定推导一下 g(x) 的导数。如下：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739263467021-28.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>联想到 sigmoid 的导数为</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739263459253-25.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>好像知道答案了。g(x) 的导数可以继续化简，为：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739263445888-22.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>所以说导数这里有个 ln k 的常数。</p>
+<p>一是为了计算的简便，当 k &#x3D; e 时，这一项就没有了。</p>
+<p>二是联想到 ResNet 的导数，里面如果含有一个常数项，累计效应会造成训练的不稳定，具体的推导可以看：<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzUyOTA5OTcwMg==&mid=2247486359&idx=1&sn=f1fa3f9ffad87683bcc5d6f56fe0a389&chksm=fa67754ecd10fc58f65dee2cb3f6708afffec46ea38cdef4f1e222d3b9cba13b33af940260e7&scene=21#wechat_redirect">字节大模型一面：“为什么现在深度学习都用 ResNet?”</a></p>
+<p>我觉得这应该是 k 取 e 的原因吧。</p>
+<p>晚上吃完饭又想了想，这个 ln k 的常数是怎么出来的呢？突然我一拍大腿，发现其实上面的证明有点绕远路了。</p>
+<p>因为$k&#x3D;e^{\ln k}$ , 然后</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739263437386-19.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>所以 g(x) 依然是 sigmoid.</p>
+<p>根据链式法则，</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739263428022-16.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>这就是 ln k 常数的由来。</p>
+<p>文章合集：<a target="_blank" rel="noopener" href="https://github.com/chongzicbo/ReadWriteThink/tree/main">chongzicbo&#x2F;ReadWriteThink: 博学而笃志，切问而近思 (github.com)</a></p>
+<p>个人博客：<a href="https://chongzicbo.github.io/">程博仕</a></p>
+<p>微信公众号：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg" srcset="/img/loading.gif" lazyload alt="微信公众号"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/" class="category-chain-item">笔试面试</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/" class="category-chain-item">AI算法</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/" class="category-chain-item">nlp</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/nlp/" class="print-no-link">#nlp</a>
+      
+        <a href="/tags/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/" class="print-no-link">#笔试面试</a>
+      
+        <a href="/tags/%E7%AE%97%E6%B3%95%E9%9D%A2%E8%AF%95/" class="print-no-link">#算法面试</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>公众号“看图学”试题合集（2）</div>
+      <div>https://chongzicbo.github.io/2025/02/11/笔试面试/AI算法/nlp/AI笔试面试题002：公众号“看图学”题目合集（2）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>程博</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>February 11, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/10/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98001%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%881%EF%BC%89/" title="公众号“看图学”试题合集（1）">
+                        <span class="hidden-mobile">公众号“看图学”试题合集（1）</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="笔试面试"
+        id="heading-c0a64144467cb7c553d64e018103720a" role="tab" data-toggle="collapse" href="#collapse-c0a64144467cb7c553d64e018103720a"
+        aria-expanded="true"
+      >
+        笔试面试
+        <span class="list-group-count">(2)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-c0a64144467cb7c553d64e018103720a"
+           role="tabpanel" aria-labelledby="heading-c0a64144467cb7c553d64e018103720a">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="AI算法"
+        id="heading-497d6b71d600944e9158c90081f69bcd" role="tab" data-toggle="collapse" href="#collapse-497d6b71d600944e9158c90081f69bcd"
+        aria-expanded="true"
+      >
+        AI算法
+        <span class="list-group-count">(2)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-497d6b71d600944e9158c90081f69bcd"
+           role="tabpanel" aria-labelledby="heading-497d6b71d600944e9158c90081f69bcd">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="nlp"
+        id="heading-4c5adbed16b4c9d16698f71cca4218cb" role="tab" data-toggle="collapse" href="#collapse-4c5adbed16b4c9d16698f71cca4218cb"
+        aria-expanded="true"
+      >
+        nlp
+        <span class="list-group-count">(2)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-4c5adbed16b4c9d16698f71cca4218cb"
+           role="tabpanel" aria-labelledby="heading-4c5adbed16b4c9d16698f71cca4218cb">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2025/02/10/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98001%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%881%EF%BC%89/" title="公众号“看图学”试题合集（1）"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">公众号“看图学”试题合集（1）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/02/11/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98002%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%882%EF%BC%89/" title="公众号“看图学”试题合集（2）"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">公众号“看图学”试题合集（2）</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/chongzicbo" target="_blank" rel="nofollow noopener"><span>Github</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
