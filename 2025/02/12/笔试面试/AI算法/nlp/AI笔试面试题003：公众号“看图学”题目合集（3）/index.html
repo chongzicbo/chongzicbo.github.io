@@ -1,0 +1,1419 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/daxiong.jpg">
+  <link rel="icon" href="/img/daxiong.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="程博">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. tanh 和 sigmoid 什么关系？为什么 tanh 作为激活函数比 sigmoid 要好？sigmoid 的性质导致其导数全为正数，详细看：我用Sigmoid 作为激活函数，导师建议延毕，导致这样的其中一个原因（并不是全部的原因）是：sigmoid 的值的范围在 0-1 之间。 如果将 sigmoid 函数变成 zero centered， 那么其值就有正有负， sigmoid 收敛慢">
+<meta property="og:type" content="article">
+<meta property="og:title" content="公众号“看图学”试题合集（3）">
+<meta property="og:url" content="https://chongzicbo.github.io/2025/02/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98003%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%883%EF%BC%89/index.html">
+<meta property="og:site_name" content="程博仕">
+<meta property="og:description" content="1. tanh 和 sigmoid 什么关系？为什么 tanh 作为激活函数比 sigmoid 要好？sigmoid 的性质导致其导数全为正数，详细看：我用Sigmoid 作为激活函数，导师建议延毕，导致这样的其中一个原因（并不是全部的原因）是：sigmoid 的值的范围在 0-1 之间。 如果将 sigmoid 函数变成 zero centered， 那么其值就有正有负， sigmoid 收敛慢">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/GCNbdU0ticibqHYib5RElGpjWbicM55SF4kw31aZz88zULnhC3kelarC2un9XQtDGfQ1nHqnibkeZYCY63mZqnJpkqA/640?wx_fmt=png&from=appmsg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/GCNbdU0ticibqHYib5RElGpjWbicM55SF4kw7zIIoV8JvqLqDU6OYcB2l1tdwLKDfxEcRucSqX0696CfIibbAofDIfA/640?wx_fmt=png&from=appmsg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/GCNbdU0ticibqHYib5RElGpjWbicM55SF4kw9osQ8mO7s5wvJ8en4n0ibFdr0ickhPF6Y8ic8LYVln52MPn0Uib93kV3mg/640?wx_fmt=png&from=appmsg">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739321758907-3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739322623949-5.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739322635546-8.png">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/GCNbdU0ticibrzmX72vYuH2tEEdRhofUpOVuus8aHTM1qZiamoCj59Pr0BWegtBadzWLrePZzuYOvrMib13DXAcVEA/640?wx_fmt=png&from=appmsg">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/GCNbdU0ticibrzmX72vYuH2tEEdRhofUpOiaWLeccesLU5fCJwLCjv9WxexprBpKb1dglaXz7GHVXl0VmOocsLFqw/640?wx_fmt=png&from=appmsg">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250212101125829.png">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/GCNbdU0ticibrzmX72vYuH2tEEdRhofUpOfx6Uwkx4YBzMzX2wvtmnHvDXrQcpdzlC5sLIQgdk70kTybxJibvQegA/640?wx_fmt=png&from=appmsg">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739327000639-14.png">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/GCNbdU0ticibqaeLFAy6A5j4iaSyINZ59uDjWtJjulAIObjz7ZOmq6TRSibgGicZ6AjHteyNx6YFdPOczIDibHZXvJmQ/640?wx_fmt=png&from=appmsg">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739327166736-17.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739327377568-20.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739327386996-23.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
+<meta property="article:published_time" content="2025-02-12T04:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-12T02:31:47.592Z">
+<meta property="article:author" content="程博">
+<meta property="article:tag" content="nlp">
+<meta property="article:tag" content="笔试面试">
+<meta property="article:tag" content="算法面试">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mmbiz.qpic.cn/mmbiz_png/GCNbdU0ticibqHYib5RElGpjWbicM55SF4kw31aZz88zULnhC3kelarC2un9XQtDGfQ1nHqnibkeZYCY63mZqnJpkqA/640?wx_fmt=png&from=appmsg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>公众号“看图学”试题合集（3） - 程博仕</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":"3841b375bfdd5627f0f840e1e289416e","google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?3841b375bfdd5627f0f840e1e289416e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>程博仕</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>笔试面试</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>计算机基础</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F" target="_self">
+                    
+                    <span>操作系统</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C" target="_self">
+                    
+                    <span>计算机网络</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>人工智能</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/asr" target="_self">
+                    
+                    <span>语音识别</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>开发</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91" target="_self">
+                    
+                    <span>音视频</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/web&#39;" target="_self">
+                    
+                    <span>Web开发</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>文章分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>时间轴</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="公众号“看图学”试题合集（3）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        程博
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-12 12:00" pubdate>
+          February 12, 2025 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.5k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          46 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">公众号“看图学”试题合集（3）</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    Last updated on February 12, 2025 am
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-tanh-和-sigmoid-什么关系？为什么-tanh-作为激活函数比-sigmoid-要好？"><a href="#1-tanh-和-sigmoid-什么关系？为什么-tanh-作为激活函数比-sigmoid-要好？" class="headerlink" title="1. tanh 和 sigmoid 什么关系？为什么 tanh 作为激活函数比 sigmoid 要好？"></a>1. tanh 和 sigmoid 什么关系？为什么 tanh 作为激活函数比 sigmoid 要好？</h1><p>sigmoid 的性质导致其导数全为正数，详细看：<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzUyOTA5OTcwMg==&mid=2247486543&idx=1&sn=fb01702155d9e6e477fa3e2b21405aa2&chksm=fa677296cd10fb8072900b63063e73107827719bbbdb4914f40b19a61172e279055e05f9a3ea&scene=21#wechat_redirect">我用Sigmoid 作为激活函数，导师建议延毕</a>，导致这样的其中一个原因（并不是全部的原因）是：sigmoid 的值的范围在 0-1 之间。</p>
+<p>如果将 sigmoid 函数变成 zero centered， 那么其值就有正有负， sigmoid 收敛慢，不稳定的原因就解决了。</p>
+<p>那么 sigmoid 如何 变成 zero centered 呢？</p>
+<p>sigmoid 的范围在[0, 1] 之间， 其实只需要减去 0.5 就可以了，这样就变成了 [-0.5, 0.5] 之间。</p>
+<p>我们定义这么一个的函数：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/GCNbdU0ticibqHYib5RElGpjWbicM55SF4kw31aZz88zULnhC3kelarC2un9XQtDGfQ1nHqnibkeZYCY63mZqnJpkqA/640?wx_fmt=png&from=appmsg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>我们把这个式子推导一下，看看能得到什么</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/GCNbdU0ticibqHYib5RElGpjWbicM55SF4kw7zIIoV8JvqLqDU6OYcB2l1tdwLKDfxEcRucSqX0696CfIibbAofDIfA/640?wx_fmt=png&from=appmsg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>结果另一个常用的激活函数就出现了。</p>
+<p>结合上面公式，tanh 也可以写作</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/GCNbdU0ticibqHYib5RElGpjWbicM55SF4kw9osQ8mO7s5wvJ8en4n0ibFdr0ickhPF6Y8ic8LYVln52MPn0Uib93kV3mg/640?wx_fmt=png&from=appmsg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>所以 <strong>tanh 作为激活函数，本质上就是对 sigmoid 做了个 zero centered 操作</strong>， 先把 <strong>sigmoid 在x轴挤了一下，然后在 y 轴上拉伸，最后减去中心点</strong>，相当于平移成一个 zero centered 的函数。</p>
+<p>其实我感觉不做这些缩放的变换，直接用 g(x) &#x3D; σ(x) -0.5 作为激活函数也是完全可以的。</p>
+<p>这样解决了梯度全为正（或者全为负）的问题。</p>
+<p>但是毕竟跟 sigmoid 是同源的，依然没有解决梯度消失的问题。</p>
+<p>下面是 tanh 的导数 和 sigmoid 导数的对比：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739321758907-3.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>可以看出，tanh 的饱和区大概在 [-3,3] 之间。</p>
+<p>但是即使这样，<strong>tanh 在实际的使用效果上，已经比 sigmoid 要好很多了。</strong></p>
+<h1 id="2-基于-Llama-的模型都有哪些？有什么细微的差异？"><a href="#2-基于-Llama-的模型都有哪些？有什么细微的差异？" class="headerlink" title="2. 基于 Llama 的模型都有哪些？有什么细微的差异？"></a>2. 基于 Llama 的模型都有哪些？有什么细微的差异？</h1><h2 id="Llama-生态"><a href="#Llama-生态" class="headerlink" title="Llama 生态"></a><strong>Llama 生态</strong></h2><p>现在的模型架构基本都是 Llama 了。即使本来也有一些自己独创的结构，但是随着 Llama 生态环境的日趋统一，也都被迫向 Llama 低头了，不然没人适配你的特殊架构，自然就不带你玩了。比如 GLM 之前属于 Prefix LM，但是现在也变成 Llama 类似了。</p>
+<p><strong>虽然大家都长的很像，但是细微之处还是有些不太一样</strong>。今天就聊聊跟 Llama 很像的模型之间的细微差异。</p>
+<p>Llama 目前有3代，先看一下 Llama 自己的变化，然后再以 Llama 为基准看一下其他模型与 Llama 的不同。</p>
+<h2 id="Llama-1-2-3"><a href="#Llama-1-2-3" class="headerlink" title="Llama 1 2 3"></a><strong>Llama 1 2 3</strong></h2><h3 id="Llama-1"><a href="#Llama-1" class="headerlink" title="Llama 1"></a><strong>Llama 1</strong></h3><p>Llama 1 的架构是基于 GPT 来的，做了如下的升级：</p>
+<ul>
+<li>采用了 Pre-RMSNorm</li>
+<li>把 Gelu 改成了 SwiGLU</li>
+<li>位置编码改成了 RoPE</li>
+</ul>
+<p>需要注意的是，<strong>这些内容都不是 Meta 首创的，但是 Meta 的 Llama 团队将他们组合到了一起并且取得了开源的 SOTA 效果</strong>。至于闭源的，那肯定早都用了。</p>
+<p>其结构如下所示(Llama 7B)：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs routeros">LlamaForCausalLM(<br>  (model): LlamaModel(<br>    (embed_tokens): Embedding(32000, 4096, <span class="hljs-attribute">padding_idx</span>=0)<br>    (layers): ModuleList(<br>      (0-31): 32 x LlamaDecoderLayer(<br>        (self_attn): LlamaAttention(<br>          (q_proj): Linear(<span class="hljs-attribute">in_features</span>=4096, <span class="hljs-attribute">out_features</span>=4096, <span class="hljs-attribute">bias</span>=<span class="hljs-literal">False</span>)<br>          (k_proj): Linear(<span class="hljs-attribute">in_features</span>=4096, <span class="hljs-attribute">out_features</span>=4096, <span class="hljs-attribute">bias</span>=<span class="hljs-literal">False</span>)<br>          (v_proj): Linear(<span class="hljs-attribute">in_features</span>=4096, <span class="hljs-attribute">out_features</span>=4096, <span class="hljs-attribute">bias</span>=<span class="hljs-literal">False</span>)<br>          (o_proj): Linear(<span class="hljs-attribute">in_features</span>=4096, <span class="hljs-attribute">out_features</span>=4096, <span class="hljs-attribute">bias</span>=<span class="hljs-literal">False</span>)<br>          (rotary_emb): LlamaRotaryEmbedding()<br>        )<br>        (mlp): LlamaMLP(<br>          (gate_proj): Linear(<span class="hljs-attribute">in_features</span>=4096, <span class="hljs-attribute">out_features</span>=11008, <span class="hljs-attribute">bias</span>=<span class="hljs-literal">False</span>)<br>          (up_proj): Linear(<span class="hljs-attribute">in_features</span>=4096, <span class="hljs-attribute">out_features</span>=11008, <span class="hljs-attribute">bias</span>=<span class="hljs-literal">False</span>)<br>          (down_proj): Linear(<span class="hljs-attribute">in_features</span>=11008, <span class="hljs-attribute">out_features</span>=4096, <span class="hljs-attribute">bias</span>=<span class="hljs-literal">False</span>)<br>          (act_fn): SiLU()<br>        )<br>        (input_layernorm): LlamaRMSNorm((4096,), <span class="hljs-attribute">eps</span>=1e-06)<br>        (post_attention_layernorm): LlamaRMSNorm((4096,), <span class="hljs-attribute">eps</span>=1e-06)<br>      )<br>    )<br>    (norm): LlamaRMSNorm((4096,), <span class="hljs-attribute">eps</span>=1e-06)<br>    (rotary_emb): LlamaRotaryEmbedding()<br>  )<br>  (lm_head): Linear(<span class="hljs-attribute">in_features</span>=4096, <span class="hljs-attribute">out_features</span>=32000, <span class="hljs-attribute">bias</span>=<span class="hljs-literal">False</span>)<br>)<br></code></pre></td></tr></table></figure>
+
+<h3 id="Llama-2"><a href="#Llama-2" class="headerlink" title="Llama 2"></a><strong>Llama 2</strong></h3><p>Llama2 和 Llama1 结构基本相同，但是在更大的模型上（34B和70B） 采用了 grouped-query attention，主要是为了加速。</p>
+<p>还有就是将上下文从 2048 扩展到了 4096.</p>
+<h3 id="Llama-3"><a href="#Llama-3" class="headerlink" title="Llama 3"></a><strong>Llama 3</strong></h3><p>Llama3 做了如下改变</p>
+<ul>
+<li>GQA 变成标配。</li>
+<li>上下文 从 4096 扩展到了 8192</li>
+<li>词表大小从 32k 变成了 128k。前两代都是基于 SentencePiece 的，Llama 3 直接采用了 Openai 的 tiktoken。因为 tiktoken 用 rust 进行了底层的深度优化，效率比其他家要好很多。</li>
+</ul>
+<h2 id="Baichuan-系列"><a href="#Baichuan-系列" class="headerlink" title="Baichuan 系列"></a><strong>Baichuan 系列</strong></h2><h3 id="Baichuan-1"><a href="#Baichuan-1" class="headerlink" title="Baichuan 1"></a><strong>Baichuan 1</strong></h3><p>Baichuan 1 可以说是完全复用了 Llama 1 的架构。把权重的名字改一改可以完全用 baichuan 的代码来加载 llama 的权重。具体怎么修改的代码放在付费内容了，感兴趣可以看看。</p>
+<p>有如下的差异：</p>
+<ul>
+<li>llama 的 qkv 三个权重矩阵，在 baichuan 里变成了一个矩阵，相当于 qkv concat 起来了。</li>
+<li>扩充了 llama 的词表，加入了中文，词表大小为 64k，llama 1 为 32k。</li>
+<li>上下文为 4096， llama 1 为 2048.</li>
+</ul>
+<h3 id="Baichuan-2"><a href="#Baichuan-2" class="headerlink" title="Baichuan 2"></a><strong>Baichuan 2</strong></h3><p>Baichuan 2 的架构在 Llama 2 的基础上做了一些创新。</p>
+<ul>
+<li>在 lm_head 模块加了一个 norm，论文中说是可以提升效果</li>
+<li>在 13B 的模型上采用了 Alibi 位置编码。</li>
+<li>词表从 64k 扩充到了  125,696</li>
+</ul>
+<h3 id="Baichuan-3-4"><a href="#Baichuan-3-4" class="headerlink" title="Baichuan 3 &amp; 4"></a><strong>Baichuan 3 &amp; 4</strong></h3><p>没有开源。</p>
+<h2 id="Yi"><a href="#Yi" class="headerlink" title="Yi"></a><strong>Yi</strong></h2><p>yi 的架构和 llama2 一样。需要注意的是 llama2 只在更大的模型上使用了 GQA, 但是 Yi 在所有系列都用了。</p>
+<p>在经历过一些开源协议的质疑之后，<strong>现在 yi 的模型可以用 LlamaForCausalLM 加载了</strong>。</p>
+<h2 id="Qwen"><a href="#Qwen" class="headerlink" title="Qwen"></a><strong>Qwen</strong></h2><h3 id="Qwen-1"><a href="#Qwen-1" class="headerlink" title="Qwen 1"></a><strong>Qwen 1</strong></h3><p>Qwen 1 和 Llama 1 的区别如下：</p>
+<ul>
+<li>qkv 矩阵和 baichuan 类似，变成了一个 concat 后的大矩阵。</li>
+<li><strong>这个 qkv 的矩阵有 bias</strong>，这一点和大多数模型都不一样。这是因为苏剑林的一篇文章，认为加入 bias 可以提高模型的外推能力：<a target="_blank" rel="noopener" href="https://spaces.ac.cn/archives/9577">https://spaces.ac.cn/archives/9577</a></li>
+<li>词表大小为：151936</li>
+<li>训练的长度是2048， 但是通过一些外推手段来扩展长度。</li>
+</ul>
+<h3 id="Qwen-1-5"><a href="#Qwen-1-5" class="headerlink" title="Qwen 1.5"></a><strong>Qwen 1.5</strong></h3><p>其实 Qwen 1.5 开始，比起 Llama 就多了很多自己的东西，只不过 Qwen 1 仍然和 Llama 很相似，所以这里也一并写一下吧。</p>
+<p>1.5 的版本更像是在 1 的基础上做了很多扩展，重点如下：</p>
+<ul>
+<li>扩展长度到 32K</li>
+<li>sliding window attention 和 full attention 的混合</li>
+<li>32B 的模型尝试了使用 GQA</li>
+<li>tokenizer 针对代码做了一些优化。</li>
+</ul>
+<h3 id="Qwen-2"><a href="#Qwen-2" class="headerlink" title="Qwen 2"></a><strong>Qwen 2</strong></h3><p>Qwen 2 包含了 1.5 的所有改变。和 llama 2 的区别：</p>
+<ul>
+<li>qkv 矩阵有 bias</li>
+<li>全尺寸使用了 GQA</li>
+<li>上下文扩展为 32K</li>
+<li>采用了 Dual Chunk Attention with YARN</li>
+<li>还有一点就是在同等尺寸上，Qwen 2 相对于 1.5 和 1，将 MLP 模块的 hidden size 变大了，其他模块的 hidden size 变小了。以提高模型的表达的记忆能力。</li>
+<li>词表又扩充了一点点。</li>
+</ul>
+<h2 id="ChatGLM"><a href="#ChatGLM" class="headerlink" title="ChatGLM"></a><strong>ChatGLM</strong></h2><p>GLM 最开始的时候采用的是 Prefix LM，但是后来也都改成 Decoder Only LM 了。</p>
+<p>所以虽然 GLM 要早于 Llama，但是最后还是和 Llama 变得很像。上面提到的其实最像 Qwen 1.</p>
+<p>所以也说一下与 Llama 的区别：</p>
+<ul>
+<li>qkv 矩阵和 baichuan 类似，变成了一个 concat 后的大矩阵。</li>
+<li>这个 qkv 的矩阵有 bias。</li>
+</ul>
+<h2 id="MiniCPM"><a href="#MiniCPM" class="headerlink" title="MiniCPM"></a><strong>MiniCPM</strong></h2><p>目前已经转战 size 略小一点的模型，也取得了很不错的效果。</p>
+<p>我粗看其架构应该和 llama 3 差不多，区别：</p>
+<ul>
+<li>采用了 Weight Tying</li>
+<li>整体框架采用了 deep and thin 的结构。</li>
+</ul>
+<p>有个细节是，我看论文里写的词表大小为：122,753， 似乎有点非主流。因为一般都需要设置成 8 或者64 的倍数。具体可以看：<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzUyOTA5OTcwMg==&mid=2247485933&idx=1&sn=080978167f972ed3c686e417c6f792f9&chksm=fa677734cd10fe227cd6edbdf61b9e786e40df5b7d7c5e51d30b5906002ba0ec256f8f89658c&scene=21#wechat_redirect">NLP 面试八股：“Transformers &#x2F; LLM 的词表应该选多大?” 学姐这么告诉我答案</a></p>
+<h2 id="Gemma"><a href="#Gemma" class="headerlink" title="Gemma"></a><strong>Gemma</strong></h2><p>我要说 Gemma 是基于 Llama 的，Google 肯定是不承认的。</p>
+<p>Google 有不承认的底气，毕竟 Transformers 是人家搞出来的， GLU 也是人家的，MQA 和 GQA 也是人家搞出来的。</p>
+<p>最终发现 <strong>Llama 中除了 Pre-RMSNorm 和 RoPE，其他都是 Google 的成果</strong>。只能说 Google 真的是 “斗宗强者，恐怖如斯”。</p>
+<p>但是最后的架构和 Llama 其实还是很像。区别如下：</p>
+<h3 id="Gemma-1"><a href="#Gemma-1" class="headerlink" title="Gemma 1"></a><strong>Gemma 1</strong></h3><ul>
+<li>MLP 的激活采用了 GeGLU 而不是 SwiGLU</li>
+<li>采用了 MHA。但是 2 代还是换成了 GQA</li>
+<li>使用了 Weight Tying</li>
+</ul>
+<h3 id="Gemma-2"><a href="#Gemma-2" class="headerlink" title="Gemma 2"></a><strong>Gemma 2</strong></h3><ul>
+<li>MLP 的激活采用了 GeGLU 而不是 SwiGLU</li>
+<li>融合了 Local and Global Attention</li>
+<li>使用了 Weight Tying</li>
+</ul>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a><strong>其他</strong></h2><p>至于 Mistral 和 DeepseekV2 和 Llama 还是有些不太一样，所以这次就先不介绍了。</p>
+<h1 id="3-大模型一个-token-能代表几个单词和汉字？"><a href="#3-大模型一个-token-能代表几个单词和汉字？" class="headerlink" title="3. 大模型一个 token 能代表几个单词和汉字？"></a>3. 大模型一个 token 能代表几个单词和汉字？</h1><h2 id="答案"><a href="#答案" class="headerlink" title="答案"></a><strong>答案</strong></h2><p>每个模型的 Tokenizer 都不太一样，所以这个问题不能给出很精确的答案，<strong>更多的是考察一些大模型的使用经验。</strong></p>
+<p>**文末有一些目前 Tokenizer 的看法，感兴趣的可以讨论。<br>**</p>
+<p>也可以换着法子问，比如 一段一万字的 prompt，输入到最大长度为 8192 的模型，是否能正确的输出？</p>
+<p>但是每个模型的 Tokenization 都是在自己的语料上训练出来的，怎么知道具体某一个 Tokenizer 每个 token 平均代表几个汉字呢？</p>
+<p>有的模型的技术报告会在 Tokenization 那一章提供一个“压缩率” 的指标，比如 qwen 和 baichuan 的，但是有些技术报告并不会提。</p>
+<p>虽然说不同的 tokenizer 在不同的训练语料上训练的不一样，但是大家采用的方法其实无非就那么几种，感兴趣的可以看：<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzUyOTA5OTcwMg==&mid=2247486043&idx=1&sn=79c199f8a3261646963e0cb5ba66e1d3&chksm=fa677482cd10fd94a4c04f0fda46ce89edc4138e340b600eeb994ab6e7605e2f348ff0c14551&scene=21#wechat_redirect">小米面试官：“Tokenization 是什么”。封面看着眼熟</a></p>
+<p>其实只要训练语料里<strong>主要的语言一样，在大量数据的堆积下，最终的的结果差异并不大</strong>。下面会给出以 英文为主的模型和中英文为主的模型的一些结果对比。</p>
+<p>为了测试，我选择了两本小说，《孔乙己》 和 《哈利波特》第一章，分别测试不同 tokenizer 对这两篇小说的中文版和英文版的效果。</p>
+<p>结果如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739322623949-5.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>虽然这只能算是个抽样，但是也能看出一些问题。</p>
+<p>每个模型在<strong>英文上的效果基本差不太多。一个 token 大概占 0.75～0.8 个单词</strong>。这与 OpenAI 官网上写的差不多：“A helpful rule of thumb is that one token generally corresponds to ~4 characters of text for common English text. This translates to roughly ¾ of a word (so 100 tokens ~&#x3D; 75 words).” </p>
+<p><strong>国内的模型在中文语料上特训之后</strong>，中文编码的效率显著高于英文的 ChatGPT 和 Llama。<strong>一个 token 大概占1.5 个汉字。</strong></p>
+<h2 id="目前的-Tokenizer-的编码效率够么？"><a href="#目前的-Tokenizer-的编码效率够么？" class="headerlink" title="目前的 Tokenizer 的编码效率够么？"></a><strong>目前的 Tokenizer 的编码效率够么？</strong></h2><p>周一曾经写了一一篇交叉熵的文章：<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzUyOTA5OTcwMg==&mid=2247486447&idx=1&sn=975e04a89b4e3b11b782b6579b2d8de9&chksm=fa677536cd10fc209f2f2a0e30daffe49aa8075bf844679e6b02ded5131d26ec254a4d864f04&scene=21#wechat_redirect">华为面试官：“交叉熵 (cross entropy) ，KL 散度的值，到底有什么含义？”</a>， 里面有提到通信的问题。</p>
+<p><strong>如何把语料用最少的 bit 位传输给模型，其实也是个通信的问题</strong>。只不过现在模型参数的通信远高于数据的通信，所以数据 与 GPU 的通信目前还不需要优化。</p>
+<p>如果哪一天模型需要大量的输入的时候，tokenizer 的编码效率可能还会被研究。</p>
+<p>当前的 tokenization 是否是最优编码？目前只能说有最优编码的影子，但是还不完全是。</p>
+<p>比如 BPE 的算法其实就是在构建 Huffman 树，但是构建了之后仍然采用了相同比特位数来编码。这么做的好处省去了解码的过程，直接查表就获取到了 Embedding，但是其实引入解码这点计算量也算不了啥。坏处就是通信上其实还有优化的空间。</p>
+<p>还有一点就是<strong>中文的编码效率其实理论上还可以更高</strong>，因为<strong>目前所有的处理流程都是按照英文的流程来的。</strong></p>
+<p>比如 subword，对中文就完全没生效啊。之前也举过一个例子，oarfish 我虽然不知道是啥，但是猜测是条鱼。对于中文来说，“鲥”这个字我可能也不认识，但是我也猜测这是条鱼，但是这个字在中文肯定被表示成 bytes 了，就没啥意义了。</p>
+<p>所以中文如何高效的编码，也应该是一个研究课题，我甚至感觉中文这种二维的文字，应该和图像的 tokenizer 有某种联系，比如在训练的时候，除了 id embedding，还有这个字对应的图片信息的 embedding。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739322635546-8.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>我也不知道这个想法之前有没有人提过，要是没有的话，后续有人研究 id embedding + token image embedding 的话，可以引用一下这篇</p>
+<h1 id="4-交叉熵-cross-entropy-，KL-散度的值，到底有什么含义？"><a href="#4-交叉熵-cross-entropy-，KL-散度的值，到底有什么含义？" class="headerlink" title="4. 交叉熵 (cross entropy) ，KL 散度的值，到底有什么含义？"></a>4. 交叉熵 (cross entropy) ，KL 散度的值，到底有什么含义？</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/KQUDz8cP95RQpHVl7TpaVA">华为面试官：“交叉熵 (cross entropy) ，KL 散度的值，到底有什么含义？”</a></p>
+<h1 id="5-说一下-DPO-的原理。"><a href="#5-说一下-DPO-的原理。" class="headerlink" title="5. 说一下 DPO 的原理。"></a>5. 说一下 DPO 的原理。</h1><h2 id="简易版答案"><a href="#简易版答案" class="headerlink" title="简易版答案"></a><strong>简易版答案</strong></h2><ol>
+<li>RLHF 的目的是求一个最优的policy，但是因为 RLHF 的整体上的流程不可微,虽然可以用 TRPO&#x2F;PPO 等策略梯度算法来优化，但是很耗资源。</li>
+<li>DPO 重新定义了问题，将<strong>求解最优的 policy 变成了求解 reward model</strong>。</li>
+<li>在求解 reward model 的过程中，又很巧妙的去掉了无法计算的部分，整个求解过程也是可微的。</li>
+<li>DPO 理论上非常漂亮，实际使用中也能用少量资源达到不错的效果，但是也有很多值得注意的地方。</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/PSo9d0VtHiAGYiZUPVasmg">阿里大模型原题：“请讲述一下 DPO 的原理”</a></p>
+<h1 id="6-RLHF-为什么不直接对-loss-进行梯度下降来求解？"><a href="#6-RLHF-为什么不直接对-loss-进行梯度下降来求解？" class="headerlink" title="6. RLHF 为什么不直接对 loss 进行梯度下降来求解？"></a>6. RLHF 为什么不直接对 loss 进行梯度下降来求解？</h1><h2 id="从强化学习说起"><a href="#从强化学习说起" class="headerlink" title="从强化学习说起"></a><strong>从强化学习说起</strong></h2><p>这里先简单讲述一下强化学习和 RLHF，来了解一下 RLHF 的 loss 是怎么来的。</p>
+<p><strong>强化学习的目标</strong>：假设我们有探索一个未知环境(environment)的执行代理(agent)，这个代理可以通过与环境互动来获取一定奖励。代理应当对所执行的动作(action)有所偏好，<strong>以最大化累计收益</strong>。</p>
+<h3 id="举个一般的例子"><a href="#举个一般的例子" class="headerlink" title="举个一般的例子** **"></a><strong>举个一般的例子</strong>**<img src="https://mmbiz.qpic.cn/mmbiz_png/GCNbdU0ticibrzmX72vYuH2tEEdRhofUpOVuus8aHTM1qZiamoCj59Pr0BWegtBadzWLrePZzuYOvrMib13DXAcVEA/640?wx_fmt=png&from=appmsg" srcset="/img/loading.gif" lazyload alt="img"> **</h3><p>利用上面的例子来说明一些强化学习的基本概念。</p>
+<ul>
+<li><p>Agent: Robot</p>
+</li>
+<li><p>State：position (x, y)</p>
+</li>
+<li><p>Action: 移动到下一个格子</p>
+</li>
+<li><p>Reward model：</p>
+<ul>
+<li>移动到空白格子：0分</li>
+<li>移动到火上：-10分</li>
+<li>移动到钻石：+100分</li>
+</ul>
+</li>
+<li><p>Policy：</p>
+<ul>
+<li>假设action只由状态决定$\pi(a|s)$</li>
+</ul>
+<h3 id="语言模型的例子"><a href="#语言模型的例子" class="headerlink" title="语言模型的例子"></a><strong>语言模型的例子</strong></h3><p>在语言模型中，对应的强化学习的概念如下：</p>
+<ul>
+<li>Agent:  语言模型</li>
+<li>State：the prompt (input tokens)</li>
+<li>Action:  下一个 token 是什么</li>
+<li>Reward model：<ul>
+<li>人类给生成的结果打分，来确定好坏</li>
+</ul>
+</li>
+<li>Policy：<ul>
+<li>语言模型本身，因为语言模型的建模就是跟进前面的token去预测下一个。</li>
+</ul>
+</li>
+</ul>
+<h2 id="RLHF"><a href="#RLHF" class="headerlink" title="RLHF"></a><strong>RLHF</strong></h2><p>RLHF 是利用人类的反馈训练了一个reward model，其流程如下：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/GCNbdU0ticibrzmX72vYuH2tEEdRhofUpOiaWLeccesLU5fCJwLCjv9WxexprBpKb1dglaXz7GHVXl0VmOocsLFqw/640?wx_fmt=png&from=appmsg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>RLHF 也是强化学习，所以最终要<strong>求一个最优的 Policy</strong>，其优化目标如下：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250212101125829.png" srcset="/img/loading.gif" lazyload alt="RLHF"></p>
+<p>公式的第一部分是强化学习的目标，那就是<strong>最大化奖励</strong>。</p>
+<p>公式的第二部分是一个 <strong>KL 散度，用来约束模型要尽可能和优化前的模型接近</strong>。</p>
+<p>KL 散度用来刻画两个分布的距离，KL 散度越大代表两个分布越不一样。之所以要加上 KL 散度的约束，是因为模型的优化都是贪婪的，如果没有 KL 散度的约束，那训练会一直往 reward model 定义的方向去优化，最后就只会输出reward 分数最高的那一部分结果。那最后模型就只会输出“好好好”，“很赞”这一类无意义的话，通过大量数据训练，花了那么多钱训练出来的base model 的能力都会丢失，变成了电子垃圾。</p>
+<h2 id="为什么不直接对-loss-求梯度"><a href="#为什么不直接对-loss-求梯度" class="headerlink" title="为什么不直接对 loss 求梯度"></a><strong>为什么不直接对 loss 求梯度</strong></h2><p>核心原因就是<strong>因为 loss 或者优化目标不可微</strong>，看一下优化目标的红色框部分：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/GCNbdU0ticibrzmX72vYuH2tEEdRhofUpOfx6Uwkx4YBzMzX2wvtmnHvDXrQcpdzlC5sLIQgdk70kTybxJibvQegA/640?wx_fmt=png&from=appmsg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>这里的 y 是采样出来的，可能是 greedy，beam search 等，这个操作在词汇表上进行采样或选择，而不是产生一个连续的、可微分的输出。所以也就没法直接使用梯度下降，而是用 PPO等策略梯度来求解。</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Qxue1q9n9q06HLg_ijjqRw">头条大模型面试：“RLHF 为什么不直接对 loss 进行梯度下降来求解？”</a></p>
+<h1 id="7-为什么现在深度学习都用-ResNet"><a href="#7-为什么现在深度学习都用-ResNet" class="headerlink" title="7. 为什么现在深度学习都用 ResNet?"></a>7. 为什么现在深度学习都用 ResNet?</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/8dEl63KBB_AHx8p1KaGnWA">字节大模型一面：“为什么现在深度学习都用 ResNet?”</a></p>
+<h1 id="8-KV-Cache-原理是什么？"><a href="#8-KV-Cache-原理是什么？" class="headerlink" title="8. KV Cache 原理是什么？"></a>8. KV Cache 原理是什么？</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/mKdliGu4WhUx4PHatBpewA">阿里大模型面试原题：“ KV Cache 原理是什么？”</a></p>
+<h1 id="9-共享权重如何求梯度？"><a href="#9-共享权重如何求梯度？" class="headerlink" title="9. 共享权重如何求梯度？"></a>9. 共享权重如何求梯度？</h1><p>之前的文章：<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzUyOTA5OTcwMg==&mid=2247486000&idx=1&sn=74abbd3c3306652d86319c0239d8b644&chksm=fa6774e9cd10fdff2f404f54335b8f886cfa495390843ce7f7a16b16c8e86c02ddb1d8273739&scene=21#wechat_redirect">阿里面试官：“Transformers 中的 Weight Tying 是什么?”</a>中有提到过 Weight Tying 技术。把 Embedding 层和最后的 LM Head 层进行了共享，假设共享的矩阵为 W。</p>
+<p>我们知道反向传播是一层一层从后往前计算的，但是权重 W 最开始就要计算梯度，然后传播到最后还要计算梯度。</p>
+<p>W 的梯度，到底是计算了一次还是计算了两次？</p>
+<p>如果是计算了2次，那两次权重是怎么更新的呢？</p>
+<p>其实，可以先考虑一个简单一点的例子，就知道答案。</p>
+<p>假设<br>$$<br>f(x)&#x3D;xy<br>$$</p>
+<p>$$<br>g(x)&#x3D;xf(x)<br>$$</p>
+<p>求 g(x) 对于 x 的导数。这个例子我们一种做法是把式子展开<br>$$<br>g(x)&#x3D;x\times x\times y&#x3D;x^2y<br>$$<br>很容易知道<br>$$<br>g^{\prime}(x)&#x3D;2xy<br>$$<br>但是实际神经网络反向传播的计算中，并不是全展开了才进行计算，而是迭代的计算。我们换一种思路来求解：<br>$$<br>\begin{aligned}g^{\prime}(x)&amp;&#x3D;x^{\prime}f(x)+xf^{\prime}(x)\&amp;&#x3D;f(x)+x\times y\&amp;&#x3D;xy+xy&#x3D;2xy\end{aligned}<br>$$<br>所以我们就大概猜到，<strong>共享权重执行了2次计算，然后结果相加</strong>。下面举个具体的例子来说明：</p>
+<p>我们假设有一个三层的神经网络，第一层的权重和第三层的权重是共享的，来模拟 Weight Tying 的情况。<br>$$<br>\begin{aligned}h_1&amp;&#x3D;\mathrm{ReLU}(W_1x+b_1)\h_2&amp;&#x3D;\mathrm{ReLU}(W_2h_1+b_2)\y&amp;&#x3D;W_1^Th_2+b_3\end{aligned}<br>$$<br>假设损失函数为<br>$$<br>L&#x3D;\frac1{NM}\sum_{i&#x3D;1}^N\sum_{j&#x3D;1}^M(y_{ij}-y_{true,ij})^2<br>$$<br>其反向传播的公式为：<br>$$<br>\begin{aligned}&amp;\frac{\partial L}{\partial y}&#x3D;\frac{2(y-y_{true})}{NM}\&amp;\frac{\partial L}{\partial h_2}&#x3D;W_1\frac{\partial L}{\partial y}\odot I(h_2&gt;0)\&amp;\frac{\partial L}{\partial W_2}&#x3D;\frac{\partial L}{\partial h_2}h_1^T\&amp;\frac{\partial L}{\partial h_1}&#x3D;W_2^T\frac{\partial L}{\partial h_2}\odot I(h_1&gt;0)\&amp;\frac{\partial L}{\partial W_1}&#x3D;\frac{\partial L}{\partial h_1}x^T+\left(\frac{\partial L}{\partial y}h_2^T\right)^T\end{aligned}<br>$$</p>
+<h2 id="Pytorch-等框架怎么计算？"><a href="#Pytorch-等框架怎么计算？" class="headerlink" title="Pytorch 等框架怎么计算？"></a><strong>Pytorch 等框架怎么计算？</strong></h2><p>上面只是从原理上进行演示，但是 pytorch，tensorflow 等工具并不是像上面那样一步一步通过公式推导来进行计算的。<strong>而是通过 autograd 的技术来进行</strong>。</p>
+<p>autograd 细节很多，但是大体上可以理解为整个神经网络都抽象成一个计算图，然后每个节点都有对应的前向传播的计算逻辑，还有对应的反向传播的计算逻辑。整个计算都是在计算图上流动。</p>
+<p>对于上面的小例子，对应的反向传播的计算图如下：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739327000639-14.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>从这里，可以更清楚的看到，<strong>共享权重的梯度，在最后是有合并操作的</strong>。</p>
+<h2 id="代码演示"><a href="#代码演示" class="headerlink" title="代码演示"></a><strong>代码演示</strong></h2><p>我们和 pytorch 内部的反向传播进行比较，可以看到，与pytorch 的结果一样。</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/GCNbdU0ticibqaeLFAy6A5j4iaSyINZ59uDjWtJjulAIObjz7ZOmq6TRSibgGicZ6AjHteyNx6YFdPOczIDibHZXvJmQ/640?wx_fmt=png&from=appmsg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Custom</span> vs PyTorch gradients:<br><span class="hljs-attribute">W1</span>:<br>  <span class="hljs-attribute">Custom</span> grad mean: -<span class="hljs-number">2</span>.<span class="hljs-number">979950</span><br>  <span class="hljs-attribute">PyTorch</span> grad mean: -<span class="hljs-number">2</span>.<span class="hljs-number">979950</span><br>  <span class="hljs-attribute">Mean</span> difference: <span class="hljs-number">0</span>.<span class="hljs-number">000000</span><br><span class="hljs-attribute">W2</span>:<br>  <span class="hljs-attribute">Custom</span> grad mean: <span class="hljs-number">5</span>.<span class="hljs-number">116329</span><br>  <span class="hljs-attribute">PyTorch</span> grad mean: <span class="hljs-number">5</span>.<span class="hljs-number">116329</span><br>  <span class="hljs-attribute">Mean</span> difference: <span class="hljs-number">0</span>.<span class="hljs-number">000000</span><br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/98DzW-3fjDA7ZgKS2NtajQ">字节大模型面试原题：共享权重如何求梯度？</a></p>
+<h1 id="10-BF16-和-FP16-的区别？"><a href="#10-BF16-和-FP16-的区别？" class="headerlink" title="10. BF16 和 FP16 的区别？"></a>10. BF16 和 FP16 的区别？</h1><h2 id="浮点数如何表示"><a href="#浮点数如何表示" class="headerlink" title="浮点数如何表示"></a><strong>浮点数如何表示</strong></h2><p>计算机是二进制的世界，所以浮点数也是用二进制来表示的，与整型不同的是，浮点数通过3个区间来表示。</p>
+<p>这三个区间分别是 sign，exponent，fraction.</p>
+<p>浮点数的计算逻辑如下，以 BF16 举例（图中的数字是BF16中最接近π的）</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739327166736-17.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="sign-表示正负，和整型一样。"><a href="#sign-表示正负，和整型一样。" class="headerlink" title="sign 表示正负，和整型一样。"></a><strong>sign 表示正负，和整型一样。</strong></h3><p>1表示正数，0表示负数。</p>
+<h3 id="exponent-用来确定数字的范围"><a href="#exponent-用来确定数字的范围" class="headerlink" title="exponent 用来确定数字的范围"></a><strong>exponent 用来确定数字的范围</strong></h3><p>如果这一部分有 k 个bit，这 k 个 bit 的二进制表示的数字为 x，那么这一部分表示的值为$2^{x-(2^{k-1}-1)}$。<strong>所以 k 越大，浮点数能表示的范围就越大</strong>。</p>
+<h3 id="fraction-部分用来确定精度"><a href="#fraction-部分用来确定精度" class="headerlink" title="fraction 部分用来确定精度"></a><strong>fraction 部分用来确定精度</strong></h3><p>浮点数的表示，会有一个规范化的动作，那就是所有的数字都会先规范化为 $1.abc\times2^z$​这种表示。</p>
+<p>比如数字 10.0， 表示成二进制是 B1010.0，要变成 B1010.0 &#x3D; B1.010 * 23。前面的 B 代表的是二进制的表示。所以实际上 10.0 在二进制里是<br>$$<br>2^3\times(1\times2^0+0\times2^{-1}+1\times2^{-2}+0<em>2^{-3})&#x3D;8</em>1.25&#x3D;10.0<br>$$<br>而后面这个 1.abc 就是fraction。假设 faction 有 n 个bit，这些 bit 表示的数字为 y，则 fraction 部分代表的数字为$1+\frac y{2^n}$</p>
+<p><strong>fraction 的位数越多</strong>，就代表有更小的$2^{-i}$  参加运算，就可以切割的越细，<strong>能表示的精度就越高</strong>。</p>
+<h3 id="最终结果"><a href="#最终结果" class="headerlink" title="最终结果"></a><strong>最终结果</strong></h3><p>浮点数的最终结果由上面3部分组合而成, 假设 exponent 有 k 个 bit，bit 的表示的数为 x；faction 有 n 个bit，这些 bit 表示的数字为 y，则表示的浮点数为<br>$$<br>\mathrm{sign}\times2^{x-(2^{k-1}-1)}\times(1+\frac y{2^n})<br>$$</p>
+<h2 id="BF16-vs-FP16"><a href="#BF16-vs-FP16" class="headerlink" title="BF16 vs FP16"></a>BF16 vs FP16</h2><p>有了上面的基础知识，就很容易知道 BF16 和 FP16 的区别了。</p>
+<p>BF16 一共 16 bit，sign 占 1 bit，exponent 占 8 bit， fraction 占 7 bit。</p>
+<p>FP16 一共 16 bit，sign 占 1 bit，exponent 占 5 bit， fraction 占 10 bit。</p>
+<p>如下图：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739327377568-20.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>对比 FP16，可以认为 BF16 从 fraction 挪了 3 位给了 exponent。为什么 exponent 选择 8 bit 呢？因为 FP32 的 exponent 是 8 bit。</p>
+<p>所以 BF16 能表示的数字范围更大，但是表示的精度更低。FP16 表示的数字范围更小，但是表示的精度更高。</p>
+<p>具体差多少呢？可以看下表：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739327386996-23.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>这个表能直观的看到表示范围的差异，<strong>BF16 最大可以表示 3.39e+38， 但是 FP16 最大只能表示65504.0</strong></p>
+<p>但是精度感觉不太出来，好像 roundoff 也差别没那么大。</p>
+<p>但是当数字很大后，所表示的数字就会出现很大的间隔。</p>
+<p>以数字 <strong>19968.0</strong> 举例</p>
+<ul>
+<li>BF16 可以表示这个数字，<strong>但是 BF16 可表示的下一个数字是 20096.0</strong>, (19958, 20096) 这里面的数字 在 FB16 的世界中是不存在的。</li>
+<li><strong>FP16 可表示的下一个数字是 19984.0</strong>，这个要比 BF16 要好一些了，但是仍然有不小的间隔。</li>
+<li><strong>FP32 可以表示的下一个数字是 19968.001953125</strong>，FP32 的表示则要好很多，最起码能表示到小数点后3位左右。</li>
+</ul>
+<p>神经网络的训练过程中，训练的稳定性很重要，如果用 FP16，则会经常溢出，所以采用 BF16 是个不错的选择，但是精度会损失很多，影响收敛速度。很多数值敏感的运算最好还是采用 FP32，可以采用混合精度训练。还有个问题就是 BF16 目前并不是所有的硬件都支持，但是目前越来越多的硬件都开始支持了。</p>
+<p>FP16 则很适合推理，算的快，精度也不错，通信也少。</p>
+<p>当然有钱有资源还是用 FP32，上面都是想省钱的产物，各有优缺点。</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/8KtcgNuafBj2K3_gnzv0aw">华为大模型面试原题：BF16 和 FP16 的区别？</a></p>
+<p>文章合集：<a target="_blank" rel="noopener" href="https://github.com/chongzicbo/ReadWriteThink/tree/main">chongzicbo&#x2F;ReadWriteThink: 博学而笃志，切问而近思 (github.com)</a></p>
+<p>个人博客：<a href="https://chongzicbo.github.io/">程博仕</a></p>
+<p>微信公众号：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg" srcset="/img/loading.gif" lazyload alt="微信公众号"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/" class="category-chain-item">笔试面试</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/" class="category-chain-item">AI算法</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/" class="category-chain-item">nlp</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/nlp/" class="print-no-link">#nlp</a>
+      
+        <a href="/tags/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/" class="print-no-link">#笔试面试</a>
+      
+        <a href="/tags/%E7%AE%97%E6%B3%95%E9%9D%A2%E8%AF%95/" class="print-no-link">#算法面试</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>公众号“看图学”试题合集（3）</div>
+      <div>https://chongzicbo.github.io/2025/02/12/笔试面试/AI算法/nlp/AI笔试面试题003：公众号“看图学”题目合集（3）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>程博</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>February 12, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/02/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98004%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%884%EF%BC%89/" title="公众号“看图学”试题合集（4）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">公众号“看图学”试题合集（4）</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/11/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98002%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%882%EF%BC%89/" title="公众号“看图学”试题合集（2）">
+                        <span class="hidden-mobile">公众号“看图学”试题合集（2）</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="笔试面试"
+        id="heading-c0a64144467cb7c553d64e018103720a" role="tab" data-toggle="collapse" href="#collapse-c0a64144467cb7c553d64e018103720a"
+        aria-expanded="true"
+      >
+        笔试面试
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-c0a64144467cb7c553d64e018103720a"
+           role="tabpanel" aria-labelledby="heading-c0a64144467cb7c553d64e018103720a">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="AI算法"
+        id="heading-497d6b71d600944e9158c90081f69bcd" role="tab" data-toggle="collapse" href="#collapse-497d6b71d600944e9158c90081f69bcd"
+        aria-expanded="true"
+      >
+        AI算法
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-497d6b71d600944e9158c90081f69bcd"
+           role="tabpanel" aria-labelledby="heading-497d6b71d600944e9158c90081f69bcd">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="nlp"
+        id="heading-4c5adbed16b4c9d16698f71cca4218cb" role="tab" data-toggle="collapse" href="#collapse-4c5adbed16b4c9d16698f71cca4218cb"
+        aria-expanded="true"
+      >
+        nlp
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-4c5adbed16b4c9d16698f71cca4218cb"
+           role="tabpanel" aria-labelledby="heading-4c5adbed16b4c9d16698f71cca4218cb">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2025/02/10/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98001%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%881%EF%BC%89/" title="公众号“看图学”试题合集（1）"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">公众号“看图学”试题合集（1）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/02/11/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98002%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%882%EF%BC%89/" title="公众号“看图学”试题合集（2）"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">公众号“看图学”试题合集（2）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/02/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98003%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%883%EF%BC%89/" title="公众号“看图学”试题合集（3）"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">公众号“看图学”试题合集（3）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/02/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98004%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%884%EF%BC%89/" title="公众号“看图学”试题合集（4）"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">公众号“看图学”试题合集（4）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/02/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98005%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%885%EF%BC%89/" title="公众号“看图学”试题合集（5）"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">公众号“看图学”试题合集（5）</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/chongzicbo" target="_blank" rel="nofollow noopener"><span>Github</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,1217 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/daxiong.jpg">
+  <link rel="icon" href="/img/daxiong.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="程博">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1.  RoPE 旋转位置编码这么解释 RoPE 旋转位置编码，女朋友睁大了双眼（上） RoPE 旋转位置编码，详细解释（下）NLP 面试的女生彻底说明白了 初中生能看懂的绝对位置编码和旋转位置编码（RoPE），甚至会认表的小学生也行 2. Transformers 中的 Layer Norm 可以并行么？NLP 面试八股：“Transformers 中的 Layer Norm 可以并行么？” 拿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="公众号“看图学”试题合集（5）">
+<meta property="og:url" content="https://chongzicbo.github.io/2025/02/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98005%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%885%EF%BC%89/index.html">
+<meta property="og:site_name" content="程博仕">
+<meta property="og:description" content="1.  RoPE 旋转位置编码这么解释 RoPE 旋转位置编码，女朋友睁大了双眼（上） RoPE 旋转位置编码，详细解释（下）NLP 面试的女生彻底说明白了 初中生能看懂的绝对位置编码和旋转位置编码（RoPE），甚至会认表的小学生也行 2. Transformers 中的 Layer Norm 可以并行么？NLP 面试八股：“Transformers 中的 Layer Norm 可以并行么？” 拿">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739341227340-72.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739341171523-57.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739341181726-60.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739341188848-63.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739341197081-66.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739341208959-69.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
+<meta property="article:published_time" content="2025-02-12T08:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-13T05:58:51.674Z">
+<meta property="article:author" content="程博">
+<meta property="article:tag" content="nlp">
+<meta property="article:tag" content="笔试面试">
+<meta property="article:tag" content="算法面试">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739341227340-72.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>公众号“看图学”试题合集（5） - 程博仕</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":"3841b375bfdd5627f0f840e1e289416e","google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?3841b375bfdd5627f0f840e1e289416e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>程博仕</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>笔试面试</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>计算机基础</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F" target="_self">
+                    
+                    <span>操作系统</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C" target="_self">
+                    
+                    <span>计算机网络</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>人工智能</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/asr" target="_self">
+                    
+                    <span>语音识别</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>开发</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91" target="_self">
+                    
+                    <span>音视频</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/web&#39;" target="_self">
+                    
+                    <span>Web开发</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>文章分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>时间轴</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="公众号“看图学”试题合集（5）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        程博
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-12 16:00" pubdate>
+          February 12, 2025 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.9k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          16 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">公众号“看图学”试题合集（5）</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    Last updated on February 13, 2025 pm
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-RoPE-旋转位置编码"><a href="#1-RoPE-旋转位置编码" class="headerlink" title="1.  RoPE 旋转位置编码"></a>1.  RoPE 旋转位置编码</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/57NF280gvfM7MR0UqSx3Uw">这么解释 RoPE 旋转位置编码，女朋友睁大了双眼（上）</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/pH6MSDyllZREq5v-Bevrqg">RoPE 旋转位置编码，详细解释（下）NLP 面试的女生彻底说明白了</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/lYXNXvQHWtm7faVJvUKOew">初中生能看懂的绝对位置编码和旋转位置编码（RoPE），甚至会认表的小学生也行</a></p>
+<h1 id="2-Transformers-中的-Layer-Norm-可以并行么？"><a href="#2-Transformers-中的-Layer-Norm-可以并行么？" class="headerlink" title="2. Transformers 中的 Layer Norm 可以并行么？"></a>2. Transformers 中的 Layer Norm 可以并行么？</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/mr2t3w6-sb7cEgNnxoPXVQ">NLP 面试八股：“Transformers 中的 Layer Norm 可以并行么？” 拿到 offer 的女同学这样回答</a></p>
+<h1 id="3-大模型常用的-Normalization-都有什么？"><a href="#3-大模型常用的-Normalization-都有什么？" class="headerlink" title="3. 大模型常用的 Normalization 都有什么？"></a>3. 大模型常用的 Normalization 都有什么？</h1><ul>
+<li>LayerNorm</li>
+<li>RMSNorm</li>
+<li>DeepNorm</li>
+<li>BatchNorm</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/pvXuWi3F4UJj7JkGuzHlRA">NLP面试官：“大模型常用的 Normalization 都有什么？ ” 算法女生表示易如反掌</a></p>
+<h1 id="4-Transformers-中为什么使用-Layer-Norm"><a href="#4-Transformers-中为什么使用-Layer-Norm" class="headerlink" title="4. Transformers 中为什么使用 Layer Norm"></a>4. Transformers 中为什么使用 Layer Norm</h1><h2 id="为什么使用-Layer-Norm"><a href="#为什么使用-Layer-Norm" class="headerlink" title="为什么使用 Layer Norm"></a>为什么使用 Layer Norm</h2><p>不仅仅是使用 Layer Norm，各种 Normalize 的操作，首先是<strong>为了保证训练的稳定性。</strong>因为当神经网络很深的时候，反向传播的参数计算往往都是指数级的变化，太大或者太小的数值送入激活函数后就容易造成梯度消失或者梯度爆炸，训练就挂了。</p>
+<p>其次是<strong>加速模型的收敛</strong>。这个也比较容易理解，模型的每一层都在拟合一个数据分布，而如果不进行 normalize，那么每次的输入分布可能随时都在变化，这样学习起来就很困难。在 normalize 之后，绝大部分数值都集中在了一个可接受的范围内，每一层的参数就安心拟合这个分布就好了，这个范围正好又是激活函数的“舒适区”，所以模型收敛速度会更快。</p>
+<p>还有一个额外的好处就是<strong>让模型的训练不再那么依赖权重的初始化</strong>，早期的时候初始化对模型结果的影响还是蛮大的，也是个很火热的研究方向。就包括现在也有很多研究，比如 torch.manual_seed(3407) is all you need</p>
+<h2 id="为什么不用-Batch-Norm"><a href="#为什么不用-Batch-Norm" class="headerlink" title="为什么不用 Batch Norm*"></a>为什么不用 Batch Norm*</h2><p>其实在 Transformers 论文刚出的那个时间点，就是两种 Normalize 比较流行，早一点提出的是 Batch Norm, 后来是 Layer Norm, 至于再后来的 Instance Norm 和 Group Norm 等都可以认为是这两种基础上的扩展。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739341227340-72.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>当时 Batch Norm 在 CV 领域比较流行，而 NLP 则使用 Layer Norm 比较多。但也并不是一定要按照任务这么划分。</p>
+<p>当时为什么 CV 都使用 Batch Norm 呢？我个人觉得是因为站在 CNN 卷积核的计算方式上看，在 Batch 上进行 Normalize 是比较契合的，因为这样每个卷积核在计算的时候数据的 Normalize 的方式是一样的。</p>
+<p>但是 Batch Norm 也有些问题，下面简单说几点：</p>
+<ol>
+<li><strong>Batch 需要大</strong>，小的 Batch 训练不稳定。因为 Batch Norm 需要跨样本的 Normalize，所以采样要足够大才能捕捉到样本的分布。</li>
+<li>加大 Batch 有一些副作用。一个最明显的问题，那就是现在模型越来越大，如果想实现多机多卡的 GPU 并行，<strong>那 Batch Norm 需要额外的通信</strong>，因为一个 Batch 很可能分布在不同的机器上，而 Normalize 又需要计算整个样本的数据分布才行。现在大概有两种解法，一种是类似 mini batch，放弃跨机器通信；一种是 Pytorch 实现的 SyncBatchNorm，在前面的基础上尽量减少通信的数据。但是不管怎么样，额外的通信开销在模型足够大的时候也是个问题。</li>
+<li><strong>训练和预测的不一致性</strong>。训练的时候有大批的数据可以组成 Batch，但是预测的时候，我如果只想预测一个样本，那 Batch Norm 就废了。所以在预测的时候实际上是采用了训练时候的数据分布来进行 Normalize 的。这样就必须要保证训练和预测的分布必须一致，泛化能力没那么强。</li>
+<li>并不适合当时的 NLP 主流框架比如 RNN。</li>
+<li><strong>并不太适合长度不固定的 NLP 序列</strong>。因为每个 Batch 最后总有些 pad，这些 pad 会干扰 Batch Norm 的数据分布。如果把 pad 都不参与计算，那就相当于 batch 越来越小，根据第一条也不太好。</li>
+</ol>
+<p>关于数据分布还有 Batch 的讨论，可以看下论文 Facebook 的《Rethinking “Batch” in BatchNorm》，其中还提到了 Batch 内的信息泄漏等问题，感兴趣的可以阅读一下原始的论文。</p>
+<p>所以说 Layer Norm 改成了按 特征 来 Normalize，可以很好的处理小 Batch 和变长输入的问题，也没有额外的通信，可以说基本解决了上面的问题。</p>
+<p>所以后来 Layer Norm 越来越流行， Batch Norm 反而不太用了，尤其是大模型时代一直在追求更高的训练效率， Batch Norm 的额外通信就有些不合时宜了。当然现在大模型也有其他的 Normalize 方法，比如 RMSNorm、DeepNorm 等。</p>
+<h2 id="实验论证1：Transformers-使用-Batch-Norm-效果并不太好"><a href="#实验论证1：Transformers-使用-Batch-Norm-效果并不太好" class="headerlink" title="实验论证1：Transformers 使用 Batch Norm 效果并不太好"></a>实验论证1：Transformers 使用 Batch Norm 效果并不太好</h2><p>上面说了一些 Batch Norm 和 Layer Norm 的对比，有人可能会说你这都是理论上的，有证据么？还真有，2020年的一篇论文专门测试了把 Transformers 中的 Layer Norm 变成了 Batch Norm，打了个擂台。论文的名字是《PowerNorm: Rethinking Batch Normalization in Transformers》</p>
+<p>这篇论文中，作者发现 Transformers 中的 LayerNorm 换成 Batch Norm 后，在分类和机器翻译的任务上性能下降明显。如下图</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739341171523-57.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>可以看出，Batch Norm 效果并不太好。分析其原因呢，作者指出采用 Batch Norm 的 Transformers， 其 Batch Norm 的均值和方差震荡明显，并不稳定，所以收敛的就很慢。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739341181726-60.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739341188848-63.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>当然作者后来对 BN 进行了改进，提出了 PowerNorm, 感兴趣的可以看看。</p>
+<h2 id="实验论证2：Layer-Norm-会改善-Transformers-的注意力"><a href="#实验论证2：Layer-Norm-会改善-Transformers-的注意力" class="headerlink" title="实验论证2：Layer Norm 会改善 Transformers 的注意力"></a><strong>实验论证2：Layer Norm 会改善 Transformers 的注意力</strong></h2><p>来自2023年的论文：《On the Expressivity Role of LayerNorm in Transformers’ Attention》</p>
+<p>这篇文章在<strong>较小的 Transformers 模型</strong>上做了实验，发现 Layer Norm 为 Attention 提供了两个功能</p>
+<ol>
+<li>Projection：会将输入投影到 query 和 key 正交的超平面，这样方便所有的 key 可以同等访问。</li>
+<li>Scaling：每一个 Key 都能被选中，都有机会获得最高分。</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739341197081-66.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>Layer Norm 的存在可以让 Attention 不用自己去学习这两点。<strong>但是随着模型规模的增大，这个辅助作用是被削弱的</strong>，也就是模型能自己学会这两点。但是仍旧从一个比较有意思的角度阐述了 Layer Norm 的作用。</p>
+<h2 id="实验论证3-Layer-Norm-在图像中表现怎么样？"><a href="#实验论证3-Layer-Norm-在图像中表现怎么样？" class="headerlink" title="实验论证3: Layer Norm 在图像中表现怎么样？"></a><strong>实验论证3: Layer Norm 在图像中表现怎么样？</strong></h2><p>2018年，何凯明提出的 《Group Normalization》对 ResNet 中使用不同的 Normalize 方式进行了对比，可以看出 Layer Norm 是不如 Batch Norm 的</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739341208959-69.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>在 Transformers 大火后，CV 领域也开始使用 Transformers，Vit 中使用的就是 Layer Norm.</p>
+<p>2022年的一篇文章，也是何凯明之前所在的 FAIR 小组，发表了论文《A ConvNet for the 2020s》，论文里表示，在借鉴了一些 Vision Transformers 的思想对 ConvNet 修改后，使用 LayerNorm 效果比 Batch Norm 还要好一点。</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/qbRaF2ilz0fT-Mi0GokAmQ">NLP面试官：“Transformers 中为什么使用 Layer Norm ” 算法女生这么回答轻松拿下</a></p>
+<h1 id="5-Transformers-中的-Position-Embedding-的作用"><a href="#5-Transformers-中的-Position-Embedding-的作用" class="headerlink" title="5. Transformers 中的 Position Embedding 的作用"></a>5. Transformers 中的 Position Embedding 的作用</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/TsSxAkab1uWyePLNEZoHHw">NLP面试官：“Transformers 中的 Position Embedding 的作用” 算法女生这么回答就很赞</a></p>
+<h1 id="6-Transformers-中-FFN-的作用"><a href="#6-Transformers-中-FFN-的作用" class="headerlink" title="6. Transformers 中 FFN 的作用"></a>6. Transformers 中 FFN 的作用</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/dLTHD05wezA5pAM2c4j07Q">NLP面试官：“Transformers 中 FFN 的作用” 算法女生这么回答下午就想安排入职</a></p>
+<h1 id="7-Attention为什么要除以根号d"><a href="#7-Attention为什么要除以根号d" class="headerlink" title="7. Attention为什么要除以根号d"></a>7. Attention为什么要除以根号d</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/3o0NgpFPKS1RNICNuMuygg">NLP面试官：“Attention为什么要除以根号d” 算法女生这么回答当场想发 offer</a></p>
+<h1 id="8-如何根据模型参数量估计需要的显存？"><a href="#8-如何根据模型参数量估计需要的显存？" class="headerlink" title="8. 如何根据模型参数量估计需要的显存？"></a>8. 如何根据模型参数量估计需要的显存？</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/edOUscAzAPqqLUSh_H_KJQ">如何根据模型参数量估计需要的显存？</a></p>
+<h1 id="9-如何让大模型处理更长的文本？"><a href="#9-如何让大模型处理更长的文本？" class="headerlink" title="9. 如何让大模型处理更长的文本？"></a>9. 如何让大模型处理更长的文本？</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Flm8cO_RQvVnsl9noN-87g">如何让大模型处理更长的文本？</a></p>
+<p>文章合集：<a target="_blank" rel="noopener" href="https://github.com/chongzicbo/ReadWriteThink/tree/main">chongzicbo&#x2F;ReadWriteThink: 博学而笃志，切问而近思 (github.com)</a></p>
+<p>个人博客：<a href="https://chongzicbo.github.io/">程博仕</a></p>
+<p>微信公众号：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg" srcset="/img/loading.gif" lazyload alt="微信公众号"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/" class="category-chain-item">笔试面试</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/" class="category-chain-item">AI算法</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/" class="category-chain-item">nlp</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/nlp/" class="print-no-link">#nlp</a>
+      
+        <a href="/tags/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/" class="print-no-link">#笔试面试</a>
+      
+        <a href="/tags/%E7%AE%97%E6%B3%95%E9%9D%A2%E8%AF%95/" class="print-no-link">#算法面试</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>公众号“看图学”试题合集（5）</div>
+      <div>https://chongzicbo.github.io/2025/02/12/笔试面试/AI算法/nlp/AI笔试面试题005：公众号“看图学”题目合集（5）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>程博</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>February 12, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98004%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%884%EF%BC%89/" title="公众号“看图学”试题合集（4）">
+                        <span class="hidden-mobile">公众号“看图学”试题合集（4）</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="笔试面试"
+        id="heading-c0a64144467cb7c553d64e018103720a" role="tab" data-toggle="collapse" href="#collapse-c0a64144467cb7c553d64e018103720a"
+        aria-expanded="true"
+      >
+        笔试面试
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-c0a64144467cb7c553d64e018103720a"
+           role="tabpanel" aria-labelledby="heading-c0a64144467cb7c553d64e018103720a">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="AI算法"
+        id="heading-497d6b71d600944e9158c90081f69bcd" role="tab" data-toggle="collapse" href="#collapse-497d6b71d600944e9158c90081f69bcd"
+        aria-expanded="true"
+      >
+        AI算法
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-497d6b71d600944e9158c90081f69bcd"
+           role="tabpanel" aria-labelledby="heading-497d6b71d600944e9158c90081f69bcd">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="nlp"
+        id="heading-4c5adbed16b4c9d16698f71cca4218cb" role="tab" data-toggle="collapse" href="#collapse-4c5adbed16b4c9d16698f71cca4218cb"
+        aria-expanded="true"
+      >
+        nlp
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-4c5adbed16b4c9d16698f71cca4218cb"
+           role="tabpanel" aria-labelledby="heading-4c5adbed16b4c9d16698f71cca4218cb">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2025/02/10/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98001%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%881%EF%BC%89/" title="公众号“看图学”试题合集（1）"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">公众号“看图学”试题合集（1）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/02/11/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98002%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%882%EF%BC%89/" title="公众号“看图学”试题合集（2）"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">公众号“看图学”试题合集（2）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/02/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98003%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%883%EF%BC%89/" title="公众号“看图学”试题合集（3）"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">公众号“看图学”试题合集（3）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/02/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98004%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%884%EF%BC%89/" title="公众号“看图学”试题合集（4）"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">公众号“看图学”试题合集（4）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/02/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98005%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%885%EF%BC%89/" title="公众号“看图学”试题合集（5）"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">公众号“看图学”试题合集（5）</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/chongzicbo" target="_blank" rel="nofollow noopener"><span>Github</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

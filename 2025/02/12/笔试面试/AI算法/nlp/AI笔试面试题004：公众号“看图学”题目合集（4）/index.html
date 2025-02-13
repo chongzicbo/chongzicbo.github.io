@@ -1,0 +1,1408 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/daxiong.jpg">
+  <link rel="icon" href="/img/daxiong.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="程博">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. 为什么 output token 的价格比 input token 更贵？翻一翻各大厂家的 API 定价，会发现基本上 输出 token 的价格是输入 token 价格的好几倍。  首先从计算量的角度来看，对于输入的 D 个 token，和输出 D 个token来说，FLOPs 都大约是 2ND，其中 N 为参数量。至于为什么 FLOPs 为什么是 2ND， 可以看这篇：学妹问：“反向传播的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="公众号“看图学”试题合集（4）">
+<meta property="og:url" content="https://chongzicbo.github.io/2025/02/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98004%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%884%EF%BC%89/index.html">
+<meta property="og:site_name" content="程博仕">
+<meta property="og:description" content="1. 为什么 output token 的价格比 input token 更贵？翻一翻各大厂家的 API 定价，会发现基本上 输出 token 的价格是输入 token 价格的好几倍。  首先从计算量的角度来看，对于输入的 D 个 token，和输出 D 个token来说，FLOPs 都大约是 2ND，其中 N 为参数量。至于为什么 FLOPs 为什么是 2ND， 可以看这篇：学妹问：“反向传播的">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739327904870-28.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250212104019319.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250212104911344.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250212105116467.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250212105414927.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250212111819458.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739426444171-6.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739426429461-3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739331028467-30.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250212113054552.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/32105a41870c59a214433219327d96c6.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250212113141977.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/5a7470c5185d7e1804e4bc981b452c55.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/6ab3f1df53fb68e9eb614398214b0b5c.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/afda72feb2634f34c110484312f1a749.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739426468188-8.jpeg">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739426477981-11.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739331710316-37.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739331717753-40.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739332256825-46.webp">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739332267846-49.webp">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739332283396-52.webp">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739332191882-43.webp">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739426572811-17.webp">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739426566396-14.webp">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
+<meta property="article:published_time" content="2025-02-12T07:00:00.000Z">
+<meta property="article:modified_time" content="2025-02-13T06:02:58.279Z">
+<meta property="article:author" content="程博">
+<meta property="article:tag" content="nlp">
+<meta property="article:tag" content="笔试面试">
+<meta property="article:tag" content="算法面试">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739327904870-28.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>公众号“看图学”试题合集（4） - 程博仕</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":"3841b375bfdd5627f0f840e1e289416e","google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?3841b375bfdd5627f0f840e1e289416e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>程博仕</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>笔试面试</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>计算机基础</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F" target="_self">
+                    
+                    <span>操作系统</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C" target="_self">
+                    
+                    <span>计算机网络</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>人工智能</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/asr" target="_self">
+                    
+                    <span>语音识别</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>开发</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91" target="_self">
+                    
+                    <span>音视频</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/web&#39;" target="_self">
+                    
+                    <span>Web开发</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>文章分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>时间轴</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="公众号“看图学”试题合集（4）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        程博
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-12 15:00" pubdate>
+          February 12, 2025 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.3k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          45 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">公众号“看图学”试题合集（4）</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    Last updated on February 13, 2025 pm
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-为什么-output-token-的价格比-input-token-更贵？"><a href="#1-为什么-output-token-的价格比-input-token-更贵？" class="headerlink" title="1. 为什么 output token 的价格比 input token 更贵？"></a>1. 为什么 output token 的价格比 input token 更贵？</h1><p>翻一翻各大厂家的 API 定价，会发现基本上 输出 token 的价格是输入 token 价格的好几倍。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739327904870-28.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>首先从计算量的角度来看，<strong>对于输入的 D 个 token，和输出 D 个token来说，FLOPs 都大约是 2ND</strong>，其中 N 为参数量。至于为什么 FLOPs 为什么是 2ND， 可以看这篇：<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzUyOTA5OTcwMg==&mid=2247486124&idx=1&sn=c9294e6696047bb616e0f640fca3ff5f&chksm=fa677475cd10fd63f99450f3d6d1287e79a38a3a99eeee28515e84c0e982d745e7d51a4ac65f&scene=21#wechat_redirect">学妹问：“反向传播的计算量是前向传播计算量的几倍？”</a>。</p>
+<p><strong>从内存角度来看</strong>，输入 token 和 QKV 等矩阵大小和 输出 token 的<strong>也差不太多</strong>，只不过输出 token 采用 KV Cache 的形式。</p>
+<p>既然计算量和内存占用都差不多，从资源的角度来讲，成本是差不多的。那最终成本究竟差在哪里呢？</p>
+<p>其实是<strong>差在资源的利用率上。</strong></p>
+<p>要知道 GPU 在运算的时候，既有计算，又有数据通信。这就存在一个最佳的 ops:bytes ratio。</p>
+<p>通俗点来讲，就是每读取一份数据 (比如一个 FP16&#x2F;BF16)， 应该执行多少 FLOPs。</p>
+<p>如果算的比读的快，那通信就是瓶颈，因为这个时候 GPU 的 SM 在等待。</p>
+<p>如果算的比读的慢，那计算就是瓶颈，这个时候通信需要等待。</p>
+<p><strong>大模型训练，大多数情况下，通信是瓶颈</strong>，所以都是算的快，读的慢。这样计算下来，整体的 MFU (Model FLOPs utilization) 很难打满。</p>
+<p>经过这么长时间的优化，目前大模型的训练 MFU 在50-60% 就已经很厉害了。</p>
+<p>回到题目，对于 D 个输入 token 来说，模型只需要执行一个 forward 计算，可以充分的并行，整个计算过程的利用率能接近训练的最高水平。</p>
+<p>然而对于 输出 token 来说，必须是一个 token 一个 token 的生成，对于 D 个输出 token 来说，需要执行 D 次 forward 操作。本来通信就是瓶颈，现在 D 次 forward 的额外通信更是雪上加霜。虽然现在也有batch 上，还有动态填充等优化，但是 <strong>GPU 利用率上来说，输出是远低于输入的</strong>。</p>
+<p>假如你是老板，招聘了两个员工，他们干的活是一样多的，消耗资源成本也都一样。一个完成一件事情需要1个小时，一个完成一件事情需要1天，你该怎么发工资呢？</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Kgh5kIeaYaADwS6waxDcNw">阿里大模型面试原题：为什么 output token 的价格比 input token 更贵？</a></p>
+<h1 id="2-Flash-Attention-的数学原理"><a href="#2-Flash-Attention-的数学原理" class="headerlink" title="2. Flash Attention 的数学原理"></a>2. Flash Attention 的数学原理</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Nv9iS96J7pVZRvH7U8fWsA">字节Transformers二面原题：Flash Attention 的数学原理</a></p>
+<h1 id="3-Softmax-如何并行？"><a href="#3-Softmax-如何并行？" class="headerlink" title="3. Softmax 如何并行？"></a>3. Softmax 如何并行？</h1><h3 id="Softmax-计算公式"><a href="#Softmax-计算公式" class="headerlink" title="Softmax 计算公式"></a>Softmax 计算公式</h3><p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250212104019319.png" srcset="/img/loading.gif" lazyload alt="Softmax"></p>
+<h3 id="安全的-Softmax-运算"><a href="#安全的-Softmax-运算" class="headerlink" title="安全的 Softmax 运算"></a>安全的 Softmax 运算</h3><p>softmax 有个问题，那就是很容易溢出。比如采用半精度，由于float16的最大值为65504，所以只要 $x\geq11$ 那么softmax就溢出了。即使是float32，x也不能超过88。</p>
+<p>好在 exp 有这么一个性质，那就是 $e^{x-y}&#x3D;\frac{e^x}{e^y}.$</p>
+<p>根据这个性质，可以在分子分母上同时除以一个数，这样可以将 x 的范围都挪到非正实数域。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250212104911344.png" srcset="/img/loading.gif" lazyload alt="image-20250212104911344"></p>
+<p>其中$m&#x3D;max({x_1,x_2,\ldots,x_N})$</p>
+<p>这样，就可以保证计算 softmax 时的数值稳定性。</p>
+<p>这个算法可以分成三次迭代来执行。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250212105116467.png" srcset="/img/loading.gif" lazyload alt="image-20250212105116467"></p>
+<p>分析上面的步骤，可以发现，如果是不做任何优化的话，至少要进行和 GPU 进行6次通信（3次写入，3次写出）。</p>
+<p>如果对每一步的for 循环进行一些并行切分的的话，还要加上 reduce_sum 和 reduce_max 之类的通信成本。</p>
+<p>是否能将某些操作进行融合，减少通信呢？按照之前 layernorm 并行的经验，我们需要寻找一个 Online Algorithm。</p>
+<h3 id="Online-Softmax"><a href="#Online-Softmax" class="headerlink" title="Online Softmax"></a>Online Softmax</h3><p>2018年 Nvidia 提出了《Online normalizer calculation for softmax》</p>
+<p>既然是 Online 的算法，我们需要找出递归的表达式。</p>
+<p>对于第二步中的 $d_i&#x3D;d_{i-1}+e^{x_i-m_N}$， 我们期望去掉这个式子对 $m_N$ 的依赖。</p>
+<p>设$d_i^{\prime}&#x3D;\sum_j^ie^{x_j-m_i}$  ,注意，这里减去的全局最大值变成了当前最大值。这个式子有如下的性质</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250212105414927.png" srcset="/img/loading.gif" lazyload alt="image-20250212105414927"></p>
+<p>这里可以发现，$d_{i}^{\prime}$ 的计算，依赖于 $d_{i-1’}^{\prime}m_{i,}m_{i-1’}$这样，就可以将前两步合并到一起。上面的3步可以变成2步。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250212111819458.png" srcset="/img/loading.gif" lazyload alt="image-20250212111819458"></p>
+<p>还能不能进一步融合算子呢？没办法了，因为第二步的分母依赖于第一步的计算。</p>
+<p>但是可以借助 GPU 的 share memory 来存储中间结果，将上面的两步只用一个 kernel 实现，这样就只需要与 global memory 通信两次，一次写入数据，一次读取结果。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>整体来说，有两个重要的优化点：</p>
+<ol>
+<li>将前两步的算子融合，减少 Reduce_max 和 Reduce_sum 之类的通信成本。</li>
+<li>借助 share memory 存储中间结果，减少与 global memory 的通信成本。</li>
+</ol>
+<p>这一篇只是从数学上给出了一些 Softmax 的并行理论基础。具体实现还有很多细节上的优化点，比如：</p>
+<p>感兴趣的可以看看 oneflow 的一个 softmax 深度优化：<a target="_blank" rel="noopener" href="https://www.oneflow.org/a/share/jishuboke/54.html">https://www.oneflow.org/a/share/jishuboke/54.html</a> . 源代码在<a target="_blank" rel="noopener" href="https://github.com/Oneflow-Inc/oneflow/blob/master/oneflow/core/cuda/softmax.cuh">https://github.com/Oneflow-Inc/oneflow/blob/master/oneflow/core/cuda/softmax.cuh</a></p>
+<p>还有 Nvidia 自己实现的一个可读性很好的版本：<a target="_blank" rel="noopener" href="https://github.com/NVIDIA/FasterTransformer/blob/release/v1.0_tag/fastertransformer/cuda/open_attention.cu#L189-L268">https://github.com/NVIDIA/FasterTransformer/blob/release/v1.0_tag/fastertransformer/cuda/open_attention.cu#L189-L268</a> 但是速度没有 oneflow 的好。</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/5MbYt_795Iyel5y73ntdAQ">字节 Transformers 面试原题：Softmax 如何并行？</a></p>
+<h1 id="4-权重共享是怎么回事？"><a href="#4-权重共享是怎么回事？" class="headerlink" title="4. 权重共享是怎么回事？"></a>4. 权重共享是怎么回事？</h1><p><strong>权重共享（****Weight Sharing</strong> <strong>）<strong><strong>就是在模型的不同部分使用相同参数的技术。</strong></strong>有时候也叫</strong> <strong>Parameter sharing</strong><strong>, 或者</strong> <strong>Weight Tying。</strong></p>
+<p>权重共享其实可以算作是老技术了，我们可能不知不觉的就在使用，比如 CNN 网络和 Transformers 中的 FNN 层。</p>
+<p>CNN 中，同一个卷积核的权重在整个图像的不同位置是共享的。而 Transformers 中的 FNN 层也类似，序列的不同位置共享 MLP。</p>
+<p><strong>权重共享有好处：</strong></p>
+<ol>
+<li>可学习的参数变少了，模型更容易训练，收敛更快了。</li>
+<li>在内存受限、需要通信的推理场景，能够加快推理速度。</li>
+<li>权重共享有一定的正则化的作用，因为可学习的参数变少了。所以相当于提升了模型的泛化能力。这个理论可以从 Bias Variance Trade-off 的角度来证明，可以看一篇旧文：<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzUyOTA5OTcwMg==&mid=2247483714&idx=1&sn=364707eb2483be5357421da1915975f1&chksm=fa677f9bcd10f68d46a9f075c12f80771fce2aecefc4952fdbe7810f1d7b49a71b822c573355&scene=21#wechat_redirect">码农要术：机器学习篇：泛化挑战</a></li>
+</ol>
+<p><strong>权重共享的坏处：</strong></p>
+<p>强扭的瓜不一定甜。一些权重可能理论上在完成任务的功能上就是正交的，共享之后可能会有新的问题。但是这些坏处要具体情况具体分析。比如 词向量与 LM Head 的共享可能导致各向异性的问题。</p>
+<p>下面列举一下神经网络中常见的一些权重共享。</p>
+<h2 id="基于位置的共享"><a href="#基于位置的共享" class="headerlink" title="基于位置的共享"></a>基于位置的共享</h2><p>比如 CNN 和  Transformers 中的 FNN 层。这个不再赘述。</p>
+<h2 id="嵌入层和输出层权重共享"><a href="#嵌入层和输出层权重共享" class="headerlink" title="嵌入层和输出层权重共享"></a>嵌入层和输出层权重共享</h2><p>这个就是常说的 Weight Tying, 将词向量与最后的 lm head 的权重进行共享。具体可以见：<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzUyOTA5OTcwMg==&mid=2247486000&idx=1&sn=74abbd3c3306652d86319c0239d8b644&chksm=fa6774e9cd10fdff2f404f54335b8f886cfa495390843ce7f7a16b16c8e86c02ddb1d8273739&scene=21#wechat_redirect">阿里面试官：“Transformers 中的 Weight Tying 是什么?”</a>，里面好处坏处，还有一些分析写的比较清楚。</p>
+<h2 id="MQA-和-GQA"><a href="#MQA-和-GQA" class="headerlink" title="MQA 和 GQA"></a>MQA 和 GQA</h2><p>MQA 就是 Attention 共享同一个 K 和 V。</p>
+<p>GQA 觉得这样是不是有点太暴力，于是选择了 MQA(共享一个) 和 MHA（完全不共享） 的一个中间形态，按组来共享。如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739426444171-6.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>目前使用 GQA 的越来越多了，比如 Llama2，deepseek，yi等。</p>
+<h2 id="Layer-Sharing-（或者-Block-Sharing"><a href="#Layer-Sharing-（或者-Block-Sharing" class="headerlink" title="Layer Sharing （或者 Block Sharing)"></a>Layer Sharing （或者 Block Sharing)</h2><p>将 Transformers 中的 block 进行共享。</p>
+<p>早在 BERT 时代，就有人提出了 AlBERT 模型，就是把 Transformers 堆叠的层都用一个来表示。</p>
+<p>后来又有 Universal Transformers 和 PonderNet 等模型也做了类似的尝试，但不只是共享那么简单了。</p>
+<p>田渊栋团队最新的论文 MobileLLM 中也探讨了 Block 间不同的共享方式。 </p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739426429461-3.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>上面列的都是主流的共享方法。也有很多其他的尝试，但是目前用的不多。</p>
+<p>比如 Sharing in branches, Sharing in branches, 还有借助其他方法辅助的。</p>
+<p>感兴趣的可以看：</p>
+<ul>
+<li>《Subformer: Exploring Weight Sharing for Parameter Efficiency in Generative Transformers》</li>
+<li>《Understanding Parameter Sharing in Transformers》</li>
+<li>《Pea-KD: Parameter-efficient and accurate Knowledge Distillation on BERT.》</li>
+<li>《LightFormer: Light-weight Transformer Using SVD-based Weight Transfer and Parameter Sharing. 》</li>
+</ul>
+<p>最后，大家可以思考一下，权重共享的模块出现在模型的不同位置时，如何进行梯度的反向传播？</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/efYCi2UFZSfEew9I677O1w">腾讯面试官：“权重共享是怎么回事？” 封面依然眼熟</a></p>
+<h1 id="5-Tokenization-是什么"><a href="#5-Tokenization-是什么" class="headerlink" title="5. Tokenization 是什么"></a>5. Tokenization 是什么</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/0ewnWvf8sQflmamcXpcUfQ">小米面试官：“Tokenization 是什么”。封面看着眼熟</a></p>
+<h1 id="6-什么是张量并行-Tensor-Parallelism-？"><a href="#6-什么是张量并行-Tensor-Parallelism-？" class="headerlink" title="6. 什么是张量并行(Tensor Parallelism) ？"></a>6. 什么是张量并行(Tensor Parallelism) ？</h1><p>张量并行（Tensor Parallelism） 是一种分布式矩阵算法。</p>
+<p>随着模型越来越大，模型内的矩阵也越来越大。一个大矩阵的乘法可以拆分成多个小矩阵的运算，这个些运算就可以充分利用 GPU 的多核还有多 GPU 来进行分布式计算，从而提高运算速度。</p>
+<p>Megatron-LM 提出了 1D Tensor Parallelism， 也就是两个矩阵之间的分布式计算方法。后面陆续又有 2D、2.5D、3D Tensor Parallelism。</p>
+<p>本文先讲一下 Megatron-LM 的 1D Tensor Parallelism 算法。</p>
+<h2 id="1D-Tensor-Parallelism"><a href="#1D-Tensor-Parallelism" class="headerlink" title="1D Tensor Parallelism"></a>1D Tensor Parallelism</h2><p>其实 1D Tensor Parallelism 的算法完全来源于矩阵运算的性质。如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739331028467-30.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><strong>切分方法1</strong></p>
+<p>假设两个矩阵相乘，左矩阵按列分割成两个，右矩阵按行分割成2个，那么有如下性质：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250212113054552.png" srcset="/img/loading.gif" lazyload alt="image-20250212113054552"></p>
+<p>证明如下：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/32105a41870c59a214433219327d96c6.png" srcset="/img/loading.gif" lazyload alt="32105a41870c59a214433219327d96c6"></p>
+<p>这样的切分方法需要一个 Reduce 操作，因为要把各部分的结果求和得到最终结果。</p>
+<h3 id="切分方法2"><a href="#切分方法2" class="headerlink" title="切分方法2"></a><strong>切分方法2</strong></h3><p>假设两个矩阵相乘，左矩阵按行分割成两个，右矩阵按列分割成2个，那么有如下性质：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/image-20250212113141977.png" srcset="/img/loading.gif" lazyload alt="image-20250212113141977"></p>
+<p>证明如下：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/5a7470c5185d7e1804e4bc981b452c55.png" srcset="/img/loading.gif" lazyload alt="5a7470c5185d7e1804e4bc981b452c55"></p>
+<p>这样的切分方法最终需要把结果 Concat 起来。但是由于每一部分的计算结果都是最终结果的一部分，所以可以不着急 Reduce 结果，可以直接作为下一次并行计算的输入。</p>
+<h3 id="两种切分方法组合"><a href="#两种切分方法组合" class="headerlink" title="两种切分方法组合"></a><strong>两种切分方法组合</strong></h3><p>假设我们有多个矩阵进行相乘，比如 $\boldsymbol{A}\cdot\boldsymbol{B}\boldsymbol{\cdot}\boldsymbol{C}\boldsymbol{\ldots}\boldsymbol{X}$， 相邻之间的矩阵可以一个横切，一个纵切，然后放到不同的 device 上。从而达到并行计算的目的。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/6ab3f1df53fb68e9eb614398214b0b5c.png" srcset="/img/loading.gif" lazyload alt="6ab3f1df53fb68e9eb614398214b0b5c"></p>
+<p>分割成多个也是类似的结论。所以对于矩阵相乘来说，如果有 N 个 GPU，完全可以将参数平分到 N 个GPU上，每个 GPU 只负责计算 $\frac{1}{N}$ 的参数，而不用都塞到一个里面，显存也吃不消。</p>
+<h2 id="FFN-的-Tensor-Parallelism"><a href="#FFN-的-Tensor-Parallelism" class="headerlink" title="FFN 的 Tensor Parallelism"></a><strong>FFN 的 Tensor Parallelism</strong></h2><p>来看一个具体的案例。Transformers 的 FFN 层涉及两次矩阵乘法。<br>$$<br>\mathrm{FFN}(X)&#x3D;g(X\cdot W_1)W_2<br>$$<br>其中g是激活函数 Gelu。激活函数的非线性导致：<br>$$<br>Gelu(X+Y)\neq Gelu(X)+Gelu(Y)<br>$$<br>由于有这个激活函数的存在，我们最好按照切分方法2 来进行。因为如果采用第一种，那么需要先进行 Reduce 之后才能执行 Gelu 操作。然后再拆分，再 Reduce。这里有2步 Reduce 操作。</p>
+<p>如果采用第二种，则仅需要最后一步进行 Reduce 即可，少了中间的 Reduce 再拆分的工作。如下图所示：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/afda72feb2634f34c110484312f1a749.png" srcset="/img/loading.gif" lazyload alt="afda72feb2634f34c110484312f1a749"></p>
+<p>当然这里并没有对 X 进行拆分，仅拆分了$W_1$  和 $W_2$。要拆分也是可以的。</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XQLbTU3dX29nBjdkWOrSqg">京东面试官：“ 什么是张量并行(Tensor Parallelism) ？”</a></p>
+<h1 id="7-Transformers-中的-weight-tying-是什么"><a href="#7-Transformers-中的-weight-tying-是什么" class="headerlink" title="7. Transformers 中的 weight tying 是什么?"></a>7. Transformers 中的 weight tying 是什么?</h1><p>Transformers 的输入会从一个词向量矩阵中获取对应 token 的词向量，这个词向量矩阵的大小为 (vocab_size, hidden_size)。</p>
+<p>在预测一个词的输出概率时，transformer 有个预测头(prediction head), 这个预测头是 Transformers 的最后一层，大小为 (hidden_size, vocab_size)，可能还有一个 bias。</p>
+<p>如果预测头没有bias的话，这两个矩阵的大小是一样的，如果这两个矩阵使用同一个矩阵，就被称作 weight typing。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739426468188-8.jpeg" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>这项技术是由两拨人独立提出的，一波人是Ofir Press, Lior Wolf 发表了《Using the Output Embedding to Improve Language Models》，一波是Hakan Inan, Khashayar Khosravi, Richard Socher 提出的《Using the Output Embedding to Improve Language Models》。</p>
+<p>这里面比较出名的是 Richard Socher，创办了you.com</p>
+<p>下面简单回顾一下这两篇论文关于 Weight Typing 的部分。</p>
+<h3 id="Using-the-Output-Embedding-to-Improve-Language-Models"><a href="#Using-the-Output-Embedding-to-Improve-Language-Models" class="headerlink" title="Using the Output Embedding to Improve Language Models"></a><strong>Using the Output Embedding to Improve Language Models</strong></h3><p>这篇文章的出发点是基于词向量和预测头的功能考虑的。作者认为，词向量最终应该满足这样一个条件，那就是相似词的词向量应该也相似（在向量空间中的距离应该更近）。而预测头需要参与 softmax 去预测某一个词，我们期望两个同义词互相交换位置后，得分应该也差不多，这也就要求相似的词在预测头中对应的向量也应该相似才行。</p>
+<p>基于这一点的考虑，作者认为词向量和预测头可以共享权重。然后做了一些实验，证明出了结构极其简单的 word2vec，其他的稍微复杂一点的模型，weight tying 之后效果都变好了。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739426477981-11.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="Tying-Word-Vectors-and-Word-Classifiers-A-Loss-Framework-for-Language-Modeling"><a href="#Tying-Word-Vectors-and-Word-Classifiers-A-Loss-Framework-for-Language-Modeling" class="headerlink" title="Tying Word Vectors and Word Classifiers: A Loss Framework for Language Modeling"></a><strong>Tying Word Vectors and Word Classifiers: A Loss Framework for Language Modeling</strong></h3><p>这篇文章提了个新的loss，在这个loss下，从数学上证明了词向量和预测头这两个矩阵的相似性。具体证明有点繁琐，感兴趣的可以看看原文。</p>
+<h2 id="Weight-Tying-的好处"><a href="#Weight-Tying-的好处" class="headerlink" title="Weight Tying 的好处"></a>Weight Tying 的好处</h2><p><strong>最明显的好处就是降低了模型参数。</strong></p>
+<p>在词表不大的时候并没有什么感觉，但是词表越大，词向量占参数的比例就越大。</p>
+<p>比如 llama2 有 32000 个 token ，参数量为 32000 * 4096 &#x3D; 131072000 个，整体参数量为 6738415616， 占比 1.95%.</p>
+<p>llama3 有 151936 个 to，参数量为 151936 * 4096 &#x3D; 622329856 个，整体参数量为 8030261248， 占比 7.75%.</p>
+<p>然而 llama3 并没有使用 Weight Tying， 如果使用的话，参数量会缩减 7.75%，后面会看到，一些词表更大的模型，都用了 Weight Tying。</p>
+<h3 id="加速模型收敛"><a href="#加速模型收敛" class="headerlink" title="加速模型收敛"></a><strong>加速模型收敛</strong></h3><p>模型参数变小，自然收敛更快。但是从原理上还有另外一层解释。</p>
+<p>如果没有 weight tying， 词向量矩阵只会更新自己见过的 token。但是当使用 weight tying 后，<strong>所有的 token 的词向量都会更新，即使没见到的 token，模型也会分配合适的概率。</strong></p>
+<p>这个问题在 BERT 之类的 Encoder-only 的模型中更为显著，因为每个样本只会预测15%左右的词汇，而不是像 Decoder 那样所有的 token 都会更新。<strong>所以 Encoder-only 的模型更喜欢使用 Weight Tying</strong></p>
+<h2 id="Weight-Tying-的坏处"><a href="#Weight-Tying-的坏处" class="headerlink" title="Weight Tying 的坏处"></a>Weight Tying 的坏处</h2><p>Weight Tying 也不只是有好处，也有坏处。从根本上说，预测头和词向量所肩负的任务是完全不一样的，强扭的瓜不一定甜。</p>
+<p>在论文《Improving Low Compute Language Modeling with In-Domain Embedding Initialisation》 也提到，在一些领域内的低词频的词汇得到充分的训练后，Weight Tying 并没有像 Press &amp; Wolf 那样改善模型的性能。所以更多的语料会削弱 Weight Tying 的效果。</p>
+<p>还有在论文《Representation Degeneration Problem in Training Natural Language Generation Models》中提到，<strong>使用 weight tying 会导致各向异性问题</strong>。关于各向异性可以见 <a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzUyOTA5OTcwMg==&mid=2247484639&idx=1&sn=8ed482b29c8c25150aa6d83a38b7014c&chksm=fa677a06cd10f310ac066fc0a095cda55c3084ef46b73451a5aec9c6b40a38fa3b10d163395a&scene=21#wechat_redirect">NLP名词解释：各向异性(Anisotropic)</a></p>
+<h2 id="常用模型使用-Weight-Tying-的情况"><a href="#常用模型使用-Weight-Tying-的情况" class="headerlink" title="常用模型使用 Weight Tying 的情况"></a>常用模型使用 Weight Tying 的情况</h2><ul>
+<li>Gemma: True</li>
+<li>qwen: False</li>
+<li>llama : False</li>
+<li>deepseek:</li>
+<li>yi: False</li>
+<li>glm2&#x2F;4: false</li>
+<li>glm1: True</li>
+<li>command R: True</li>
+<li>mistral: False</li>
+</ul>
+<p>可以看出， Gemma 和 command R 由于词表确实很大（256000 个），使用了 Weight Tying，其他的词表在 100k+ 的搜没有采用 Weight Tying</p>
+<h1 id="8-给一个网络结构，如何计算模型的参数量？"><a href="#8-给一个网络结构，如何计算模型的参数量？" class="headerlink" title="8. 给一个网络结构，如何计算模型的参数量？"></a>8. 给一个网络结构，如何计算模型的参数量？</h1><p>这个题目其实就是问细节，看看对一些网络结构熟不熟悉。</p>
+<p>知道了常用的网络结构的计算方法，然后就是加法和乘法了。</p>
+<p>一些常见的网络结构列举如下：</p>
+<ul>
+<li><p><strong>Linear</strong></p>
+<p>就是个矩阵，有时候会加上个 bias。一个 Linear(in_features&#x3D;w, out_features&#x3D;h, bias&#x3D;True) 的参数量为：w * h + h, 如果 bias &#x3D; False, 则 为 w * h</p>
+</li>
+<li><p><strong>Embedding</strong></p>
+<p>可以认为是一个没有 bias 的 Linear。</p>
+</li>
+<li><p><strong>Norm</strong></p>
+<p>关于 Norm 的原理和涉及的参数，可以看：<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzUyOTA5OTcwMg==&mid=2247485766&idx=1&sn=b84e23c78ddee76afdab8c6710bfa25b&chksm=fa67779fcd10fe89edffd0295f2226159a39469c1951227950f34b352d51abea078cefd21464&scene=21#wechat_redirect">NLP面试官：“大模型常用的 Normalization 都有什么？” 算法女生表示易如反掌</a></p>
+<ul>
+<li>Layer Norm 里面有两个可训练参数, $\gamma$ 和$\beta$ , 假设hidden_size 的大小为 h, hidden_size 的每一维都有两个，所以是 $h\times2$ 个</li>
+<li>RMSNorm 每一维则只有一个可训练参数$\gamma$ , 所以有 h 个</li>
+</ul>
+</li>
+<li><p><strong>Active</strong> 和 <strong>Dropout</strong></p>
+<ul>
+<li>没有可训练参数</li>
+</ul>
+</li>
+</ul>
+<h2 id="举例说明"><a href="#举例说明" class="headerlink" title="举例说明"></a>举例说明</h2><p>知道了上面的参数数量，剩下的就是小学数学题了。以 llama3 和 qwen2 来举例：</p>
+<h3 id="meta-llama-Meta-Llama-3-8B"><a href="#meta-llama-Meta-Llama-3-8B" class="headerlink" title="meta-llama&#x2F;Meta-Llama-3-8B"></a><strong>meta-llama&#x2F;Meta-Llama-3-8B</strong></h3><p>可以从论文里查找参数量，但是最方便的还是打印一下模型的结构，代码如下</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-keyword">from</span> transformers import AutoModelForCausalLM<br>model_llama3 = AutoModelForCausalLM.from_pretrained(<br>    model_path, <span class="hljs-attribute">tie_word_embeddings</span>=<span class="hljs-literal">False</span>, <br>    <span class="hljs-attribute">token</span>=access_token)<br><span class="hljs-built_in">print</span>(model_llama3)<br></code></pre></td></tr></table></figure>
+
+<p>结构如下:</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739331710316-37.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>然后挨个计算就可以了：128256 * 4096 + 32 * (4096 * 4096 * 2 + 4096 * 1024 * 2 + 4096 * 14336 * 3 + 2 * 4096) + 4096 + 128256 * 4096 &#x3D; 8030261248.</p>
+<p>所以 llama3 8B 的真实参数量为：8030261248</p>
+<h3 id="Qwen-2-7B"><a href="#Qwen-2-7B" class="headerlink" title="Qwen 2 7B"></a><strong>Qwen 2 7B</strong></h3><p>如法炮制</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs routeros">model_qwen_lm = AutoModelForCausalLM.from_pretrained(<br>    model_qwen, <span class="hljs-attribute">trust_remote_code</span>=<span class="hljs-literal">True</span>)<br><span class="hljs-built_in">print</span>(model_qwen_lm)<br></code></pre></td></tr></table></figure>
+
+<p>结构如下：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739331717753-40.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>对比一下可以看出，llama3 和 qwen2 还是有点区别，在 Embedding、Attention 和 FNN 的参数都有所差异。</p>
+<p>通过参数，可以看出 llama3 和 qwen2 的词表大小都是64的倍数，具体原因见： <a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzUyOTA5OTcwMg==&mid=2247485933&idx=1&sn=080978167f972ed3c686e417c6f792f9&chksm=fa677734cd10fe227cd6edbdf61b9e786e40df5b7d7c5e51d30b5906002ba0ec256f8f89658c&scene=21#wechat_redirect">NLP 面试八股：“Transformers &#x2F; LLM 的词表应该选多大?” 学姐这么告诉我答案</a></p>
+<p>通过参数，你能看出 llama3 是 Grouped Query Attention 么?</p>
+<p>参数量计算：151936 * 4096  + 32 * (4096 * 2 + 12288 * 4096 + 12288 + 4096 * 4096 + 11008 * 4096 * 3) + 4096 + 4096 * 151936 &#x3D; 7721324544</p>
+<p>所以 qwen 7B 的真实参数量为：7721324544.</p>
+<h2 id="我堂堂大学生，不想手动计算"><a href="#我堂堂大学生，不想手动计算" class="headerlink" title="我堂堂大学生，不想手动计算"></a>我堂堂大学生，不想手动计算</h2><p>上面是手动计算的方法，利用 pytorch 提供的函数，我们可以很方便的计算出模型的参数量，只需要一行就行，代码如下：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs scss">def <span class="hljs-built_in">count_parameters</span>(model):<br>    return <span class="hljs-built_in">sum</span>(p.<span class="hljs-built_in">numel</span>() for p in model.<span class="hljs-built_in">parameters</span>() if p.requires_grad)<br></code></pre></td></tr></table></figure>
+
+<h1 id="9-Pre-Norm-和-Post-Norm-各自的优缺点？"><a href="#9-Pre-Norm-和-Post-Norm-各自的优缺点？" class="headerlink" title="9. Pre Norm 和 Post Norm 各自的优缺点？"></a>9. Pre Norm 和 Post Norm 各自的优缺点？</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/9Bf7Kb17-uNGZSBDnHYDaA">字节面试官:”Pre Norm 和 Post Norm 各自的优缺点？” 学妹这么回答</a></p>
+<h1 id="10-Transformers-LLM-的词表应该选多大"><a href="#10-Transformers-LLM-的词表应该选多大" class="headerlink" title="10. Transformers &#x2F; LLM 的词表应该选多大?"></a>10. Transformers &#x2F; LLM 的词表应该选多大?</h1><h2 id="答案"><a href="#答案" class="headerlink" title="答案"></a>答案</h2><p>先说一下结论：</p>
+<ol>
+<li><strong>数据量够大的情况下</strong>，vocabulary 越大，压缩率越高，模型效果越好。</li>
+<li>太大的 vocabulary 需要做一些训练和推理的优化，所以要<strong>平衡计算和效果。</strong></li>
+<li>要考虑内存对齐。vocabulary 的<strong>大小设置要是 8 的倍数，在 A100 上则是 64 的倍数。</strong>（不同的GPU可能不一样）</li>
+</ol>
+<p>下面分别说一下这三点.</p>
+<h2 id="越大越好"><a href="#越大越好" class="headerlink" title="越大越好"></a>越大越好</h2><p>目前已经有很多研究表明，词表越大模型效果会更好。 比如最近刚发的一篇《Large Vocabulary Size Improves Large Language Models》，里面就详细对比了词表大小分别为：5k, 10k, 50k, 100k and 500k 的效果。如下图所示</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739332256825-46.webp" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<p>注意这里是完全从头训练的 GPT-3 Large 模型，模型的参数量为 760M。</p>
+<p>然后作者还尝试了在 llama 的基础上扩大词表继续训练，扩大了词表后效果依然有提升。如下表所示：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739332267846-49.webp" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<p>为什么词表变大会更好？个人觉得有如下几个原因：</p>
+<h3 id="计算效率的提升"><a href="#计算效率的提升" class="headerlink" title="计算效率的提升"></a><strong>计算效率的提升</strong></h3><p>相同的文本，转换为token后越短越好。通常用压缩率来衡量文本转换为token后的压缩比例。</p>
+<p>更高的压缩率代表了相同数量的token能够表达更多的信息，相同的信息 token 越短则训练效率更高。</p>
+<p>Baichuan 在技术报告里给出的一些模型的压缩率如下</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739332283396-52.webp" srcset="/img/loading.gif" lazyload alt="图片">然后千问在技术报告里也提到自家模型的压缩率比其他家更好。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739332191882-43.webp" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<h3 id="有助于理解文本"><a href="#有助于理解文本" class="headerlink" title="有助于理解文本"></a><strong>有助于理解文本</strong></h3><p>更多的词汇能够减少 OOV (Out of Vocabulary)的影响, 训练的信息不会丢失，推理的时候泛化能力也更强。</p>
+<p>同时更多的词汇可以减少词汇分解后的歧义，从而更好地理解和生成文本。</p>
+<h3 id="更长的上下文"><a href="#更长的上下文" class="headerlink" title="更长的上下文"></a><strong>更长的上下文</strong></h3><p>预训练阶段往往都有最大序列长度的限制，<strong>压缩率更高代表着能看到更多的上下文</strong>，就能 attention 到更多的信息。</p>
+<p>还有一些论文比如《Impact of Tokenization on Language Models: An Analysis for Turkish》等也有类似的结论。</p>
+<h2 id="计算效率的考虑"><a href="#计算效率的考虑" class="headerlink" title="计算效率的考虑"></a>计算效率的考虑</h2><p>虽然 vocabulary 越大越好，但是也不能无限扩大。因为 vocabulary 变大后，Embedding 层变大，最后输出的 Head layer 也会变大。比如 Llama3 将 vocabulary 从 llama2 的 32000 扩展到 128256，参数量就变大了。llama2 还不到7B，但是 Llama3 有 8B了（当然这里面还有其他参数的改动）。</p>
+<p>参数更大，更占内存，而且输出的时候 softmax 也更大，计算就更慢。虽然大多数情况下 token 量的减少，整体上是算得更快的。</p>
+<p>所以也不能设置得过大，目前<strong>业界普遍设置在 10万 到 20万左右</strong>。比如 Qwen 的 词表大小为 152064，baichuan2为125696，llama3 为128256，deepseek 为 102400。</p>
+<p>多模态的会更大一些。</p>
+<p>当然 softmax 过大的问题目前也有解法，可以用 Adaptive softmax，参考论文《Efficient softmax approximation for GPUs》。</p>
+<h2 id="内存对齐"><a href="#内存对齐" class="headerlink" title="内存对齐"></a>内存对齐</h2><p>之前就有人看到 qwen 的readme 和 训练代码中 vocabulary 的数量不一样， readme 中为 151643，但是实际上代码里写的是 152064。</p>
+<p>这就是为了内存对齐。所以<strong>很多时候模型上的一些设置其实跟硬件息息相关</strong>。</p>
+<p>因为最终Embedding 矩阵和输出时候的 Head Layer 最终都会转换成矩阵放到 GPU 的 Tensor Core 中计算。而根据英伟达的开发手册，矩阵运算最好根据 GPU 和计算类型满足如下的条件：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739426572811-17.webp" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<p>Karpathy 也曾经证实了这一点，他当时写了个 nanoGPT，提升最大的点就是把词表从 50257 改成了 50304，后一个是64的倍数。然后带来了25%的速度上的提升。</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/640-1739426566396-14.webp" srcset="/img/loading.gif" lazyload alt="图片"></p>
+<p>所以目前大多数训练都在 A100 上训练，所以基本上都是64的倍数。如果某个模型的词表不是 64的倍数，那可能不知不觉浪费了很多计算资源。</p>
+<p>文章合集：<a target="_blank" rel="noopener" href="https://github.com/chongzicbo/ReadWriteThink/tree/main">chongzicbo&#x2F;ReadWriteThink: 博学而笃志，切问而近思 (github.com)</a></p>
+<p>个人博客：<a href="https://chongzicbo.github.io/">程博仕</a></p>
+<p>微信公众号：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg" srcset="/img/loading.gif" lazyload alt="微信公众号"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/" class="category-chain-item">笔试面试</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/" class="category-chain-item">AI算法</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/" class="category-chain-item">nlp</a>
+  
+  
+
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/nlp/" class="print-no-link">#nlp</a>
+      
+        <a href="/tags/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/" class="print-no-link">#笔试面试</a>
+      
+        <a href="/tags/%E7%AE%97%E6%B3%95%E9%9D%A2%E8%AF%95/" class="print-no-link">#算法面试</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>公众号“看图学”试题合集（4）</div>
+      <div>https://chongzicbo.github.io/2025/02/12/笔试面试/AI算法/nlp/AI笔试面试题004：公众号“看图学”题目合集（4）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>程博</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>February 12, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/02/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98005%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%885%EF%BC%89/" title="公众号“看图学”试题合集（5）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">公众号“看图学”试题合集（5）</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98003%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%883%EF%BC%89/" title="公众号“看图学”试题合集（3）">
+                        <span class="hidden-mobile">公众号“看图学”试题合集（3）</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="笔试面试"
+        id="heading-c0a64144467cb7c553d64e018103720a" role="tab" data-toggle="collapse" href="#collapse-c0a64144467cb7c553d64e018103720a"
+        aria-expanded="true"
+      >
+        笔试面试
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-c0a64144467cb7c553d64e018103720a"
+           role="tabpanel" aria-labelledby="heading-c0a64144467cb7c553d64e018103720a">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="AI算法"
+        id="heading-497d6b71d600944e9158c90081f69bcd" role="tab" data-toggle="collapse" href="#collapse-497d6b71d600944e9158c90081f69bcd"
+        aria-expanded="true"
+      >
+        AI算法
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-497d6b71d600944e9158c90081f69bcd"
+           role="tabpanel" aria-labelledby="heading-497d6b71d600944e9158c90081f69bcd">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="nlp"
+        id="heading-4c5adbed16b4c9d16698f71cca4218cb" role="tab" data-toggle="collapse" href="#collapse-4c5adbed16b4c9d16698f71cca4218cb"
+        aria-expanded="true"
+      >
+        nlp
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-4c5adbed16b4c9d16698f71cca4218cb"
+           role="tabpanel" aria-labelledby="heading-4c5adbed16b4c9d16698f71cca4218cb">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2025/02/10/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98001%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%881%EF%BC%89/" title="公众号“看图学”试题合集（1）"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">公众号“看图学”试题合集（1）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/02/11/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98002%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%882%EF%BC%89/" title="公众号“看图学”试题合集（2）"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">公众号“看图学”试题合集（2）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/02/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98003%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%883%EF%BC%89/" title="公众号“看图学”试题合集（3）"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">公众号“看图学”试题合集（3）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/02/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98004%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%884%EF%BC%89/" title="公众号“看图学”试题合集（4）"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">公众号“看图学”试题合集（4）</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/02/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98005%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%885%EF%BC%89/" title="公众号“看图学”试题合集（5）"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">公众号“看图学”试题合集（5）</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/chongzicbo" target="_blank" rel="nofollow noopener"><span>Github</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
