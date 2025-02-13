@@ -1,0 +1,1409 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/daxiong.jpg">
+  <link rel="icon" href="/img/daxiong.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="程博">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. 导入模块123456789101112131415import gc  # 垃圾回收模块import math  # 数学计算模块import timm  # 视觉模型库import torch  # PyTorch深度学习框架from torch import Tensor  # PyTorch中的张量类型import torch.nn as nn  # PyTorch中的神经网络模块fr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MiniCPM-V多模态模型源码解析-04：核心模块omnilmm.py">
+<meta property="og:url" content="https://chongzicbo.github.io/2025/01/14/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9AMiniCPM-V%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-04%EF%BC%9A%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97omnilmm.py%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="程博仕">
+<meta property="og:description" content="1. 导入模块123456789101112131415import gc  # 垃圾回收模块import math  # 数学计算模块import timm  # 视觉模型库import torch  # PyTorch深度学习框架from torch import Tensor  # PyTorch中的张量类型import torch.nn as nn  # PyTorch中的神经网络模块fr">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
+<meta property="article:published_time" content="2025-01-14T06:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-13T07:43:23.576Z">
+<meta property="article:author" content="程博">
+<meta property="article:tag" content="多模态">
+<meta property="article:tag" content="llm">
+<meta property="article:tag" content="源码解析">
+<meta property="article:tag" content="MiniCPM">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>MiniCPM-V多模态模型源码解析-04：核心模块omnilmm.py - 程博仕</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":"3841b375bfdd5627f0f840e1e289416e","google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?3841b375bfdd5627f0f840e1e289416e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>程博仕</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>笔试面试</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>计算机基础</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F" target="_self">
+                    
+                    <span>操作系统</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C" target="_self">
+                    
+                    <span>计算机网络</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>人工智能</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/asr" target="_self">
+                    
+                    <span>语音识别</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>开发</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91" target="_self">
+                    
+                    <span>音视频</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/web&#39;" target="_self">
+                    
+                    <span>Web开发</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>文章分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>时间轴</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="MiniCPM-V多模态模型源码解析-04：核心模块omnilmm.py"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        程博
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-01-14 14:00" pubdate>
+          January 14, 2025 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.8k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          24 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">MiniCPM-V多模态模型源码解析-04：核心模块omnilmm.py</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    Last updated on January 13, 2025 pm
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h3 id="1-导入模块"><a href="#1-导入模块" class="headerlink" title="1. 导入模块"></a><strong>1. 导入模块</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> gc  <span class="hljs-comment"># 垃圾回收模块</span><br><span class="hljs-keyword">import</span> math  <span class="hljs-comment"># 数学计算模块</span><br><span class="hljs-keyword">import</span> timm  <span class="hljs-comment"># 视觉模型库</span><br><span class="hljs-keyword">import</span> torch  <span class="hljs-comment"># PyTorch深度学习框架</span><br><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> Tensor  <span class="hljs-comment"># PyTorch中的张量类型</span><br><span class="hljs-keyword">import</span> torch.nn <span class="hljs-keyword">as</span> nn  <span class="hljs-comment"># PyTorch中的神经网络模块</span><br><span class="hljs-keyword">from</span> torch.nn <span class="hljs-keyword">import</span> CrossEntropyLoss  <span class="hljs-comment"># 交叉熵损失函数</span><br><span class="hljs-keyword">from</span> typing <span class="hljs-keyword">import</span> <span class="hljs-type">List</span>, <span class="hljs-type">Optional</span>, <span class="hljs-type">Tuple</span>, <span class="hljs-type">Union</span>  <span class="hljs-comment"># 类型注解</span><br><br><span class="hljs-keyword">from</span> transformers <span class="hljs-keyword">import</span> AutoConfig, AutoModelForCausalLM  <span class="hljs-comment"># Hugging Face的自动配置和因果语言模型</span><br><span class="hljs-keyword">from</span> transformers <span class="hljs-keyword">import</span> MistralForCausalLM, MistralModel, MistralConfig  <span class="hljs-comment"># Mistral模型相关类</span><br><span class="hljs-keyword">from</span> transformers.modeling_outputs <span class="hljs-keyword">import</span> BaseModelOutputWithPast, CausalLMOutputWithPast  <span class="hljs-comment"># 模型输出类型</span><br><br><span class="hljs-keyword">from</span> omnilmm.model.utils <span class="hljs-keyword">import</span> build_transform  <span class="hljs-comment"># 图像变换构建工具</span><br><span class="hljs-keyword">from</span> omnilmm.model.resampler <span class="hljs-keyword">import</span> Resampler  <span class="hljs-comment"># 重采样器模块</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-定义常量"><a href="#2-定义常量" class="headerlink" title="2. 定义常量"></a><strong>2. 定义常量</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">DEFAULT_IMAGE_PATCH_TOKEN = <span class="hljs-string">&quot;&lt;im_patch&gt;&quot;</span>  <span class="hljs-comment"># 默认的图像patch token</span><br>DEFAULT_IM_START_TOKEN = <span class="hljs-string">&quot;&lt;im_start&gt;&quot;</span>  <span class="hljs-comment"># 默认的图像开始token</span><br>DEFAULT_IM_END_TOKEN = <span class="hljs-string">&quot;&lt;im_end&gt;&quot;</span>  <span class="hljs-comment"># 默认的图像结束token</span><br></code></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-OmniLMMConfig-类"><a href="#3-OmniLMMConfig-类" class="headerlink" title="3. OmniLMMConfig 类"></a><strong>3. OmniLMMConfig 类</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">OmniLMMConfig</span>(<span class="hljs-title class_ inherited__">MistralConfig</span>):<br>    model_type = <span class="hljs-string">&quot;omnilmm&quot;</span>  <span class="hljs-comment"># 模型类型为OmniLMM</span><br></code></pre></td></tr></table></figure>
+<ul>
+<li>继承自<code>MistralConfig</code>，用于配置OmniLMM模型。</li>
+<li><code>model_type</code> 设置为 <code>&quot;omnilmm&quot;</code>，表示这是一个OmniLMM模型。</li>
+</ul>
+<hr>
+<h3 id="4-Identity-类"><a href="#4-Identity-类" class="headerlink" title="4. Identity 类"></a><strong>4. Identity 类</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Identity</span>(torch.nn.Identity):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, <span class="hljs-built_in">input</span>: Tensor, **kwargs</span>) -&gt; Tensor:<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">super</span>().forward(<span class="hljs-built_in">input</span>)  <span class="hljs-comment"># 直接返回输入，不做任何处理</span><br></code></pre></td></tr></table></figure>
+<ul>
+<li>继承自<code>torch.nn.Identity</code>，用于占位或传递输入，不做任何变换。</li>
+</ul>
+<hr>
+<h3 id="5-create-vision-module-函数"><a href="#5-create-vision-module-函数" class="headerlink" title="5. create_vision_module 函数"></a><strong>5. create_vision_module 函数</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">create_vision_module</span>(<span class="hljs-params">config</span>):<br>    <span class="hljs-comment"># 使用timm库创建一个视觉模型，模型名为&#x27;eva02_enormous_patch14_clip_224.laion2b_plus&#x27;</span><br>    vision_tower = timm.create_model(<span class="hljs-string">&#x27;eva02_enormous_patch14_clip_224.laion2b_plus&#x27;</span>,<br>                                     pretrained=<span class="hljs-literal">False</span>,  <span class="hljs-comment"># 不使用预训练权重</span><br>                                     num_classes=<span class="hljs-number">0</span>,  <span class="hljs-comment"># 输出类别数为0</span><br>                                     dynamic_img_size=<span class="hljs-literal">True</span>,  <span class="hljs-comment"># 动态图像尺寸</span><br>                                     dynamic_img_pad=<span class="hljs-literal">True</span>)  <span class="hljs-comment"># 动态图像填充</span><br><br>    <span class="hljs-comment"># 如果视觉模型是VisionTransformer类型，并且有注意力池化层，则将其替换为Identity</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(vision_tower, timm.models.VisionTransformer):<br>        <span class="hljs-keyword">if</span> vision_tower.attn_pool <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>            vision_tower.attn_pool = Identity()<br><br>    <span class="hljs-comment"># 使用倒数第二层的输出，将最后一层替换为Identity</span><br>    vision_tower.blocks[-<span class="hljs-number">1</span>] = Identity()<br><br>    <span class="hljs-comment"># 获取嵌入维度</span><br>    embed_dim = config.hidden_size<br>    <span class="hljs-comment"># 创建Resampler对象，用于对视觉特征进行重采样</span><br>    resampler = Resampler(<br>        grid_size=<span class="hljs-built_in">int</span>(math.sqrt(config.num_query)),  <span class="hljs-comment"># 网格大小</span><br>        embed_dim=embed_dim,  <span class="hljs-comment"># 嵌入维度</span><br>        num_heads=embed_dim // <span class="hljs-number">128</span>,  <span class="hljs-comment"># 注意力头数</span><br>        kv_dim=vision_tower.embed_dim,  <span class="hljs-comment"># 键值维度</span><br>    )<br>    <span class="hljs-keyword">return</span> vision_tower, resampler  <span class="hljs-comment"># 返回视觉模型和重采样器</span><br></code></pre></td></tr></table></figure>
+<ul>
+<li>该函数用于创建视觉模块，包括视觉模型和重采样器。</li>
+</ul>
+<hr>
+<h3 id="6-OmniLMMModel-类"><a href="#6-OmniLMMModel-类" class="headerlink" title="6. OmniLMMModel 类"></a><strong>6. OmniLMMModel 类</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">OmniLMMModel</span>(<span class="hljs-title class_ inherited__">MistralModel</span>):<br>    config_class = OmniLMMConfig  <span class="hljs-comment"># 配置类为OmniLMMConfig</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, config: OmniLMMConfig, mm_vision_tower=<span class="hljs-literal">None</span>, mm_hidden_size=<span class="hljs-literal">None</span>, tune_clip=<span class="hljs-literal">True</span></span>):<br>        <span class="hljs-built_in">super</span>(OmniLMMModel, <span class="hljs-variable language_">self</span>).__init__(config)  <span class="hljs-comment"># 调用父类构造函数</span><br><br>        <span class="hljs-comment"># 如果配置中有视觉模型，则创建视觉模块</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">hasattr</span>(config, <span class="hljs-string">&quot;mm_vision_tower&quot;</span>):<br>            vision_tower, resampler = create_vision_module(config)<br><br>            <span class="hljs-comment"># <span class="hljs-doctag">HACK:</span> 为了FSDP（完全分片数据并行），将视觉模型包装在列表中</span><br>            <span class="hljs-variable language_">self</span>.vision_tower = [vision_tower]<br>            <span class="hljs-variable language_">self</span>.resampler = resampler<br>            <span class="hljs-keyword">if</span> tune_clip:<br>                <span class="hljs-variable language_">self</span>.vision_tower = <span class="hljs-variable language_">self</span>.vision_tower[<span class="hljs-number">0</span>]  <span class="hljs-comment"># 如果调优CLIP，则直接使用视觉模型</span><br><br>        <span class="hljs-variable language_">self</span>.vision_config = <span class="hljs-keyword">lambda</span> x: <span class="hljs-literal">None</span>  <span class="hljs-comment"># 视觉配置，初始化为空函数</span><br></code></pre></td></tr></table></figure>
+<ul>
+<li>继承自<code>MistralModel</code>，是OmniLMM的核心模型类。</li>
+<li>初始化时根据配置创建视觉模块。</li>
+</ul>
+<hr>
+<h4 id="6-1-initialize-vision-modules-方法"><a href="#6-1-initialize-vision-modules-方法" class="headerlink" title="6.1  initialize_vision_modules 方法"></a><strong>6.1  initialize_vision_modules 方法</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">initialize_vision_modules</span>(<span class="hljs-params">self, vision_tower, no_randaug, num_query, image_size, tune_clip=<span class="hljs-literal">False</span></span>):<br>    <span class="hljs-variable language_">self</span>.config.mm_vision_tower = vision_tower  <span class="hljs-comment"># 设置视觉模型</span><br>    <span class="hljs-variable language_">self</span>.config.use_mm_proj = <span class="hljs-literal">True</span>  <span class="hljs-comment"># 使用多模态投影</span><br>    <span class="hljs-variable language_">self</span>.config.num_query = num_query  <span class="hljs-comment"># 设置查询数量</span><br>    <span class="hljs-variable language_">self</span>.config.image_size = image_size  <span class="hljs-comment"># 设置图像尺寸</span><br><br>    <span class="hljs-comment"># 如果没有视觉模型，则创建并加载预训练权重</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> <span class="hljs-built_in">hasattr</span>(<span class="hljs-variable language_">self</span>, <span class="hljs-string">&#x27;vision_tower&#x27;</span>):<br>        vision_tower, resampler = create_vision_module(<span class="hljs-variable language_">self</span>.config)<br>        state_dict = torch.load(<br>            <span class="hljs-string">&#x27;/tt/data/public/multimodal/multimodal_model_ckpts/timm/eva02_enormous_patch14_clip_224.laion2b_plus.pt&#x27;</span>)<br>        vision_tower.load_state_dict(state_dict, strict=<span class="hljs-literal">False</span>)<br>        <span class="hljs-keyword">del</span> state_dict<br>        gc.collect()<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-comment"># 如果视觉模型是列表，则取第一个元素</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(<span class="hljs-variable language_">self</span>.vision_tower, <span class="hljs-built_in">list</span>):<br>            vision_tower = <span class="hljs-variable language_">self</span>.vision_tower[<span class="hljs-number">0</span>]<br>        <span class="hljs-keyword">else</span>:<br>            vision_tower = <span class="hljs-variable language_">self</span>.vision_tower<br>        resampler = <span class="hljs-variable language_">self</span>.resampler<br>    <span class="hljs-variable language_">self</span>.vision_tower = vision_tower <span class="hljs-keyword">if</span> tune_clip <span class="hljs-keyword">else</span> [vision_tower]  <span class="hljs-comment"># 根据是否调优CLIP设置视觉模型</span><br>    <span class="hljs-variable language_">self</span>.resampler = resampler  <span class="hljs-comment"># 设置重采样器</span><br><br>    <span class="hljs-comment"># 构建训练和评估时的图像变换</span><br>    train_img_transform = build_transform(<br>        is_train=<span class="hljs-literal">True</span>, randaug=<span class="hljs-keyword">not</span> no_randaug, input_size=<span class="hljs-variable language_">self</span>.config.image_size, std_mode=<span class="hljs-string">&#x27;OPENAI_CLIP&#x27;</span>)<br>    eval_img_transform = build_transform(<br>        is_train=<span class="hljs-literal">False</span>, input_size=<span class="hljs-variable language_">self</span>.config.image_size, std_mode=<span class="hljs-string">&#x27;OPENAI_CLIP&#x27;</span>)<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">dict</span>(<br>        image_processor=(train_img_transform, eval_img_transform),  <span class="hljs-comment"># 返回图像处理器</span><br>        image_token_len=num_query,  <span class="hljs-comment"># 返回图像token长度</span><br>        vision_config=<span class="hljs-variable language_">self</span>.vision_config  <span class="hljs-comment"># 返回视觉配置</span><br>    )<br></code></pre></td></tr></table></figure>
+<ul>
+<li>该方法用于初始化视觉模块，包括加载预训练权重、设置图像变换等。</li>
+</ul>
+<hr>
+<h4 id="6-2-get-vision-embedding-方法"><a href="#6-2-get-vision-embedding-方法" class="headerlink" title="6.2 get_vision_embedding 方法"></a><strong>6.2 get_vision_embedding 方法</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_vision_embedding</span>(<span class="hljs-params">self, pixel_values</span>):<br>    <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(<span class="hljs-variable language_">self</span>.vision_tower, <span class="hljs-built_in">list</span>):<br>        vision_tower = <span class="hljs-variable language_">self</span>.vision_tower[<span class="hljs-number">0</span>]  <span class="hljs-comment"># <span class="hljs-doctag">HACK:</span> 为了FSDP，取列表中的第一个元素</span><br>    <span class="hljs-keyword">else</span>:<br>        vision_tower = <span class="hljs-variable language_">self</span>.vision_tower<br><br>    dtype = vision_tower.pos_embed.data.dtype  <span class="hljs-comment"># 获取视觉模型的位置嵌入数据类型</span><br>    vision_embedding = vision_tower.forward_features(<br>        pixel_values.<span class="hljs-built_in">type</span>(dtype))  <span class="hljs-comment"># 获取视觉特征</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-built_in">hasattr</span>(vision_tower, <span class="hljs-string">&#x27;num_prefix_tokens&#x27;</span>) <span class="hljs-keyword">and</span> vision_tower.num_prefix_tokens &gt; <span class="hljs-number">0</span>:<br>        vision_embedding = vision_embedding[:,<br>                                            vision_tower.num_prefix_tokens:]  <span class="hljs-comment"># 去掉前缀token</span><br>    res = <span class="hljs-variable language_">self</span>.resampler(vision_embedding)  <span class="hljs-comment"># 对视觉特征进行重采样</span><br>    <span class="hljs-keyword">return</span> res  <span class="hljs-comment"># 返回重采样后的视觉特征</span><br></code></pre></td></tr></table></figure>
+<ul>
+<li>该方法用于从输入图像中提取视觉特征，并进行重采样。</li>
+</ul>
+<h4 id="6-3-get-vllm-embedding-方法"><a href="#6-3-get-vllm-embedding-方法" class="headerlink" title="6.3 get_vllm_embedding 方法"></a><strong>6.3 get_vllm_embedding 方法</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_vllm_embedding</span>(<span class="hljs-params">self, data</span>):<br>    <span class="hljs-comment"># 如果数据中没有视觉隐藏状态，则从像素值中提取视觉特征</span><br>    <span class="hljs-keyword">if</span> <span class="hljs-string">&#x27;vision_hidden_states&#x27;</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> data:<br>        pixel_values_list = data[<span class="hljs-string">&#x27;pixel_values&#x27;</span>]<br>        vision_hidden_states = []<br>        <span class="hljs-keyword">for</span> pixel_values <span class="hljs-keyword">in</span> pixel_values_list:<br>            <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(pixel_values) &gt; <span class="hljs-number">0</span>:<br>                <span class="hljs-comment"># 提取视觉特征</span><br>                vision_hidden_states.append(<span class="hljs-variable language_">self</span>.get_vision_embedding(pixel_values.unsqueeze(<span class="hljs-number">0</span>))[<span class="hljs-number">0</span>])<br>            <span class="hljs-keyword">else</span>:<br>                vision_hidden_states.append([])<br>    <span class="hljs-keyword">else</span>:<br>        vision_hidden_states = data[<span class="hljs-string">&#x27;vision_hidden_states&#x27;</span>]<br><br>    <span class="hljs-comment"># 获取输入token的嵌入</span><br>    inputs_embeds = <span class="hljs-variable language_">self</span>.embed_tokens(data[<span class="hljs-string">&#x27;input_ids&#x27;</span>])<br>    <span class="hljs-comment"># 将视觉特征的数据类型转换为与输入嵌入一致</span><br>    vision_hidden_states = [i.<span class="hljs-built_in">type</span>(inputs_embeds.dtype) <br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">isinstance</span>(i, torch.Tensor) <span class="hljs-keyword">else</span> i <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> vision_hidden_states<br>    ]<br><br>    <span class="hljs-comment"># <span class="hljs-doctag">HACK:</span> 替换回原始嵌入以支持LLaVA预训练</span><br>    orig_embeds_params = <span class="hljs-built_in">getattr</span>(<span class="hljs-variable language_">self</span>, <span class="hljs-string">&#x27;orig_embeds_params&#x27;</span>, <span class="hljs-literal">None</span>)<br><br>    new_input_embeds = []<br>    cur_image_idx = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">for</span> cur_input_ids, cur_input_embeds <span class="hljs-keyword">in</span> <span class="hljs-built_in">zip</span>(data[<span class="hljs-string">&#x27;input_ids&#x27;</span>], inputs_embeds):<br>        <span class="hljs-comment"># 如果当前输入中没有图像patch token，则直接使用原始嵌入</span><br>        <span class="hljs-keyword">if</span> (cur_input_ids == <span class="hljs-variable language_">self</span>.vision_config.im_patch_token).<span class="hljs-built_in">sum</span>() == <span class="hljs-number">0</span>:<br>            cur_input_embeds = cur_input_embeds + (<span class="hljs-number">0.</span> * dummy_image_features).<span class="hljs-built_in">sum</span>()<br>            new_input_embeds.append(cur_input_embeds)<br>            <span class="hljs-keyword">continue</span><br><br>        <span class="hljs-comment"># 如果使用图像开始和结束token</span><br>        <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.vision_config.use_im_start_end:<br>            cur_image_features = vision_hidden_states[cur_image_idx]<br>            num_patches = cur_image_features.shape[<span class="hljs-number">0</span>]<br>            <span class="hljs-comment"># 检查图像开始和结束token的数量是否一致</span><br>            <span class="hljs-keyword">if</span> (cur_input_ids == <span class="hljs-variable language_">self</span>.vision_config.im_start_token).<span class="hljs-built_in">sum</span>() != (cur_input_ids == <span class="hljs-variable language_">self</span>.vision_config.im_end_token).<span class="hljs-built_in">sum</span>():<br>                <span class="hljs-keyword">raise</span> ValueError(<br>                    <span class="hljs-string">&quot;The number of image start tokens and image end tokens should be the same.&quot;</span>)<br>            <span class="hljs-comment"># 找到图像开始token的位置</span><br>            image_start_tokens = torch.where(<br>                cur_input_ids == <span class="hljs-variable language_">self</span>.vision_config.im_start_token)[<span class="hljs-number">0</span>]<br>            <span class="hljs-keyword">for</span> image_start_token_pos <span class="hljs-keyword">in</span> image_start_tokens:<br>                cur_image_features = vision_hidden_states[cur_image_idx].to(<br>                    device=cur_input_embeds.device)<br>                num_patches = cur_image_features.shape[<span class="hljs-number">0</span>]<br>                <span class="hljs-comment"># 检查图像结束token是否紧随图像开始token</span><br>                <span class="hljs-keyword">if</span> cur_input_ids[image_start_token_pos + num_patches + <span class="hljs-number">1</span>] != <span class="hljs-variable language_">self</span>.vision_config.im_end_token:<br>                    <span class="hljs-keyword">raise</span> ValueError(<br>                        <span class="hljs-string">&quot;The image end token should follow the image start token.&quot;</span>)<br>                <span class="hljs-comment"># 如果存在原始嵌入参数，则拼接嵌入</span><br>                <span class="hljs-keyword">if</span> orig_embeds_params <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>                    cur_new_input_embeds = torch.cat((cur_input_embeds[:image_start_token_pos].detach(), cur_input_embeds[image_start_token_pos:image_start_token_pos+<span class="hljs-number">1</span>], cur_image_features,<br>                                                     cur_input_embeds[image_start_token_pos + num_patches + <span class="hljs-number">1</span>:image_start_token_pos + num_patches + <span class="hljs-number">2</span>], cur_input_embeds[image_start_token_pos + num_patches + <span class="hljs-number">2</span>:].detach()), dim=<span class="hljs-number">0</span>)<br>                <span class="hljs-keyword">else</span>:<br>                    cur_new_input_embeds = torch.cat(<br>                        (cur_input_embeds[:image_start_token_pos+<span class="hljs-number">1</span>], cur_image_features, cur_input_embeds[image_start_token_pos + num_patches + <span class="hljs-number">1</span>:]), dim=<span class="hljs-number">0</span>)<br>                cur_image_idx += <span class="hljs-number">1</span><br>            new_input_embeds.append(cur_new_input_embeds)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">raise</span> NotImplementedError<br>    inputs_embeds = torch.stack(new_input_embeds, dim=<span class="hljs-number">0</span>)<br><br>    <span class="hljs-keyword">return</span> inputs_embeds, vision_hidden_states<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>该方法用于从输入数据中提取视觉特征，并将其与文本嵌入结合，生成多模态输入嵌入。</li>
+</ul>
+<hr>
+<h4 id="6-4-forward-方法"><a href="#6-4-forward-方法" class="headerlink" title="6.4 forward 方法"></a><strong>6.4 forward 方法</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params"></span><br><span class="hljs-params">    self,</span><br><span class="hljs-params">    input_ids: torch.LongTensor = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    attention_mask: <span class="hljs-type">Optional</span>[torch.Tensor] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    past_key_values: <span class="hljs-type">Optional</span>[<span class="hljs-type">List</span>[torch.FloatTensor]] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    inputs_embeds: <span class="hljs-type">Optional</span>[torch.FloatTensor] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    use_cache: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">bool</span>] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    output_attentions: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">bool</span>] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    output_hidden_states: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">bool</span>] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    images: <span class="hljs-type">Optional</span>[torch.FloatTensor] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    return_dict: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">bool</span>] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    **kwargs</span><br><span class="hljs-params"></span>) -&gt; <span class="hljs-type">Union</span>[<span class="hljs-type">Tuple</span>, BaseModelOutputWithPast]:<br>    <span class="hljs-comment"># <span class="hljs-doctag">HACK:</span> 替换回原始嵌入以支持LLaVA预训练</span><br>    orig_embeds_params = <span class="hljs-built_in">getattr</span>(<span class="hljs-variable language_">self</span>, <span class="hljs-string">&#x27;orig_embeds_params&#x27;</span>, <span class="hljs-literal">None</span>)<br><br>    <span class="hljs-keyword">if</span> inputs_embeds <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">and</span> past_key_values <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>        inputs_embeds = <span class="hljs-variable language_">self</span>.embed_tokens(input_ids)  <span class="hljs-comment"># 获取输入token的嵌入</span><br><br>        vision_tower = <span class="hljs-built_in">getattr</span>(<span class="hljs-variable language_">self</span>, <span class="hljs-string">&#x27;vision_tower&#x27;</span>, <span class="hljs-literal">None</span>)<br>        <span class="hljs-comment"># 如果存在视觉模型且输入不是单token或处于训练模式，并且有图像输入</span><br>        <span class="hljs-keyword">if</span> vision_tower <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">and</span> (input_ids.shape[<span class="hljs-number">1</span>] != <span class="hljs-number">1</span> <span class="hljs-keyword">or</span> <span class="hljs-variable language_">self</span>.training) <span class="hljs-keyword">and</span> images <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>            <span class="hljs-keyword">if</span> <span class="hljs-built_in">type</span>(images) <span class="hljs-keyword">is</span> <span class="hljs-built_in">list</span>:<br>                image_features = []<br>                <span class="hljs-keyword">for</span> image <span class="hljs-keyword">in</span> images:<br>                    image_forward_out = <span class="hljs-variable language_">self</span>.get_vision_embedding(image.unsqueeze(<span class="hljs-number">0</span>))[<span class="hljs-number">0</span>]<br>                    image_features.append(image_forward_out)<br>            <span class="hljs-keyword">else</span>:<br>                image_features = <span class="hljs-variable language_">self</span>.get_vision_embedding(images)<br><br>            <span class="hljs-comment"># 创建虚拟图像特征</span><br>            dummy_image_features = torch.zeros(<br>                <span class="hljs-variable language_">self</span>.config.num_query,<br>                <span class="hljs-variable language_">self</span>.config.hidden_size,<br>                device=inputs_embeds.device,<br>                dtype=inputs_embeds.dtype)<br><br>            new_input_embeds = []<br>            cur_image_idx = <span class="hljs-number">0</span><br>            <span class="hljs-keyword">for</span> cur_input_ids, cur_input_embeds <span class="hljs-keyword">in</span> <span class="hljs-built_in">zip</span>(input_ids, inputs_embeds):<br>                <span class="hljs-comment"># 如果当前输入中没有图像patch token，则直接使用原始嵌入</span><br>                <span class="hljs-keyword">if</span> (cur_input_ids == <span class="hljs-variable language_">self</span>.vision_config.im_patch_token).<span class="hljs-built_in">sum</span>() == <span class="hljs-number">0</span>:<br>                    cur_input_embeds = cur_input_embeds + (<span class="hljs-number">0.</span> * dummy_image_features).<span class="hljs-built_in">sum</span>()<br>                    new_input_embeds.append(cur_input_embeds)<br>                    <span class="hljs-keyword">continue</span><br><br>                <span class="hljs-comment"># 如果使用图像开始和结束token</span><br>                <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.vision_config.use_im_start_end:<br>                    cur_image_features = image_features[cur_image_idx]<br>                    num_patches = cur_image_features.shape[<span class="hljs-number">0</span>]<br>                    <span class="hljs-comment"># 检查图像开始和结束token的数量是否一致</span><br>                    <span class="hljs-keyword">if</span> (cur_input_ids == <span class="hljs-variable language_">self</span>.vision_config.im_start_token).<span class="hljs-built_in">sum</span>() != (cur_input_ids == <span class="hljs-variable language_">self</span>.vision_config.im_end_token).<span class="hljs-built_in">sum</span>():<br>                        <span class="hljs-keyword">raise</span> ValueError(<br>                            <span class="hljs-string">&quot;The number of image start tokens and image end tokens should be the same.&quot;</span>)<br>                    <span class="hljs-comment"># 找到图像开始token的位置</span><br>                    image_start_tokens = torch.where(<br>                        cur_input_ids == <span class="hljs-variable language_">self</span>.vision_config.im_start_token)[<span class="hljs-number">0</span>]<br>                    <span class="hljs-keyword">for</span> image_start_token_pos <span class="hljs-keyword">in</span> image_start_tokens:<br>                        cur_image_features = image_features[cur_image_idx].to(<br>                            device=cur_input_embeds.device)<br>                        num_patches = cur_image_features.shape[<span class="hljs-number">0</span>]<br>                        <span class="hljs-comment"># 检查图像结束token是否紧随图像开始token</span><br>                        <span class="hljs-keyword">if</span> cur_input_ids[image_start_token_pos + num_patches + <span class="hljs-number">1</span>] != <span class="hljs-variable language_">self</span>.vision_config.im_end_token:<br>                            <span class="hljs-keyword">raise</span> ValueError(<br>                                <span class="hljs-string">&quot;The image end token should follow the image start token.&quot;</span>)<br>                        <span class="hljs-comment"># 如果存在原始嵌入参数，则拼接嵌入</span><br>                        <span class="hljs-keyword">if</span> orig_embeds_params <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>                            cur_new_input_embeds = torch.cat((cur_input_embeds[:image_start_token_pos].detach(), cur_input_embeds[image_start_token_pos:image_start_token_pos+<span class="hljs-number">1</span>], cur_image_features,<br>                                                             cur_input_embeds[image_start_token_pos + num_patches + <span class="hljs-number">1</span>:image_start_token_pos + num_patches + <span class="hljs-number">2</span>], cur_input_embeds[image_start_token_pos + num_patches + <span class="hljs-number">2</span>:].detach()), dim=<span class="hljs-number">0</span>)<br>                        <span class="hljs-keyword">else</span>:<br>                            cur_new_input_embeds = torch.cat(<br>                                (cur_input_embeds[:image_start_token_pos+<span class="hljs-number">1</span>], cur_image_features, cur_input_embeds[image_start_token_pos + num_patches + <span class="hljs-number">1</span>:]), dim=<span class="hljs-number">0</span>)<br>                        cur_image_idx += <span class="hljs-number">1</span><br>                    new_input_embeds.append(cur_new_input_embeds)<br>                <span class="hljs-keyword">else</span>:<br>                    <span class="hljs-keyword">raise</span> NotImplementedError<br>            inputs_embeds = torch.stack(new_input_embeds, dim=<span class="hljs-number">0</span>)<br>            input_ids = <span class="hljs-literal">None</span><br><br>    <span class="hljs-comment"># 调用父类的forward方法</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">super</span>(OmniLMMModel, <span class="hljs-variable language_">self</span>).forward(<br>        input_ids=input_ids, attention_mask=attention_mask, past_key_values=past_key_values,<br>        inputs_embeds=inputs_embeds, use_cache=use_cache,<br>        output_attentions=output_attentions, output_hidden_states=output_hidden_states,<br>        return_dict=return_dict,<br>        **kwargs<br>    )<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>该方法用于模型的前向传播，处理多模态输入（文本和图像），并调用父类的 <code>forward</code> 方法。</li>
+</ul>
+<hr>
+<h3 id="7-OmniLMMForCausalLM-类"><a href="#7-OmniLMMForCausalLM-类" class="headerlink" title="7. OmniLMMForCausalLM 类"></a><strong>7. OmniLMMForCausalLM 类</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">OmniLMMForCausalLM</span>(<span class="hljs-title class_ inherited__">MistralForCausalLM</span>):<br>    config_class = OmniLMMConfig  <span class="hljs-comment"># 配置类为OmniLMMConfig</span><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, config, mm_vision_tower=<span class="hljs-literal">None</span>, tune_clip=<span class="hljs-literal">True</span></span>):<br>        <span class="hljs-built_in">super</span>(MistralForCausalLM, <span class="hljs-variable language_">self</span>).__init__(config)  <span class="hljs-comment"># 调用父类构造函数</span><br>        <span class="hljs-variable language_">self</span>.model = OmniLMMModel(<br>            config, mm_vision_tower=mm_vision_tower, tune_clip=tune_clip)  <span class="hljs-comment"># 初始化OmniLMM模型</span><br><br>        <span class="hljs-variable language_">self</span>.lm_head = nn.Linear(<br>            config.hidden_size, config.vocab_size, bias=<span class="hljs-literal">False</span>)  <span class="hljs-comment"># 定义语言模型头</span><br><br>        <span class="hljs-comment"># 初始化权重并应用最终处理</span><br>        <span class="hljs-variable language_">self</span>.post_init()<br></code></pre></td></tr></table></figure>
+<ul>
+<li>继承自<code>MistralForCausalLM</code>，用于实现因果语言模型。</li>
+<li>初始化时创建OmniLMM模型，并定义语言模型头。</li>
+</ul>
+<hr>
+<h4 id="7-1-forward-方法"><a href="#7-1-forward-方法" class="headerlink" title="7.1 forward 方法"></a><strong>7.1 forward 方法</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params"></span><br><span class="hljs-params">    self,</span><br><span class="hljs-params">    input_ids: torch.LongTensor = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    attention_mask: <span class="hljs-type">Optional</span>[torch.Tensor] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    past_key_values: <span class="hljs-type">Optional</span>[<span class="hljs-type">List</span>[torch.FloatTensor]] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    inputs_embeds: <span class="hljs-type">Optional</span>[torch.FloatTensor] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    labels: <span class="hljs-type">Optional</span>[torch.LongTensor] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    use_cache: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">bool</span>] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    output_attentions: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">bool</span>] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    output_hidden_states: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">bool</span>] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    images: <span class="hljs-type">Optional</span>[torch.FloatTensor] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    return_dict: <span class="hljs-type">Optional</span>[<span class="hljs-built_in">bool</span>] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    **kwargs</span><br><span class="hljs-params"></span>) -&gt; <span class="hljs-type">Union</span>[<span class="hljs-type">Tuple</span>, CausalLMOutputWithPast]:<br>    output_attentions = output_attentions <span class="hljs-keyword">if</span> output_attentions <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">else</span> <span class="hljs-variable language_">self</span>.config.output_attentions<br>    output_hidden_states = (<br>        output_hidden_states <span class="hljs-keyword">if</span> output_hidden_states <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">else</span> <span class="hljs-variable language_">self</span>.config.output_hidden_states<br>    )<br>    return_dict = return_dict <span class="hljs-keyword">if</span> return_dict <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">else</span> <span class="hljs-variable language_">self</span>.config.use_return_dict<br><br>    <span class="hljs-comment"># 调用模型进行前向传播</span><br>    outputs = <span class="hljs-variable language_">self</span>.model(<br>        input_ids=input_ids,<br>        attention_mask=attention_mask,<br>        past_key_values=past_key_values,<br>        inputs_embeds=inputs_embeds,<br>        use_cache=use_cache,<br>        output_attentions=output_attentions,<br>        output_hidden_states=output_hidden_states,<br>        return_dict=return_dict,<br>        images=images,<br>        **kwargs<br>    )<br><br>    hidden_states = outputs[<span class="hljs-number">0</span>]  <span class="hljs-comment"># 获取隐藏状态</span><br>    logits = <span class="hljs-variable language_">self</span>.lm_head(hidden_states)  <span class="hljs-comment"># 计算logits</span><br><br>    loss = <span class="hljs-literal">None</span><br>    <span class="hljs-keyword">if</span> labels <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>        <span class="hljs-comment"># 计算损失</span><br>        shift_logits = logits[..., :-<span class="hljs-number">1</span>, :].contiguous()<br>        shift_labels = labels[..., <span class="hljs-number">1</span>:].contiguous()<br>        loss_fct = CrossEntropyLoss()<br>        shift_logits = shift_logits.view(-<span class="hljs-number">1</span>, <span class="hljs-variable language_">self</span>.config.vocab_size)<br>        shift_labels = shift_labels.view(-<span class="hljs-number">1</span>)<br>        shift_labels = shift_labels.to(shift_logits.device)<br>        loss = loss_fct(shift_logits, shift_labels)<br><br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> return_dict:<br>        output = (logits,) + outputs[<span class="hljs-number">1</span>:]<br>        <span class="hljs-keyword">return</span> (loss,) + output <span class="hljs-keyword">if</span> loss <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">else</span> output<br><br>    <span class="hljs-keyword">return</span> CausalLMOutputWithPast(<br>        loss=loss,<br>        logits=logits,<br>        past_key_values=outputs.past_key_values,<br>        hidden_states=outputs.hidden_states,<br>        attentions=outputs.attentions,<br>    )<br></code></pre></td></tr></table></figure>
+<ul>
+<li>该方法用于模型的前向传播，计算logits和损失。</li>
+</ul>
+<hr>
+<h4 id="7-2-prepare-inputs-for-generation-方法"><a href="#7-2-prepare-inputs-for-generation-方法" class="headerlink" title="7.2 prepare_inputs_for_generation 方法"></a><strong>7.2 prepare_inputs_for_generation 方法</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">prepare_inputs_for_generation</span>(<span class="hljs-params"></span><br><span class="hljs-params">    self, input_ids, past_key_values=<span class="hljs-literal">None</span>, attention_mask=<span class="hljs-literal">None</span>, inputs_embeds=<span class="hljs-literal">None</span>, **kwargs</span><br><span class="hljs-params"></span>):<br>    <span class="hljs-keyword">if</span> past_key_values:<br>        input_ids = input_ids[:, -<span class="hljs-number">1</span>:]  <span class="hljs-comment"># 如果存在过去的键值对，则只使用最后一个token</span><br><br>    <span class="hljs-comment"># 如果传递了inputs_embeds，则只在第一步生成时使用</span><br>    <span class="hljs-keyword">if</span> inputs_embeds <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">and</span> past_key_values <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>        model_inputs = &#123;<span class="hljs-string">&quot;inputs_embeds&quot;</span>: inputs_embeds&#125;<br>    <span class="hljs-keyword">else</span>:<br>        model_inputs = &#123;<span class="hljs-string">&quot;input_ids&quot;</span>: input_ids&#125;<br><br>    <span class="hljs-comment"># 更新模型输入</span><br>    model_inputs.update(<br>        &#123;<br>            <span class="hljs-string">&quot;past_key_values&quot;</span>: past_key_values,<br>            <span class="hljs-string">&quot;use_cache&quot;</span>: kwargs.get(<span class="hljs-string">&quot;use_cache&quot;</span>),<br>            <span class="hljs-string">&quot;attention_mask&quot;</span>: attention_mask,<br>            <span class="hljs-string">&quot;images&quot;</span>: kwargs.get(<span class="hljs-string">&quot;images&quot;</span>, <span class="hljs-literal">None</span>),<br>        &#125;<br>    )<br>    <span class="hljs-keyword">return</span> model_inputs<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>该方法用于为生成任务准备输入数据。</li>
+</ul>
+<hr>
+<h4 id="7-3-generate-vllm-方法"><a href="#7-3-generate-vllm-方法" class="headerlink" title="7.3 generate_vllm 方法"></a><strong>7.3 generate_vllm 方法</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">generate_vllm</span>(<span class="hljs-params"></span><br><span class="hljs-params">    self,</span><br><span class="hljs-params">    input_ids: torch.LongTensor = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    images: <span class="hljs-type">Optional</span>[torch.FloatTensor] = <span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    vision_hidden_states=<span class="hljs-literal">None</span>,</span><br><span class="hljs-params">    return_vision_hidden_states=<span class="hljs-literal">False</span>,</span><br><span class="hljs-params">    **kwargs</span><br><span class="hljs-params"></span>):<br>    model_inputs = &#123;<span class="hljs-string">&#x27;input_ids&#x27;</span>: input_ids&#125;<br>    <span class="hljs-keyword">if</span> vision_hidden_states <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>        model_inputs[<span class="hljs-string">&#x27;pixel_values&#x27;</span>] = images  <span class="hljs-comment"># 如果没有视觉隐藏状态，则传递像素值</span><br>    <span class="hljs-keyword">else</span>:<br>        model_inputs[<span class="hljs-string">&#x27;vision_hidden_states&#x27;</span>] = vision_hidden_states  <span class="hljs-comment"># 否则传递视觉隐藏状态</span><br><br>    <span class="hljs-keyword">with</span> torch.inference_mode():<br>        <span class="hljs-comment"># 获取输入嵌入和视觉隐藏状态</span><br>        inputs_embeds, vision_hidden_states = <span class="hljs-variable language_">self</span>.model.get_vllm_embedding(model_inputs)<br><br>        <span class="hljs-comment"># 生成文本</span><br>        result = <span class="hljs-variable language_">self</span>.generate(<br>            inputs_embeds=inputs_embeds,<br>            **kwargs<br>        )<br><br>    <span class="hljs-keyword">if</span> return_vision_hidden_states:<br>        <span class="hljs-keyword">return</span> result, vision_hidden_states  <span class="hljs-comment"># 如果需要返回视觉隐藏状态，则一起返回</span><br><br>    <span class="hljs-keyword">return</span> result  <span class="hljs-comment"># 否则只返回生成结果</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>该方法用于生成文本，支持视觉输入，并可以选择返回视觉隐藏状态。</li>
+</ul>
+<hr>
+<h4 id="7-4-initialize-vision-tokenizer-方法"><a href="#7-4-initialize-vision-tokenizer-方法" class="headerlink" title="7.4 initialize_vision_tokenizer 方法"></a><strong>7.4 initialize_vision_tokenizer 方法</strong></h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">initialize_vision_tokenizer</span>(<span class="hljs-params">self, mm_use_im_start_end, tokenizer, device,</span><br><span class="hljs-params">                                tune_mm_mlp_adapter=<span class="hljs-literal">False</span></span>):<br>    <span class="hljs-variable language_">self</span>.model.vision_config.use_im_start_end = mm_use_im_start_end  <span class="hljs-comment"># 设置是否使用图像开始和结束token</span><br>    tokenizer.add_tokens([DEFAULT_IMAGE_PATCH_TOKEN], special_tokens=<span class="hljs-literal">True</span>)  <span class="hljs-comment"># 添加图像patch token</span><br>    <span class="hljs-variable language_">self</span>.resize_token_embeddings(<span class="hljs-built_in">len</span>(tokenizer))  <span class="hljs-comment"># 调整token嵌入的大小</span><br><br>    <span class="hljs-keyword">if</span> mm_use_im_start_end:<br>        <span class="hljs-comment"># 添加图像开始和结束token</span><br>        num_new_tokens = tokenizer.add_tokens(<br>            [DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN], special_tokens=<span class="hljs-literal">True</span>)<br>        <span class="hljs-variable language_">self</span>.resize_token_embeddings(<span class="hljs-built_in">len</span>(tokenizer))<br>        <span class="hljs-variable language_">self</span>.model.vision_config.im_start_token, <span class="hljs-variable language_">self</span>.model.vision_config.im_end_token = tokenizer.convert_tokens_to_ids(<br>            [DEFAULT_IM_START_TOKEN, DEFAULT_IM_END_TOKEN])<br><br>        <span class="hljs-keyword">if</span> num_new_tokens &gt; <span class="hljs-number">0</span>:<br>            <span class="hljs-comment"># 对新token的嵌入进行平均初始化</span><br>            input_embeddings = <span class="hljs-variable language_">self</span>.get_input_embeddings().weight.data<br>            output_embeddings = <span class="hljs-variable language_">self</span>.get_output_embeddings().weight.data<br><br>            input_embeddings_avg = input_embeddings[:-num_new_tokens].mean(<br>                dim=<span class="hljs-number">0</span>, keepdim=<span class="hljs-literal">True</span>)<br>            output_embeddings_avg = output_embeddings[:-num_new_tokens].mean(<br>                dim=<span class="hljs-number">0</span>, keepdim=<span class="hljs-literal">True</span>)<br><br>            input_embeddings[-num_new_tokens:] = input_embeddings_avg<br>            output_embeddings[-num_new_tokens:] = output_embeddings_avg<br><br>        <span class="hljs-comment"># 添加其他特殊token</span><br>        num_new_tokens = tokenizer.add_tokens(<br>            [<span class="hljs-string">&#x27;&lt;box&gt;&#x27;</span>, <span class="hljs-string">&#x27;&lt;/box&gt;&#x27;</span>, <span class="hljs-string">&#x27;&lt;ref&gt;&#x27;</span>, <span class="hljs-string">&#x27;&lt;/ref&gt;&#x27;</span>, <span class="hljs-string">&#x27;&lt;quad&gt;&#x27;</span>, <span class="hljs-string">&#x27;&lt;/quad&gt;&#x27;</span>], special_tokens=<span class="hljs-literal">True</span>)<br>        <span class="hljs-variable language_">self</span>.resize_token_embeddings(<span class="hljs-built_in">len</span>(tokenizer))<br><br>        <span class="hljs-keyword">if</span> num_new_tokens &gt; <span class="hljs-number">0</span>:<br>            <span class="hljs-comment"># 对新token的嵌入进行平均初始化</span><br>            input_embeddings = <span class="hljs-variable language_">self</span>.get_input_embeddings().weight.data<br>            output_embeddings = <span class="hljs-variable language_">self</span>.get_output_embeddings().weight.data<br><br>            input_embeddings_avg = input_embeddings[:-num_new_tokens].mean(<br>                dim=<span class="hljs-number">0</span>, keepdim=<span class="hljs-literal">True</span>)<br>            output_embeddings_avg = output_embeddings[:-num_new_tokens].mean(<br>                dim=<span class="hljs-number">0</span>, keepdim=<span class="hljs-literal">True</span>)<br><br>            input_embeddings[-num_new_tokens:] = input_embeddings_avg<br>            output_embeddings[-num_new_tokens:] = output_embeddings_avg<br><br>        <span class="hljs-keyword">if</span> tune_mm_mlp_adapter:<br>            <span class="hljs-comment"># 如果调优MLP适配器，则设置原始嵌入参数</span><br>            <span class="hljs-variable language_">self</span>.model.orig_embeds_params = [<br>                <span class="hljs-variable language_">self</span>.get_input_embeddings().weight.data.clone().to(device=device)]<br>            <span class="hljs-keyword">for</span> p <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>.get_input_embeddings().parameters():<br>                p.requires_grad = <span class="hljs-literal">True</span><br>            <span class="hljs-keyword">for</span> p <span class="hljs-keyword">in</span> <span class="hljs-variable language_">self</span>.get_output_embeddings().parameters():<br>                p.requires_grad = <span class="hljs-literal">False</span><br><br>    <span class="hljs-comment"># 设置图像patch token的ID</span><br>    <span class="hljs-variable language_">self</span>.model.vision_config.im_patch_token = tokenizer.convert_tokens_to_ids(<br>        [DEFAULT_IMAGE_PATCH_TOKEN])[<span class="hljs-number">0</span>]<br>    <span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;Tokenizer: <span class="hljs-subst">&#123;tokenizer&#125;</span>\n patch_token_id: <span class="hljs-subst">&#123;self.model.vision_config.im_patch_token&#125;</span>, visoin_config: <span class="hljs-subst">&#123;self.model.vision_config&#125;</span>&#x27;</span>, flush=<span class="hljs-literal">True</span>)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>该方法用于初始化视觉tokenizer，添加特殊token并调整嵌入。</li>
+</ul>
+<hr>
+<h3 id="8-注册模型"><a href="#8-注册模型" class="headerlink" title="8. 注册模型"></a><strong>8. 注册模型</strong></h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">AutoConfig.register(<span class="hljs-string">&quot;omnilmm&quot;</span>, OmniLMMConfig)  <span class="hljs-comment"># 注册OmniLMMConfig</span><br>AutoModelForCausalLM.register(OmniLMMConfig, OmniLMMForCausalLM)  <span class="hljs-comment"># 注册OmniLMMForCausalLM</span><br></code></pre></td></tr></table></figure>
+<ul>
+<li>将OmniLMM模型注册到Hugging Face的自动配置和模型工厂中。</li>
+</ul>
+<p>文章合集：<a target="_blank" rel="noopener" href="https://github.com/chongzicbo/ReadWriteThink/tree/main">chongzicbo&#x2F;ReadWriteThink: 博学而笃志，切问而近思 (github.com)</a></p>
+<p>个人博客：<a href="https://chongzicbo.github.io/">程博仕</a></p>
+<p>微信公众号：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg" srcset="/img/loading.gif" lazyload alt="微信公众号"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" class="category-chain-item">人工智能</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/" class="category-chain-item">multi-modal</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/" class="print-no-link">#多模态</a>
+      
+        <a href="/tags/llm/" class="print-no-link">#llm</a>
+      
+        <a href="/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="print-no-link">#源码解析</a>
+      
+        <a href="/tags/MiniCPM/" class="print-no-link">#MiniCPM</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>MiniCPM-V多模态模型源码解析-04：核心模块omnilmm.py</div>
+      <div>https://chongzicbo.github.io/2025/01/14/人工智能/multi-modal/源码解析：MiniCPM-V多模态模型源码解析-04：核心模块omnilmm.py详解/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>程博</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>January 14, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/02/10/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp/AI%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95%E9%A2%98001%EF%BC%9A%E5%85%AC%E4%BC%97%E5%8F%B7%E2%80%9C%E7%9C%8B%E5%9B%BE%E5%AD%A6%E2%80%9D%E9%A2%98%E7%9B%AE%E5%90%88%E9%9B%86%EF%BC%881%EF%BC%89/" title="公众号“看图学”试题合集（1）">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">公众号“看图学”试题合集（1）</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/01/14/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9AMiniCPM-V%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-03%EF%BC%9A%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E8%AF%A6%E7%BB%86%E6%B5%81%E7%A8%8B/" title="MiniCPM-V多模态模型源码解析-03：模型推理详细流程">
+                        <span class="hidden-mobile">MiniCPM-V多模态模型源码解析-03：模型推理详细流程</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="人工智能"
+        id="heading-f068f0dad74789bee210163c40a4b50d" role="tab" data-toggle="collapse" href="#collapse-f068f0dad74789bee210163c40a4b50d"
+        aria-expanded="true"
+      >
+        人工智能
+        <span class="list-group-count">(14)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-f068f0dad74789bee210163c40a4b50d"
+           role="tabpanel" aria-labelledby="heading-f068f0dad74789bee210163c40a4b50d">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="computer-vision"
+        id="heading-a82f3db817c535a4bae230a7ce1aebdd" role="tab" data-toggle="collapse" href="#collapse-a82f3db817c535a4bae230a7ce1aebdd"
+        aria-expanded="false"
+      >
+        computer-vision
+        <span class="list-group-count">(3)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-a82f3db817c535a4bae230a7ce1aebdd"
+           role="tabpanel" aria-labelledby="heading-a82f3db817c535a4bae230a7ce1aebdd">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV010-YOLO%20V10%E8%AF%A6%E8%A7%A3/" title="YOLO V10 详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">YOLO V10 详解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV007-YOLO11%E8%AF%A6%E8%A7%A3/" title="YOLO11 详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">YOLO11 详解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV008-%E8%AF%84%E4%BC%B0%20YOLO%20%EF%BC%88You%20Only%20Look%20Once%EF%BC%89%20%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%BC%94%E5%8F%98%EF%BC%9AYOLO11%20%E5%8F%8A%E5%85%B6%E5%89%8D%E8%BA%AB%E7%9A%84%E5%85%A8%E9%9D%A2%E5%9F%BA%E5%87%86%E7%A0%94%E7%A9%B6/" title="YOLO模型的全面综述"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">YOLO模型的全面综述</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="multi-modal"
+        id="heading-8bef24fd03b0b8fe8de0c18ea7f6c1fe" role="tab" data-toggle="collapse" href="#collapse-8bef24fd03b0b8fe8de0c18ea7f6c1fe"
+        aria-expanded="true"
+      >
+        multi-modal
+        <span class="list-group-count">(6)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-8bef24fd03b0b8fe8de0c18ea7f6c1fe"
+           role="tabpanel" aria-labelledby="heading-8bef24fd03b0b8fe8de0c18ea7f6c1fe">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2025/01/13/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9AMiniCPM-V%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-01%EF%BC%9A%E6%95%B4%E4%BD%93%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84%E5%8F%8A%E6%A8%A1%E5%9D%97%E5%8A%9F%E8%83%BD/" title="MiniCPM-V多模态模型源码解析-01：整体代码结构及模块功能"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">MiniCPM-V多模态模型源码解析-01：整体代码结构及模块功能</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/01/13/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9AMiniCPM-V%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-02%EF%BC%9A%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E8%AF%A6%E7%BB%86%E6%B5%81%E7%A8%8B/" title="MiniCPM-V多模态模型源码解析-02：模型训练详细流程"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">MiniCPM-V多模态模型源码解析-02：模型训练详细流程</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/01/14/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9AMiniCPM-V%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-03%EF%BC%9A%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E8%AF%A6%E7%BB%86%E6%B5%81%E7%A8%8B/" title="MiniCPM-V多模态模型源码解析-03：模型推理详细流程"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">MiniCPM-V多模态模型源码解析-03：模型推理详细流程</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/01/14/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9AMiniCPM-V%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-04%EF%BC%9A%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97omnilmm.py%E8%AF%A6%E8%A7%A3/" title="MiniCPM-V多模态模型源码解析-04：核心模块omnilmm.py"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">MiniCPM-V多模态模型源码解析-04：核心模块omnilmm.py</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/20/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB14%EF%BC%9AMiniCPM%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90/" title="MiniCPM详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">MiniCPM详解</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="OCR"
+        id="heading-f529c51ee65a122778f148485732aee5" role="tab" data-toggle="collapse" href="#collapse-f529c51ee65a122778f148485732aee5"
+        aria-expanded="false"
+      >
+        OCR
+        <span class="list-group-count">(1)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-f529c51ee65a122778f148485732aee5"
+           role="tabpanel" aria-labelledby="heading-f529c51ee65a122778f148485732aee5">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/17/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/OCR/%E5%A4%9A%E6%A8%A1%E6%80%81003%EF%BC%9AOCR%E7%AE%97%E6%B3%95%E3%80%81%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0/" title="OCR算法、模型综述"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">OCR算法、模型综述</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="nlp"
+        id="heading-4c5adbed16b4c9d16698f71cca4218cb" role="tab" data-toggle="collapse" href="#collapse-4c5adbed16b4c9d16698f71cca4218cb"
+        aria-expanded="false"
+      >
+        nlp
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-4c5adbed16b4c9d16698f71cca4218cb"
+           role="tabpanel" aria-labelledby="heading-4c5adbed16b4c9d16698f71cca4218cb">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/NLP025-huggingface%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E9%9B%86%E5%92%8C%E6%A8%A1%E5%9E%8B%E4%B8%8B%E8%BD%BD%E5%AD%98%E5%82%A8%E7%9B%AE%E5%BD%95/" title="transformers自定义数据集"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">transformers自定义数据集</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="llm"
+        id="heading-dae1be85dab3650eb56b87c4e3390387" role="tab" data-toggle="collapse" href="#collapse-dae1be85dab3650eb56b87c4e3390387"
+        aria-expanded="false"
+      >
+        llm
+        <span class="list-group-count">(4)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-dae1be85dab3650eb56b87c4e3390387"
+           role="tabpanel" aria-labelledby="heading-dae1be85dab3650eb56b87c4e3390387">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/26/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-01%EF%BC%9A%E6%95%B4%E4%BD%93%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84%E5%8F%8A%E6%A8%A1%E5%9D%97%E5%8A%9F%E8%83%BD/" title="llama3源码解析-01：整体代码结构及模块功能"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">llama3源码解析-01：整体代码结构及模块功能</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/26/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-02%EF%BC%9Atokenizer%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/" title="llama3源码解析-02：tokenizer模块解析"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">llama3源码解析-02：tokenizer模块解析</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/30/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-03%EF%BC%9Amodel.py%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/" title="llama3源码解析-03：model.py模块解析"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">llama3源码解析-03：model.py模块解析</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/30/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-04%EF%BC%9Ageneration.py%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/" title="llama3源码解析-04：generation.py模块解析"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">llama3源码解析-04：generation.py模块解析</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/chongzicbo" target="_blank" rel="nofollow noopener"><span>Github</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

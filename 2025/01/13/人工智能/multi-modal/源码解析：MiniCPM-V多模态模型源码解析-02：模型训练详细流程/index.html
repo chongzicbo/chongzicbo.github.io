@@ -1,0 +1,2091 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/daxiong.jpg">
+  <link rel="icon" href="/img/daxiong.jpg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="程博">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. 详细训练流程graph TD     A[输入: 图像和文本] --&gt; B[图像预处理]     A --&gt; C[文本预处理]     B --&gt; D[图像编码器 Vision Tower]     C --&gt; E[文本编码器 Tokenizer]     D --&gt; F[图像特征重采样 Resampler]     E --&gt; G[文本特征编码]">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MiniCPM-V多模态模型源码解析-02：模型训练详细流程">
+<meta property="og:url" content="https://chongzicbo.github.io/2025/01/13/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9AMiniCPM-V%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-02%EF%BC%9A%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E8%AF%A6%E7%BB%86%E6%B5%81%E7%A8%8B/index.html">
+<meta property="og:site_name" content="程博仕">
+<meta property="og:description" content="1. 详细训练流程graph TD     A[输入: 图像和文本] --&gt; B[图像预处理]     A --&gt; C[文本预处理]     B --&gt; D[图像编码器 Vision Tower]     C --&gt; E[文本编码器 Tokenizer]     D --&gt; F[图像特征重采样 Resampler]     E --&gt; G[文本特征编码]">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
+<meta property="article:published_time" content="2025-01-13T06:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-13T06:22:09.639Z">
+<meta property="article:author" content="程博">
+<meta property="article:tag" content="多模态">
+<meta property="article:tag" content="llm">
+<meta property="article:tag" content="源码解析">
+<meta property="article:tag" content="MiniCPM">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>MiniCPM-V多模态模型源码解析-02：模型训练详细流程 - 程博仕</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chongzicbo.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":"3841b375bfdd5627f0f840e1e289416e","google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+    <!-- Baidu Analytics -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?3841b375bfdd5627f0f840e1e289416e";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>程博仕</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>笔试面试</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/AI%E7%AE%97%E6%B3%95/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>计算机基础</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F" target="_self">
+                    
+                    <span>操作系统</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C" target="_self">
+                    
+                    <span>计算机网络</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>人工智能</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp" target="_self">
+                    
+                    <span>自然语言处理</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision" target="_self">
+                    
+                    <span>计算机视觉</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal" target="_self">
+                    
+                    <span>多模态</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/asr" target="_self">
+                    
+                    <span>语音识别</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" target="_self" href="javascript:;" role="button"
+                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="iconfont icon-category-fill"></i>
+                <span>开发</span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/%E9%9F%B3%E8%A7%86%E9%A2%91" target="_self">
+                    
+                    <span>音视频</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/web&#39;" target="_self">
+                    
+                    <span>Web开发</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/cpp" target="_self">
+                    
+                    <span>C++</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/java" target="_self">
+                    
+                    <span>Java</span>
+                  </a>
+                
+                  
+                  
+                  
+                  <a class="dropdown-item" href="/categories/%E5%BC%80%E5%8F%91/python" target="_self">
+                    
+                    <span>Python</span>
+                  </a>
+                
+              </div>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>文章分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>时间轴</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="MiniCPM-V多模态模型源码解析-02：模型训练详细流程"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        程博
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-01-13 14:00" pubdate>
+          January 13, 2025 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.9k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          49 mins
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> views
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="padding-left: 2rem; margin-right: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">MiniCPM-V多模态模型源码解析-02：模型训练详细流程</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    Last updated on January 13, 2025 pm
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="1-详细训练流程"><a href="#1-详细训练流程" class="headerlink" title="1. 详细训练流程"></a>1. 详细训练流程</h2><pre><code class=" mermaid">graph TD
+    A[输入: 图像和文本] --&gt; B[图像预处理]
+    A --&gt; C[文本预处理]
+    B --&gt; D[图像编码器 Vision Tower]
+    C --&gt; E[文本编码器 Tokenizer]
+    D --&gt; F[图像特征重采样 Resampler]
+    E --&gt; G[文本特征编码]
+    F --&gt; H[多模态特征融合 OmniLMMModel]
+    G --&gt; H
+    H --&gt; I[生成文本输出 OmniLMMForCausalLM]
+    I --&gt; J[输出: 生成的文本]
+
+    subgraph 图像处理模块
+        B[图像预处理] --&gt; D[图像编码器 Vision Tower]
+        D --&gt; F[图像特征重采样 Resampler]
+    end
+
+    subgraph 文本处理模块
+        C[文本预处理] --&gt; E[文本编码器 Tokenizer]
+        E --&gt; G[文本特征编码]
+    end
+
+    subgraph 多模态融合模块
+        F[图像特征重采样 Resampler] --&gt; H[多模态特征融合 OmniLMMModel]
+        G[文本特征编码] --&gt; H
+    end
+
+    subgraph 模型核心模块
+        H[多模态特征融合 OmniLMMModel] --&gt; I[生成文本输出 OmniLMMForCausalLM]
+    end
+
+    subgraph 输出模块
+        I[生成文本输出 OmniLMMForCausalLM] --&gt; J[输出: 生成的文本]
+    end
+
+    %% 详细步骤
+    B --&gt; B1[图像缩放]
+    B --&gt; B2[图像裁剪]
+    B --&gt; B3[图像归一化]
+    B1 --&gt; D
+    B2 --&gt; D
+    B3 --&gt; D
+
+    C --&gt; C1[文本分词]
+    C --&gt; C2[文本编码]
+    C1 --&gt; E
+    C2 --&gt; E
+
+    D --&gt; D1[提取图像特征]
+    D1 --&gt; F
+
+    E --&gt; E1[生成 input_ids]
+    E1 --&gt; G
+
+    F --&gt; F1[重采样图像特征]
+    F1 --&gt; H
+
+    G --&gt; G1[生成文本特征]
+    G1 --&gt; H
+
+    H --&gt; H1[拼接图像和文本特征]
+    H1 --&gt; H2[Transformer 编码]
+    H2 --&gt; I
+
+    I --&gt; I1[生成文本 token]
+    I1 --&gt; I2[自回归生成文本]
+    I2 --&gt; J
+</code></pre>
+
+<h3 id="流程图说明"><a href="#流程图说明" class="headerlink" title="流程图说明"></a>流程图说明</h3><h4 id="1-输入-图像和文本"><a href="#1-输入-图像和文本" class="headerlink" title="1. 输入: 图像和文本"></a>1. <strong>输入: 图像和文本</strong></h4><ul>
+<li>输入包括图像和文本数据，分别进入图像处理模块和文本处理模块。</li>
+</ul>
+<h4 id="2-图像处理模块"><a href="#2-图像处理模块" class="headerlink" title="2. 图像处理模块"></a>2. <strong>图像处理模块</strong></h4><ul>
+<li><strong>图像预处理</strong>：<ul>
+<li><strong>图像缩放</strong>：将图像调整到模型指定的输入尺寸（如 224x224）。</li>
+<li><strong>图像裁剪</strong>：对图像进行中心裁剪。</li>
+<li><strong>图像归一化</strong>：使用预定义的均值和标准差对图像进行归一化。</li>
+</ul>
+</li>
+<li>**图像编码器 (Vision Tower)**：<ul>
+<li>使用预训练的视觉模型（如 EVA02）提取图像特征。</li>
+</ul>
+</li>
+<li>**图像特征重采样 (Resampler)**：<ul>
+<li>使用多头注意力机制对图像特征进行重采样，使其与文本特征的维度匹配。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-文本处理模块"><a href="#3-文本处理模块" class="headerlink" title="3. 文本处理模块"></a>3. <strong>文本处理模块</strong></h4><ul>
+<li><strong>文本预处理</strong>：<ul>
+<li><strong>文本分词</strong>：将文本分割为 token。</li>
+<li><strong>文本编码</strong>：将 token 转换为 <code>input_ids</code>。</li>
+</ul>
+</li>
+<li>**文本编码器 (Tokenizer)**：<ul>
+<li>使用 Transformer 模型（如 Mistral）对 <code>input_ids</code> 进行编码，生成文本特征。</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-多模态融合模块"><a href="#4-多模态融合模块" class="headerlink" title="4. 多模态融合模块"></a>4. <strong>多模态融合模块</strong></h4><ul>
+<li>**多模态特征融合 (OmniLMMModel)**：<ul>
+<li>将图像特征和文本特征拼接在一起，形成联合特征。</li>
+<li>使用 Transformer 的自注意力机制对联合特征进行编码。</li>
+</ul>
+</li>
+</ul>
+<h4 id="5-模型核心模块"><a href="#5-模型核心模块" class="headerlink" title="5. 模型核心模块"></a>5. <strong>模型核心模块</strong></h4><ul>
+<li>**生成文本输出 (OmniLMMForCausalLM)**：<ul>
+<li>使用 <code>lm_head</code> 对联合特征进行解码，生成文本 token。</li>
+<li>通过自回归生成逐步生成文本输出。</li>
+</ul>
+</li>
+</ul>
+<h4 id="6-输出模块"><a href="#6-输出模块" class="headerlink" title="6. 输出模块"></a>6. <strong>输出模块</strong></h4><ul>
+<li><strong>输出: 生成的文本</strong>：<ul>
+<li>生成的文本被解码为自然语言，并返回给用户。</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-图像处理"><a href="#2-图像处理" class="headerlink" title="2. 图像处理"></a>2. 图像处理</h2><p>图像处理模块的代码主要分布在以下几个文件中：</p>
+<ol>
+<li>**<code>omnilmm.py</code>**：定义了图像编码器（Vision Tower）和图像特征重采样器（Resampler）。</li>
+<li>**<code>utils.py</code>**：定义了图像预处理函数 <code>build_transform</code>，用于对图像进行预处理。</li>
+<li>**<code>resampler.py</code>**：定义了图像特征重采样器（Resampler）的实现。</li>
+</ol>
+<h3 id="2-1-训练中对图像的处理"><a href="#2-1-训练中对图像的处理" class="headerlink" title="2.1 训练中对图像的处理"></a>2.1 <strong>训练中对图像的处理</strong></h3><h4 id="2-1-1-图像预处理"><a href="#2-1-1-图像预处理" class="headerlink" title="2.1.1 图像预处理"></a>2.1.1 <strong>图像预处理</strong></h4><ul>
+<li><p><strong>步骤</strong>：</p>
+<ol>
+<li><strong>图像缩放</strong>：将图像调整到模型指定的输入尺寸（如 224x224）。</li>
+<li><strong>图像裁剪</strong>：对图像进行中心裁剪。</li>
+<li><strong>图像归一化</strong>：使用预定义的均值和标准差对图像进行归一化。</li>
+<li><strong>数据增强</strong>（可选）：在训练过程中，可能会使用随机数据增强（如随机裁剪、旋转、颜色调整等）。</li>
+</ol>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">t = transforms.Compose([<br>    transforms.Resize((input_size, input_size), interpolation=transforms.InterpolationMode.BICUBIC),<br>    transforms.ToTensor(),<br>    transforms.Normalize(mean=mean, std=std)<br>])<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="2-1-2-图像编码"><a href="#2-1-2-图像编码" class="headerlink" title="2.1.2 图像编码"></a>2.1.2 <strong>图像编码</strong></h4><ul>
+<li><p><strong>步骤</strong>：</p>
+<ol>
+<li>使用预训练的视觉模型（如 EVA02）提取图像特征。</li>
+<li>提取的图像特征被传递给图像特征重采样器。</li>
+</ol>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python">vision_tower = timm.create_model(<span class="hljs-string">&#x27;eva02_enormous_patch14_clip_224.laion2b_plus&#x27;</span>,<br>                                 pretrained=<span class="hljs-literal">False</span>,<br>                                 num_classes=<span class="hljs-number">0</span>,<br>                                 dynamic_img_size=<span class="hljs-literal">True</span>,<br>                                 dynamic_img_pad=<span class="hljs-literal">True</span>)<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="2-1-3-图像特征重采样"><a href="#2-1-3-图像特征重采样" class="headerlink" title="2.1.3 图像特征重采样"></a>2.1.3 <strong>图像特征重采样</strong></h4><ul>
+<li><p><strong>步骤</strong>：</p>
+<ol>
+<li>使用多头注意力机制对图像特征进行重采样。</li>
+<li>重采样后的图像特征与文本特征进行融合。</li>
+</ol>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs python">resampler = Resampler(<br>    grid_size=<span class="hljs-built_in">int</span>(math.sqrt(config.num_query)),<br>    embed_dim=embed_dim,<br>    num_heads=embed_dim // <span class="hljs-number">128</span>,<br>    kv_dim=vision_tower.embed_dim,<br>)<br></code></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h3 id="2-2-使用的图像编码器"><a href="#2-2-使用的图像编码器" class="headerlink" title="2.2 使用的图像编码器"></a>2.2 <strong>使用的图像编码器</strong></h3><h4 id="2-2-1-EVA02-模型"><a href="#2-2-1-EVA02-模型" class="headerlink" title="2.2.1 EVA02 模型"></a>2.2.1 <strong>EVA02 模型</strong></h4><ul>
+<li><strong>模型名称</strong>：<code>eva02_enormous_patch14_clip_224.laion2b_plus</code></li>
+<li><strong>特点</strong>：<ul>
+<li>基于 Vision Transformer（ViT）架构。</li>
+<li>使用 CLIP 预训练权重，适合多模态任务。</li>
+<li>支持动态图像尺寸和填充。</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-2-2-图像编码器的作用"><a href="#2-2-2-图像编码器的作用" class="headerlink" title="2.2.2 图像编码器的作用"></a>2.2.2 <strong>图像编码器的作用</strong></h4><ul>
+<li>将输入的图像转换为高维特征表示。</li>
+<li>提取的图像特征用于与文本特征进行融合。</li>
+</ul>
+<hr>
+<h3 id="2-3-图像特征重采样详解-Resampler类"><a href="#2-3-图像特征重采样详解-Resampler类" class="headerlink" title="2.3 图像特征重采样详解(Resampler类)"></a>2.3 图像特征重采样详解(Resampler类)</h3><p>在 MiniCPM-V 项目中，图像特征重采样器（Resampler）的作用是将图像编码器提取的图像特征进行重采样，使其与文本特征的维度匹配，从而便于后续的多模态特征融合。<code>resampler.py</code> 文件中定义了 <code>Resampler</code> 类的实现。以下是对图像特征重采样的详细介绍：</p>
+<hr>
+<h4 id="2-3-1-Resampler-的作用"><a href="#2-3-1-Resampler-的作用" class="headerlink" title="2.3.1 Resampler 的作用"></a>2.3.1 <strong>Resampler 的作用</strong></h4><p>图像特征重采样器的主要作用是对图像特征进行降维或调整，使其与文本特征的维度一致。具体来说：</p>
+<ul>
+<li>图像编码器（如 EVA02）提取的图像特征通常是高维的（例如，224x224 的图像可能生成 196 个 patch 特征，每个 patch 特征维度为 768）。</li>
+<li>文本特征通常是一个序列（如 256 个 token，每个 token 维度为 768）。</li>
+<li>为了将图像特征与文本特征融合，需要对图像特征进行重采样，使其维度与文本特征匹配。</li>
+</ul>
+<hr>
+<h4 id="2-3-2-Resampler-的实现"><a href="#2-3-2-Resampler-的实现" class="headerlink" title="2.3.2 Resampler 的实现"></a>2.3.2 <strong>Resampler 的实现</strong></h4><p><code>Resampler</code> 类的实现基于多头注意力机制（Multihead Attention），以下是其核心部分的详细介绍：</p>
+<h5 id="初始化-init"><a href="#初始化-init" class="headerlink" title="初始化 (__init__)"></a><strong>初始化 (<code>__init__</code>)</strong></h5><ul>
+<li><p><strong>输入参数</strong>：</p>
+<ul>
+<li><code>grid_size</code>：重采样后的特征网格大小（如 14x14）。</li>
+<li><code>embed_dim</code>：重采样后的特征维度（如 768）。</li>
+<li><code>num_heads</code>：注意力头的数量（如 6）。</li>
+<li><code>kv_dim</code>：键值对的维度（通常与 <code>embed_dim</code> 相同）。</li>
+<li><code>norm_layer</code>：归一化层（如 LayerNorm）。</li>
+</ul>
+</li>
+<li><p><strong>初始化步骤</strong>：</p>
+<ol>
+<li>定义可学习的查询向量（<code>query</code>），用于生成重采样后的特征。</li>
+<li>定义位置编码（<code>pos_embed</code>），用于为图像特征添加位置信息。</li>
+<li>定义多头注意力机制（<code>attn</code>），用于对图像特征进行重采样。</li>
+<li>定义投影矩阵（<code>proj</code>），用于将重采样后的特征映射到目标维度。</li>
+</ol>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Resampler</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, grid_size, embed_dim, num_heads, kv_dim=<span class="hljs-literal">None</span>, norm_layer=partial(<span class="hljs-params">nn.LayerNorm, eps=<span class="hljs-number">1e-6</span></span>)</span>):<br>        <span class="hljs-built_in">super</span>().__init__()<br>        <span class="hljs-variable language_">self</span>.num_queries = grid_size ** <span class="hljs-number">2</span><br>        <span class="hljs-variable language_">self</span>.embed_dim = embed_dim<br>        <span class="hljs-variable language_">self</span>.num_heads = num_heads<br><br>        <span class="hljs-variable language_">self</span>.pos_embed = nn.Parameter(<br>            torch.from_numpy(get_2d_sincos_pos_embed(embed_dim, grid_size)).<span class="hljs-built_in">float</span>()<br>        ).requires_grad_(<span class="hljs-literal">False</span>)<br><br>        <span class="hljs-variable language_">self</span>.query = nn.Parameter(torch.zeros(<span class="hljs-variable language_">self</span>.num_queries, embed_dim))<br>        trunc_normal_(<span class="hljs-variable language_">self</span>.query, std=<span class="hljs-number">.02</span>)<br><br>        <span class="hljs-keyword">if</span> kv_dim <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span> <span class="hljs-keyword">and</span> kv_dim != embed_dim:<br>            <span class="hljs-variable language_">self</span>.kv_proj = nn.Linear(kv_dim, embed_dim, bias=<span class="hljs-literal">False</span>)<br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-variable language_">self</span>.kv_proj = nn.Identity()<br><br>        <span class="hljs-variable language_">self</span>.attn = nn.MultiheadAttention(embed_dim, num_heads)<br>        <span class="hljs-variable language_">self</span>.ln_q = norm_layer(embed_dim)<br>        <span class="hljs-variable language_">self</span>.ln_kv = norm_layer(embed_dim)<br><br>        <span class="hljs-variable language_">self</span>.ln_post = norm_layer(embed_dim)<br>        <span class="hljs-variable language_">self</span>.proj = nn.Parameter(<br>            (embed_dim ** -<span class="hljs-number">0.5</span>) * torch.randn(embed_dim, embed_dim))<br><br>        <span class="hljs-variable language_">self</span>.apply(<span class="hljs-variable language_">self</span>._init_weights)<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="前向传播-forward"><a href="#前向传播-forward" class="headerlink" title="前向传播 (forward)"></a><strong>前向传播 (<code>forward</code>)</strong></h5><ul>
+<li><p><strong>输入</strong>：</p>
+<ul>
+<li><code>x</code>：图像特征，形状为 <code>(batch_size, num_patches, feature_dim)</code>。</li>
+<li><code>attn_mask</code>：注意力掩码（可选）。</li>
+</ul>
+</li>
+<li><p><strong>处理步骤</strong>：</p>
+<ol>
+<li><strong>位置编码</strong>：为图像特征添加位置信息。</li>
+<li><strong>特征投影</strong>：将图像特征投影到目标维度。</li>
+<li><strong>多头注意力</strong>：使用可学习的查询向量对图像特征进行重采样。</li>
+<li><strong>特征映射</strong>：将重采样后的特征映射到目标维度。</li>
+</ol>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, x, attn_mask=<span class="hljs-literal">None</span></span>):<br>    pos_embed = get_abs_pos(<span class="hljs-variable language_">self</span>.pos_embed, x.size(<span class="hljs-number">1</span>))<br><br>    x = <span class="hljs-variable language_">self</span>.kv_proj(x)<br>    x = <span class="hljs-variable language_">self</span>.ln_kv(x).permute(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>)<br><br>    N = x.shape[<span class="hljs-number">1</span>]<br>    q = <span class="hljs-variable language_">self</span>.ln_q(<span class="hljs-variable language_">self</span>.query)<br>    out = <span class="hljs-variable language_">self</span>.attn(<br>        <span class="hljs-variable language_">self</span>._repeat(q, N) + <span class="hljs-variable language_">self</span>.pos_embed.unsqueeze(<span class="hljs-number">1</span>),<br>        x + pos_embed.unsqueeze(<span class="hljs-number">1</span>),<br>        x,<br>        attn_mask=attn_mask)[<span class="hljs-number">0</span>]<br>    x = out.permute(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">2</span>)<br><br>    x = <span class="hljs-variable language_">self</span>.ln_post(x)<br>    x = x @ <span class="hljs-variable language_">self</span>.proj<br>    <span class="hljs-keyword">return</span> x<br></code></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h4 id="2-3-3-重采样的详细过程"><a href="#2-3-3-重采样的详细过程" class="headerlink" title="2.3.3 重采样的详细过程"></a>2.3.3 <strong>重采样的详细过程</strong></h4><pre><code class=" mermaid">graph TD
+    A[输入: 图像特征] --&gt; B[位置编码]
+    A --&gt; C[特征投影]
+    B --&gt; D[添加位置信息]
+    C --&gt; E[归一化]
+    E --&gt; F[多头注意力机制]
+    D --&gt; F
+    F --&gt; G[重采样特征]
+    G --&gt; H[归一化]
+    H --&gt; I[特征映射]
+    I --&gt; J[输出: 重采样后的图像特征]
+
+    subgraph 位置编码模块
+        B --&gt; D
+    end
+
+    subgraph 特征投影模块
+        C --&gt; E
+    end
+
+    subgraph 多头注意力模块
+        D --&gt; F
+        E --&gt; F
+        F --&gt; G
+    end
+
+    subgraph 特征映射模块
+        G --&gt; H
+        H --&gt; I
+    end
+
+    subgraph 输出模块
+        I --&gt; J
+    end
+
+    %% 详细步骤
+    B --&gt; B1[生成 2D 正弦余弦位置编码]
+    B1 --&gt; D
+
+    C --&gt; C1[线性投影]
+    C1 --&gt; E
+
+    F --&gt; F1[计算注意力权重]
+    F1 --&gt; F2[加权求和]
+    F2 --&gt; G
+
+    I --&gt; I1[线性变换]
+    I1 --&gt; J
+</code></pre>
+
+<h5 id="流程图说明-1"><a href="#流程图说明-1" class="headerlink" title="流程图说明"></a>流程图说明</h5><h6 id="1-输入-图像特征"><a href="#1-输入-图像特征" class="headerlink" title="1. 输入: 图像特征"></a>1. <strong>输入: 图像特征</strong></h6><ul>
+<li>输入是图像编码器（如 EVA02）提取的图像特征，形状为 <code>(batch_size, num_patches, feature_dim)</code>。</li>
+</ul>
+<h6 id="2-位置编码模块"><a href="#2-位置编码模块" class="headerlink" title="2. 位置编码模块"></a>2. <strong>位置编码模块</strong></h6><ul>
+<li><strong>生成 2D 正弦余弦位置编码</strong>：<ul>
+<li>使用 <code>get_2d_sincos_pos_embed</code> 函数生成 2D 正弦余弦位置编码。</li>
+</ul>
+</li>
+<li><strong>添加位置信息</strong>：<ul>
+<li>将位置编码添加到图像特征中，使模型能够区分不同位置的特征。</li>
+</ul>
+</li>
+</ul>
+<h6 id="3-特征投影模块"><a href="#3-特征投影模块" class="headerlink" title="3. 特征投影模块"></a>3. <strong>特征投影模块</strong></h6><ul>
+<li><strong>线性投影</strong>：<ul>
+<li>使用线性层将图像特征投影到目标维度。</li>
+</ul>
+</li>
+<li><strong>归一化</strong>：<ul>
+<li>对投影后的特征进行归一化（LayerNorm）。</li>
+</ul>
+</li>
+</ul>
+<h6 id="4-多头注意力模块"><a href="#4-多头注意力模块" class="headerlink" title="4. 多头注意力模块"></a>4. <strong>多头注意力模块</strong></h6><ul>
+<li><strong>计算注意力权重</strong>：<ul>
+<li>使用可学习的查询向量（<code>query</code>）对图像特征进行注意力计算。</li>
+</ul>
+</li>
+<li><strong>加权求和</strong>：<ul>
+<li>根据注意力权重对图像特征进行加权求和，生成重采样后的特征。</li>
+</ul>
+</li>
+</ul>
+<h6 id="5-特征映射模块"><a href="#5-特征映射模块" class="headerlink" title="5. 特征映射模块"></a>5. <strong>特征映射模块</strong></h6><ul>
+<li><strong>归一化</strong>：<ul>
+<li>对重采样后的特征进行归一化（LayerNorm）。</li>
+</ul>
+</li>
+<li><strong>线性变换</strong>：<ul>
+<li>使用投影矩阵对特征进行线性变换，映射到目标维度。</li>
+</ul>
+</li>
+</ul>
+<h6 id="6-输出-重采样后的图像特征"><a href="#6-输出-重采样后的图像特征" class="headerlink" title="6. 输出: 重采样后的图像特征"></a>6. <strong>输出: 重采样后的图像特征</strong></h6><ul>
+<li>输出是重采样后的图像特征，形状为 <code>(batch_size, num_queries, embed_dim)</code>。</li>
+</ul>
+<hr>
+<h5 id="关键组件的作用总结"><a href="#关键组件的作用总结" class="headerlink" title="关键组件的作用总结"></a>关键组件的作用总结</h5><table>
+<thead>
+<tr>
+<th align="left">组件</th>
+<th align="left">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>位置编码模块</strong></td>
+<td align="left">为图像特征添加位置信息，使模型能够区分不同位置的特征。</td>
+</tr>
+<tr>
+<td align="left"><strong>特征投影模块</strong></td>
+<td align="left">将图像特征投影到目标维度，并进行归一化。</td>
+</tr>
+<tr>
+<td align="left"><strong>多头注意力模块</strong></td>
+<td align="left">使用可学习的查询向量对图像特征进行重采样。</td>
+</tr>
+<tr>
+<td align="left"><strong>特征映射模块</strong></td>
+<td align="left">对重采样后的特征进行归一化和线性变换，映射到目标维度。</td>
+</tr>
+<tr>
+<td align="left"><strong>输出模块</strong></td>
+<td align="left">输出重采样后的图像特征，用于与文本特征融合。</td>
+</tr>
+</tbody></table>
+<hr>
+<h5 id="详细步骤"><a href="#详细步骤" class="headerlink" title="详细步骤"></a>详细步骤</h5><ol>
+<li><strong>输入: 图像特征</strong><ul>
+<li>输入是图像编码器提取的图像特征，形状为 <code>(batch_size, num_patches, feature_dim)</code>。</li>
+</ul>
+</li>
+<li><strong>位置编码模块</strong><ul>
+<li>生成 2D 正弦余弦位置编码。</li>
+<li>将位置编码添加到图像特征中。</li>
+</ul>
+</li>
+<li><strong>特征投影模块</strong><ul>
+<li>使用线性层将图像特征投影到目标维度。</li>
+<li>对投影后的特征进行归一化。</li>
+</ul>
+</li>
+<li><strong>多头注意力模块</strong><ul>
+<li>使用可学习的查询向量对图像特征进行注意力计算。</li>
+<li>根据注意力权重对图像特征进行加权求和，生成重采样后的特征。</li>
+</ul>
+</li>
+<li><strong>特征映射模块</strong><ul>
+<li>对重采样后的特征进行归一化。</li>
+<li>使用投影矩阵对特征进行线性变换，映射到目标维度。</li>
+</ul>
+</li>
+<li><strong>输出: 重采样后的图像特征</strong><ul>
+<li>输出是重采样后的图像特征，形状为 <code>(batch_size, num_queries, embed_dim)</code></li>
+</ul>
+</li>
+</ol>
+<h4 id="2-3-4-重采样的输出"><a href="#2-3-4-重采样的输出" class="headerlink" title="2.3.4 重采样的输出"></a>2.3.4 <strong>重采样的输出</strong></h4><ul>
+<li><p><strong>输出形状</strong>：<code>(batch_size, num_queries, embed_dim)</code>。</p>
+<ul>
+<li><code>num_queries</code>：重采样后的特征数量（如 196）。</li>
+<li><code>embed_dim</code>：重采样后的特征维度（如 768）。</li>
+</ul>
+</li>
+<li><p><strong>输出用途</strong>：</p>
+<ul>
+<li>重采样后的图像特征与文本特征拼接，输入到多模态融合模块（<code>OmniLMMModel</code>）中进行进一步处理。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="2-3-5-特征重采样总结"><a href="#2-3-5-特征重采样总结" class="headerlink" title="2.3.5 特征重采样总结"></a>2.3.5 <strong>特征重采样总结</strong></h4><ul>
+<li><strong>图像特征重采样器</strong>：将图像编码器提取的高维图像特征重采样为与文本特征匹配的维度。</li>
+<li><strong>核心组件</strong>：<ul>
+<li>位置编码：为图像特征添加位置信息。</li>
+<li>多头注意力机制：对图像特征进行重采样。</li>
+<li>特征映射：将重采样后的特征映射到目标维度。</li>
+</ul>
+</li>
+<li><strong>输出</strong>：重采样后的图像特征用于与文本特征融合，生成多模态联合特征。</li>
+</ul>
+<p>通过图像特征重采样器，MiniCPM-V 能够有效地将图像特征与文本特征融合，从而实现高质量的多模态任务处理。</p>
+<h3 id="2-4-图像处理总结"><a href="#2-4-图像处理总结" class="headerlink" title="2.4 图像处理总结"></a>2.4 <strong>图像处理总结</strong></h3><ul>
+<li><strong>图像处理模块</strong>：负责对图像进行预处理、编码和重采样。</li>
+<li><strong>图像预处理</strong>：包括缩放、裁剪、归一化和数据增强。</li>
+<li><strong>图像编码器</strong>：使用 EVA02 模型提取图像特征。</li>
+<li><strong>图像特征重采样</strong>：使用多头注意力机制对图像特征进行重采样，使其与文本特征匹配。</li>
+</ul>
+<h2 id="3-输入文本处理"><a href="#3-输入文本处理" class="headerlink" title="3. 输入文本处理"></a>3. 输入文本处理</h2><h3 id="3-1-文本处理流程图"><a href="#3-1-文本处理流程图" class="headerlink" title="3.1 文本处理流程图"></a>3.1 <strong>文本处理流程图</strong></h3><pre><code class=" mermaid">graph TD
+    A[输入: 文本] --&gt; B[文本预处理]
+    B --&gt; C[文本分词]
+    C --&gt; D[文本编码]
+    D --&gt; E[生成 input_ids]
+    E --&gt; F[文本特征编码]
+    F --&gt; G[输出: 文本特征]
+
+    subgraph 文本预处理模块
+        B --&gt; C
+        C --&gt; D
+        D --&gt; E
+    end
+
+    subgraph 文本编码模块
+        E --&gt; F
+        F --&gt; G
+    end
+
+    %% 详细步骤
+    B --&gt; B1[插入特殊标记]
+    B1 --&gt; C
+
+    C --&gt; C1[使用 Tokenizer 分词]
+    C1 --&gt; D
+
+    D --&gt; D1[生成 token ID 序列]
+    D1 --&gt; E
+
+    E --&gt; E1[生成 input_ids]
+    E1 --&gt; F
+
+    F --&gt; F1[使用 Transformer 编码]
+    F1 --&gt; G
+</code></pre>
+
+<hr>
+<h3 id="3-2-文本处理的详细梳理"><a href="#3-2-文本处理的详细梳理" class="headerlink" title="3.2 文本处理的详细梳理"></a>3.2 <strong>文本处理的详细梳理</strong></h3><h4 id="3-2-1-输入-文本"><a href="#3-2-1-输入-文本" class="headerlink" title="3.2.1 输入: 文本"></a>3.2.1 <strong>输入: 文本</strong></h4><ul>
+<li>输入是一个对话格式的列表，包含用户和助手的对话轮次。例如：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs python">[<br>    &#123;<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;user&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;What is in the image?&quot;</span>&#125;,<br>    &#123;<span class="hljs-string">&quot;role&quot;</span>: <span class="hljs-string">&quot;assistant&quot;</span>, <span class="hljs-string">&quot;content&quot;</span>: <span class="hljs-string">&quot;The image shows a cat.&quot;</span>&#125;<br>]<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="3-2-2-文本预处理"><a href="#3-2-2-文本预处理" class="headerlink" title="3.2.2 文本预处理"></a>3.2.2 <strong>文本预处理</strong></h4><ul>
+<li><p><strong>插入特殊标记</strong>：</p>
+<ul>
+<li>如果文本中包含 <code>&lt;image&gt;</code> 标记，系统会将其替换为图像的特征表示（如 <code>&lt;im_start&gt;&lt;im_patch&gt;*N&lt;im_end&gt;</code>，其中 <code>N</code> 是图像特征的长度）。</li>
+<li>插入特殊标记（如 <code>&lt;im_start&gt;</code> 和 <code>&lt;im_end&gt;</code>）来表示图像的位置。</li>
+</ul>
+</li>
+<li><p><strong>生成对话模板</strong>：</p>
+<ul>
+<li>使用 <code>tokenizer.apply_chat_template</code> 函数将对话格式的文本转换为模型可以处理的格式。</li>
+</ul>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">omni_preprocess</span>(<span class="hljs-params">sources, tokenizer: transformers.PreTrainedTokenizer, generation=<span class="hljs-literal">False</span></span>):<br>    system_content = <span class="hljs-string">&#x27;You are an artificial intelligence assistant, which gives helpful, detailed, and polite answers to the human\&#x27;s questions.&#x27;</span><br>    ignore_index = -<span class="hljs-number">100</span><br><br>    response_template = <span class="hljs-string">&#x27;\n&lt;|assistant|&gt;\n&#x27;</span><br>    instruction_template = <span class="hljs-string">&#x27;\n&lt;|user|&gt;\n&#x27;</span><br>    response_token_ids = tokenizer.encode(response_template, add_special_tokens=<span class="hljs-literal">False</span>)<br>    instruction_token_ids = tokenizer.encode(instruction_template, add_special_tokens=<span class="hljs-literal">False</span>)<br><br>    batch_input_ids = []<br>    batch_labels = []<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(sources)):<br>        new_source = []<br>        prev_role = <span class="hljs-string">&#x27;unexpect&#x27;</span><br>        <span class="hljs-keyword">for</span> conv_turn <span class="hljs-keyword">in</span> sources[i]:<br>            role = conv_turn[<span class="hljs-string">&#x27;from&#x27;</span>] <span class="hljs-keyword">if</span> <span class="hljs-string">&#x27;from&#x27;</span> <span class="hljs-keyword">in</span> conv_turn <span class="hljs-keyword">else</span> conv_turn[<span class="hljs-string">&#x27;role&#x27;</span>]<br>            content = conv_turn[<span class="hljs-string">&#x27;value&#x27;</span>] <span class="hljs-keyword">if</span> <span class="hljs-string">&#x27;value&#x27;</span> <span class="hljs-keyword">in</span> conv_turn <span class="hljs-keyword">else</span> conv_turn[<span class="hljs-string">&#x27;content&#x27;</span>]<br><br>            role = <span class="hljs-string">&#x27;user&#x27;</span> <span class="hljs-keyword">if</span> role == <span class="hljs-string">&#x27;human&#x27;</span> <span class="hljs-keyword">else</span> role<br>            role = <span class="hljs-string">&#x27;assistant&#x27;</span> <span class="hljs-keyword">if</span> role == <span class="hljs-string">&#x27;gpt&#x27;</span> <span class="hljs-keyword">else</span> role<br><br>            <span class="hljs-keyword">assert</span> role <span class="hljs-keyword">in</span> [<span class="hljs-string">&#x27;user&#x27;</span>, <span class="hljs-string">&#x27;assistant&#x27;</span>]<br>            <span class="hljs-keyword">assert</span> role != prev_role, <span class="hljs-string">f&#x27;role=<span class="hljs-subst">&#123;role&#125;</span>, prev_role=<span class="hljs-subst">&#123;prev_role&#125;</span>&#x27;</span><br>            prev_role = role<br><br>            new_turn = &#123;<br>                <span class="hljs-string">&#x27;role&#x27;</span>: role,<br>                <span class="hljs-string">&#x27;content&#x27;</span>: content<br>            &#125;<br>            new_source.append(new_turn)<br>        <span class="hljs-keyword">if</span> new_source[<span class="hljs-number">0</span>][<span class="hljs-string">&#x27;role&#x27;</span>] != <span class="hljs-string">&#x27;system&#x27;</span>:<br>            new_source.insert(<span class="hljs-number">0</span>, &#123;<span class="hljs-string">&#x27;role&#x27;</span>: <span class="hljs-string">&#x27;system&#x27;</span>, <span class="hljs-string">&#x27;content&#x27;</span>: system_content&#125;)<br><br>        res_text = tokenizer.apply_chat_template(new_source, tokenize=<span class="hljs-literal">False</span>, add_generation_prompt=generation)<br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> generation:<br>            res_text = res_text.strip()<br><br>        conversations_tokenized = _tokenize_fn([res_text], tokenizer)<br>        res_input_ids = conversations_tokenized[<span class="hljs-string">&quot;input_ids&quot;</span>][<span class="hljs-number">0</span>]<br>        res_labels = copy.deepcopy(conversations_tokenized[<span class="hljs-string">&quot;labels&quot;</span>][<span class="hljs-number">0</span>])<br><br>        response_token_ids_idxs = []<br>        human_token_ids_idxs = []<br><br>        <span class="hljs-keyword">for</span> assistant_idx <span class="hljs-keyword">in</span> np.where(res_labels == response_token_ids[<span class="hljs-number">0</span>])[<span class="hljs-number">0</span>]:<br>            <span class="hljs-keyword">if</span> (response_token_ids == res_labels[assistant_idx: assistant_idx + <span class="hljs-built_in">len</span>(response_token_ids)].tolist()):<br>                response_token_ids_idxs.append(assistant_idx + <span class="hljs-built_in">len</span>(response_token_ids))<br><br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(response_token_ids_idxs) == <span class="hljs-number">0</span>:<br>            warnings.warn(<br>                <span class="hljs-string">f&quot;Could not find response key `<span class="hljs-subst">&#123;response_template&#125;</span>` in the following instance: @===&gt;<span class="hljs-subst">&#123;tokenizer.decode(res_input_ids)&#125;</span>&lt;===@ &quot;</span><br>                <span class="hljs-string">f&#x27;Raw text is @===&gt;<span class="hljs-subst">&#123;res_text&#125;</span>&lt;===@ Raw source is @===&gt;<span class="hljs-subst">&#123;new_source&#125;</span>&lt;===@ &#x27;</span><br>                <span class="hljs-string">f&quot;This instance will be ignored in loss calculation. &quot;</span><br>                <span class="hljs-string">f&quot;Note, if this happens often, consider increasing the `max_seq_length`.&quot;</span><br>            )<br>            res_labels[:] = ignore_index<br><br>        human_token_ids = instruction_token_ids<br>        <span class="hljs-keyword">for</span> human_idx <span class="hljs-keyword">in</span> np.where(res_labels == human_token_ids[<span class="hljs-number">0</span>])[<span class="hljs-number">0</span>]:<br>            <span class="hljs-keyword">if</span> human_token_ids == res_labels[human_idx: human_idx + <span class="hljs-built_in">len</span>(human_token_ids)].tolist():<br>                human_token_ids_idxs.append(human_idx)<br><br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(human_token_ids_idxs) == <span class="hljs-number">0</span>:<br>            warnings.warn(<br>                <span class="hljs-string">f&quot;Could not find instruction key `<span class="hljs-subst">&#123;instruction_template&#125;</span>` in the following instance: @===&gt;<span class="hljs-subst">&#123;tokenizer.decode(res_input_ids)&#125;</span>&lt;===@ &quot;</span><br>                <span class="hljs-string">f&#x27;Raw text is @===&gt;<span class="hljs-subst">&#123;res_text&#125;</span>&lt;===@ Raw source is @===&gt;<span class="hljs-subst">&#123;new_source&#125;</span>&lt;===@ &#x27;</span><br>                <span class="hljs-string">f&quot;This instance will be ignored in loss calculation. &quot;</span><br>                <span class="hljs-string">f&quot;Note, if this happens often, consider increasing the `max_seq_length`.&quot;</span><br>            )<br>            res_labels[:] = ignore_index<br><br>        <span class="hljs-keyword">for</span> idx, (start, end) <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(<span class="hljs-built_in">zip</span>(human_token_ids_idxs, response_token_ids_idxs)):<br>            <span class="hljs-keyword">if</span> idx != <span class="hljs-number">0</span>:<br>                res_labels[start:end] = ignore_index<br>            <span class="hljs-keyword">else</span>:<br>                res_labels[:end] = ignore_index<br><br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(response_token_ids_idxs) &lt; <span class="hljs-built_in">len</span>(human_token_ids_idxs):<br>            res_labels[human_token_ids_idxs[-<span class="hljs-number">1</span>]:] = ignore_index<br><br>        batch_input_ids.append(res_input_ids)<br>        batch_labels.append(res_labels)<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">dict</span>(input_ids=batch_input_ids, labels=batch_labels)<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="3-2-3-文本分词"><a href="#3-2-3-文本分词" class="headerlink" title="3.2.3 文本分词"></a>3.2.3 <strong>文本分词</strong></h4><ul>
+<li><p><strong>使用 Tokenizer 分词</strong>：</p>
+<ul>
+<li>使用 <code>tokenizer</code> 对文本进行分词，生成 token 序列。</li>
+<li>分词过程中会插入特殊标记（如 <code>&lt;im_start&gt;</code> 和 <code>&lt;im_end&gt;</code>）。</li>
+</ul>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">conversations_tokenized = _tokenize_fn([res_text], tokenizer)<br>res_input_ids = conversations_tokenized[<span class="hljs-string">&quot;input_ids&quot;</span>][<span class="hljs-number">0</span>]<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="3-2-4-文本编码"><a href="#3-2-4-文本编码" class="headerlink" title="3.2.4 文本编码"></a>3.2.4 <strong>文本编码</strong></h4><ul>
+<li><p><strong>生成 token ID 序列</strong>：</p>
+<ul>
+<li>将分词后的 token 转换为 token ID 序列（<code>input_ids</code>）。</li>
+<li>生成 <code>labels</code>，用于模型的损失计算。</li>
+</ul>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">res_input_ids = conversations_tokenized[<span class="hljs-string">&quot;input_ids&quot;</span>][<span class="hljs-number">0</span>]<br>res_labels = copy.deepcopy(conversations_tokenized[<span class="hljs-string">&quot;labels&quot;</span>][<span class="hljs-number">0</span>])<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="3-2-5-文本特征编码"><a href="#3-2-5-文本特征编码" class="headerlink" title="3.2.5 文本特征编码"></a>3.2.5 <strong>文本特征编码</strong></h4><ul>
+<li><p><strong>使用 Transformer 编码</strong>：</p>
+<ul>
+<li>将 <code>input_ids</code> 输入到 Transformer 模型（如 Mistral）中，生成文本特征。</li>
+<li>文本特征是一个高维向量，形状为 <code>(batch_size, sequence_length, hidden_dim)</code>。</li>
+</ul>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">inputs_embeds = <span class="hljs-variable language_">self</span>.embed_tokens(data[<span class="hljs-string">&#x27;input_ids&#x27;</span>])<br></code></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h3 id="3-3-输出-文本特征"><a href="#3-3-输出-文本特征" class="headerlink" title="3.3 输出: 文本特征"></a>3.3 <strong>输出: 文本特征</strong></h3><ul>
+<li><p><strong>输出形状</strong>：<code>(batch_size, sequence_length, hidden_dim)</code>。</p>
+<ul>
+<li><code>sequence_length</code>：文本序列的长度。</li>
+<li><code>hidden_dim</code>：文本特征的维度（如 768）。</li>
+</ul>
+</li>
+<li><p><strong>输出用途</strong>：</p>
+<ul>
+<li>文本特征与图像特征拼接，输入到多模态融合模块（<code>OmniLMMModel</code>）中进行进一步处理。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="3-4-总结"><a href="#3-4-总结" class="headerlink" title="3.4 总结"></a>3.4 <strong>总结</strong></h3><ul>
+<li><strong>文本处理流程</strong>：<ol>
+<li><strong>文本预处理</strong>：插入特殊标记，生成对话模板。</li>
+<li><strong>文本分词</strong>：使用 <code>tokenizer</code> 对文本进行分词。</li>
+<li><strong>文本编码</strong>：将分词后的 token 转换为 <code>input_ids</code>。</li>
+<li><strong>文本特征编码</strong>：使用 Transformer 模型生成文本特征。</li>
+</ol>
+</li>
+<li><strong>输出</strong>：文本特征用于与图像特征融合，生成多模态联合特征。</li>
+</ul>
+<h2 id="4-图像特征和文本特征的融合"><a href="#4-图像特征和文本特征的融合" class="headerlink" title="4. 图像特征和文本特征的融合"></a>4. 图像特征和文本特征的融合</h2><p>在 MiniCPM-V 模型中，图像特征和文本特征的融合是多模态任务的核心部分。融合过程发生在 <code>OmniLMMModel</code> 中，通过将图像特征和文本特征拼接在一起，并使用 Transformer 模型进行联合编码。以下是结合源码和流程图的详细说明：</p>
+<hr>
+<h3 id="4-1-图像特征和文本特征的融合流程图"><a href="#4-1-图像特征和文本特征的融合流程图" class="headerlink" title="4.1 图像特征和文本特征的融合流程图"></a>4.1 <strong>图像特征和文本特征的融合流程图</strong></h3><pre><code class=" mermaid">graph TD
+    A[输入: 图像特征] --&gt; B[图像特征重采样]
+    C[输入: 文本特征] --&gt; D[文本特征编码]
+    B --&gt; E[多模态特征拼接]
+    D --&gt; E
+    E --&gt; F[Transformer 编码]
+    F --&gt; G[输出: 联合特征]
+
+    subgraph 图像处理模块
+        A --&gt; B
+    end
+
+    subgraph 文本处理模块
+        C --&gt; D
+    end
+
+    subgraph 多模态融合模块
+        B --&gt; E
+        D --&gt; E
+        E --&gt; F
+        F --&gt; G
+    end
+
+    %% 详细步骤
+    B --&gt; B1[重采样图像特征]
+    B1 --&gt; E
+
+    D --&gt; D1[生成文本特征]
+    D1 --&gt; E
+
+    E --&gt; E1[拼接图像和文本特征]
+    E1 --&gt; F
+
+    F --&gt; F1[自注意力机制编码]
+    F1 --&gt; G
+</code></pre>
+
+<hr>
+<h3 id="4-2-融合过程的详细说明"><a href="#4-2-融合过程的详细说明" class="headerlink" title="4.2 融合过程的详细说明"></a>4.2 <strong>融合过程的详细说明</strong></h3><h4 id="4-2-1-输入-图像特征和文本特征"><a href="#4-2-1-输入-图像特征和文本特征" class="headerlink" title="4.2.1 输入: 图像特征和文本特征"></a>4.2.1 <strong>输入: 图像特征和文本特征</strong></h4><ul>
+<li><strong>图像特征</strong>：<ul>
+<li>来自图像特征重采样器（<code>Resampler</code>），形状为 <code>(batch_size, num_queries, embed_dim)</code>。</li>
+<li>例如：<code>(batch_size, 196, 768)</code>。</li>
+</ul>
+</li>
+<li><strong>文本特征</strong>：<ul>
+<li>来自文本编码器（<code>Tokenizer</code> 和 Transformer），形状为 <code>(batch_size, sequence_length, embed_dim)</code>。</li>
+<li>例如：<code>(batch_size, 256, 768)</code>。</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-2-2-图像特征重采样"><a href="#4-2-2-图像特征重采样" class="headerlink" title="4.2.2 图像特征重采样"></a>4.2.2 <strong>图像特征重采样</strong></h4><ul>
+<li><p><strong>作用</strong>：将图像特征重采样为与文本特征匹配的维度。</p>
+</li>
+<li><p><strong>实现</strong>：</p>
+<ul>
+<li>使用 <code>Resampler</code> 对图像特征进行重采样。</li>
+<li>重采样后的图像特征形状为 <code>(batch_size, num_queries, embed_dim)</code>。</li>
+</ul>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">vision_hidden_states = <span class="hljs-variable language_">self</span>.resampler(vision_embedding)<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="4-2-3-文本特征编码"><a href="#4-2-3-文本特征编码" class="headerlink" title="4.2.3 文本特征编码"></a>4.2.3 <strong>文本特征编码</strong></h4><ul>
+<li><p><strong>作用</strong>：将文本输入编码为文本特征。</p>
+</li>
+<li><p><strong>实现</strong>：</p>
+<ul>
+<li>使用 <code>Tokenizer</code> 对文本进行分词和编码，生成 <code>input_ids</code>。</li>
+<li>使用 Transformer 模型对 <code>input_ids</code> 进行编码，生成文本特征。</li>
+</ul>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">inputs_embeds = <span class="hljs-variable language_">self</span>.embed_tokens(data[<span class="hljs-string">&#x27;input_ids&#x27;</span>])<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="4-2-4-多模态特征拼接"><a href="#4-2-4-多模态特征拼接" class="headerlink" title="4.2.4 多模态特征拼接"></a>4.2.4 <strong>多模态特征拼接</strong></h4><ul>
+<li><p><strong>作用</strong>：将图像特征和文本特征拼接在一起，形成联合特征。</p>
+</li>
+<li><p><strong>实现</strong>：</p>
+<ul>
+<li>如果文本中包含 <code>&lt;image&gt;</code> 标记，系统会将图像特征插入到对应的位置。</li>
+<li>拼接后的联合特征形状为 <code>(batch_size, sequence_length + num_queries, embed_dim)</code>。</li>
+</ul>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python">new_input_embeds = []<br>cur_image_idx = <span class="hljs-number">0</span><br><span class="hljs-keyword">for</span> cur_input_ids, cur_input_embeds <span class="hljs-keyword">in</span> <span class="hljs-built_in">zip</span>(input_ids, inputs_embeds):<br>    <span class="hljs-keyword">if</span> (cur_input_ids == <span class="hljs-variable language_">self</span>.vision_config.im_patch_token).<span class="hljs-built_in">sum</span>() == <span class="hljs-number">0</span>:<br>        <span class="hljs-comment"># multimodal LLM, but the current sample is not multimodal</span><br>        cur_input_embeds = cur_input_embeds + (<span class="hljs-number">0.</span> * dummy_image_features).<span class="hljs-built_in">sum</span>()<br>        new_input_embeds.append(cur_input_embeds)<br>        <span class="hljs-keyword">continue</span><br><br>    <span class="hljs-keyword">if</span> <span class="hljs-variable language_">self</span>.vision_config.use_im_start_end:<br>        cur_image_features = vision_hidden_states[cur_image_idx]<br>        num_patches = cur_image_features.shape[<span class="hljs-number">0</span>]<br>        <span class="hljs-keyword">if</span> (cur_input_ids == <span class="hljs-variable language_">self</span>.vision_config.im_start_token).<span class="hljs-built_in">sum</span>() != (cur_input_ids == <span class="hljs-variable language_">self</span>.vision_config.im_end_token).<span class="hljs-built_in">sum</span>():<br>            <span class="hljs-keyword">raise</span> ValueError(<span class="hljs-string">&quot;The number of image start tokens and image end tokens should be the same.&quot;</span>)<br>        image_start_tokens = torch.where(cur_input_ids == <span class="hljs-variable language_">self</span>.vision_config.im_start_token)[<span class="hljs-number">0</span>]<br>        <span class="hljs-keyword">for</span> image_start_token_pos <span class="hljs-keyword">in</span> image_start_tokens:<br>            cur_image_features = vision_hidden_states[cur_image_idx].to(device=cur_input_embeds.device)<br>            num_patches = cur_image_features.shape[<span class="hljs-number">0</span>]<br>            <span class="hljs-keyword">if</span> cur_input_ids[image_start_token_pos + num_patches + <span class="hljs-number">1</span>] != <span class="hljs-variable language_">self</span>.vision_config.im_end_token:<br>                <span class="hljs-keyword">raise</span> ValueError(<span class="hljs-string">&quot;The image end token should follow the image start token.&quot;</span>)<br>            <span class="hljs-keyword">if</span> orig_embeds_params <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>                cur_new_input_embeds = torch.cat((cur_input_embeds[:image_start_token_pos].detach(), cur_input_embeds[image_start_token_pos:image_start_token_pos+<span class="hljs-number">1</span>], cur_image_features, cur_input_embeds[image_start_token_pos + num_patches + <span class="hljs-number">1</span>:image_start_token_pos + num_patches + <span class="hljs-number">2</span>], cur_input_embeds[image_start_token_pos + num_patches + <span class="hljs-number">2</span>:].detach()), dim=<span class="hljs-number">0</span>)<br>            <span class="hljs-keyword">else</span>:<br>                cur_new_input_embeds = torch.cat((cur_input_embeds[:image_start_token_pos+<span class="hljs-number">1</span>], cur_image_features, cur_input_embeds[image_start_token_pos + num_patches + <span class="hljs-number">1</span>:]), dim=<span class="hljs-number">0</span>)<br>            cur_image_idx += <span class="hljs-number">1</span><br>        new_input_embeds.append(cur_new_input_embeds)<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">raise</span> NotImplementedError<br>inputs_embeds = torch.stack(new_input_embeds, dim=<span class="hljs-number">0</span>)<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="4-2-5-Transformer-编码"><a href="#4-2-5-Transformer-编码" class="headerlink" title="4.2.5 Transformer 编码"></a>4.2.5 <strong>Transformer 编码</strong></h4><ul>
+<li><p><strong>作用</strong>：对拼接后的联合特征进行编码，生成最终的联合特征。</p>
+</li>
+<li><p><strong>实现</strong>：</p>
+<ul>
+<li>使用 Transformer 的自注意力机制（Self-Attention）对联合特征进行编码。</li>
+<li>编码后的联合特征形状为 <code>(batch_size, sequence_length + num_queries, embed_dim)</code>。</li>
+</ul>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">outputs = <span class="hljs-variable language_">self</span>.model(<br>    input_ids=input_ids, attention_mask=attention_mask, past_key_values=past_key_values,<br>    inputs_embeds=inputs_embeds, use_cache=use_cache,<br>    output_attentions=output_attentions, output_hidden_states=output_hidden_states,<br>    return_dict=return_dict,<br>    **kwargs<br>)<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="4-2-6-输出-联合特征"><a href="#4-2-6-输出-联合特征" class="headerlink" title="4.2.6 输出: 联合特征"></a>4.2.6 <strong>输出: 联合特征</strong></h4><ul>
+<li><p><strong>输出形状</strong>：<code>(batch_size, sequence_length + num_queries, embed_dim)</code>。</p>
+<ul>
+<li><code>sequence_length</code>：文本序列的长度。</li>
+<li><code>num_queries</code>：图像特征的数量。</li>
+<li><code>embed_dim</code>：特征的维度（如 768）。</li>
+</ul>
+</li>
+<li><p><strong>输出用途</strong>：</p>
+<ul>
+<li>联合特征用于生成文本输出（如通过 <code>OmniLMMForCausalLM</code> 生成回答）。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="4-3-总结"><a href="#4-3-总结" class="headerlink" title="4.3 总结"></a>4.3 <strong>总结</strong></h3><ul>
+<li><strong>图像特征和文本特征的融合</strong>：<ol>
+<li><strong>图像特征重采样</strong>：将图像特征重采样为与文本特征匹配的维度。</li>
+<li><strong>文本特征编码</strong>：将文本输入编码为文本特征。</li>
+<li><strong>多模态特征拼接</strong>：将图像特征和文本特征拼接在一起，形成联合特征。</li>
+<li><strong>Transformer 编码</strong>：对联合特征进行编码，生成最终的联合特征。</li>
+</ol>
+</li>
+<li><strong>输出</strong>：联合特征用于生成文本输出。</li>
+</ul>
+<h2 id="5-模型核心模块-1"><a href="#5-模型核心模块-1" class="headerlink" title="5. 模型核心模块"></a>5. 模型核心模块</h2><p>除了文本处理和图像处理模块外，模型核心模块（<code>OmniLMMModel</code> 和 <code>OmniLMMForCausalLM</code>）负责将多模态特征融合并生成最终的输出。</p>
+<hr>
+<h3 id="5-1-模型核心模块的流程图"><a href="#5-1-模型核心模块的流程图" class="headerlink" title="5.1 模型核心模块的流程图"></a>5.1 <strong>模型核心模块的流程图</strong></h3><pre><code class=" mermaid">graph TD
+    A[输入: 联合特征] --&gt; B[Transformer 编码]
+    B --&gt; C[生成文本输出]
+    C --&gt; D[计算损失]
+    D --&gt; E[反向传播]
+    E --&gt; F[更新模型参数]
+    F --&gt; G[输出: 训练后的模型]
+
+    subgraph 模型核心模块
+        A --&gt; B
+        B --&gt; C
+        C --&gt; D
+        D --&gt; E
+        E --&gt; F
+        F --&gt; G
+    end
+
+    %% 详细步骤
+    B --&gt; B1[自注意力机制编码]
+    B1 --&gt; C
+
+    C --&gt; C1[生成文本 token]
+    C1 --&gt; C2[自回归生成文本]
+    C2 --&gt; D
+
+    D --&gt; D1[计算交叉熵损失]
+    D1 --&gt; E
+
+    E --&gt; E1[计算梯度]
+    E1 --&gt; F
+
+    F --&gt; F1[优化器更新参数]
+    F1 --&gt; G
+</code></pre>
+
+<hr>
+<h3 id="5-2-模型核心模块的详细说明"><a href="#5-2-模型核心模块的详细说明" class="headerlink" title="5.2 模型核心模块的详细说明"></a>5.2 <strong>模型核心模块的详细说明</strong></h3><h4 id="5-2-1-输入-联合特征"><a href="#5-2-1-输入-联合特征" class="headerlink" title="5.2.1 输入: 联合特征"></a>5.2.1 <strong>输入: 联合特征</strong></h4><ul>
+<li><strong>联合特征</strong>：<ul>
+<li>来自多模态融合模块，形状为 <code>(batch_size, sequence_length + num_queries, embed_dim)</code>。</li>
+<li>例如：<code>(batch_size, 256 + 196, 768)</code>。</li>
+</ul>
+</li>
+</ul>
+<h4 id="5-2-2-Transformer-编码"><a href="#5-2-2-Transformer-编码" class="headerlink" title="5.2.2 Transformer 编码"></a>5.2.2 <strong>Transformer 编码</strong></h4><ul>
+<li><p><strong>作用</strong>：对联合特征进行编码，生成隐藏状态。</p>
+</li>
+<li><p><strong>实现</strong>：</p>
+<ul>
+<li>使用 Transformer 的自注意力机制（Self-Attention）对联合特征进行编码。</li>
+<li>编码后的隐藏状态形状为 <code>(batch_size, sequence_length + num_queries, embed_dim)</code>。</li>
+</ul>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python">outputs = <span class="hljs-variable language_">self</span>.model(<br>    input_ids=input_ids, attention_mask=attention_mask, past_key_values=past_key_values,<br>    inputs_embeds=inputs_embeds, use_cache=use_cache,<br>    output_attentions=output_attentions, output_hidden_states=output_hidden_states,<br>    return_dict=return_dict,<br>    **kwargs<br>)<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="5-2-3-生成文本输出"><a href="#5-2-3-生成文本输出" class="headerlink" title="5.2.3 生成文本输出"></a>5.2.3 <strong>生成文本输出</strong></h4><ul>
+<li><p><strong>作用</strong>：根据隐藏状态生成文本输出。</p>
+</li>
+<li><p><strong>实现</strong>：</p>
+<ul>
+<li>使用 <code>lm_head</code> 对隐藏状态进行解码，生成文本 token。</li>
+<li>通过自回归生成逐步生成文本输出。</li>
+</ul>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">hidden_states = outputs[<span class="hljs-number">0</span>]<br>logits = <span class="hljs-variable language_">self</span>.lm_head(hidden_states)<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="5-2-4-计算损失"><a href="#5-2-4-计算损失" class="headerlink" title="5.2.4 计算损失"></a>5.2.4 <strong>计算损失</strong></h4><ul>
+<li><p><strong>作用</strong>：计算模型输出与真实标签之间的损失。</p>
+</li>
+<li><p><strong>实现</strong>：</p>
+<ul>
+<li>使用交叉熵损失函数（CrossEntropyLoss）计算损失。</li>
+<li>损失函数的目标是最小化模型输出与真实标签之间的差异。</li>
+</ul>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python">loss = <span class="hljs-literal">None</span><br><span class="hljs-keyword">if</span> labels <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>    shift_logits = logits[..., :-<span class="hljs-number">1</span>, :].contiguous()<br>    shift_labels = labels[..., <span class="hljs-number">1</span>:].contiguous()<br>    loss_fct = CrossEntropyLoss()<br>    shift_logits = shift_logits.view(-<span class="hljs-number">1</span>, <span class="hljs-variable language_">self</span>.config.vocab_size)<br>    shift_labels = shift_labels.view(-<span class="hljs-number">1</span>)<br>    shift_labels = shift_labels.to(shift_logits.device)<br>    loss = loss_fct(shift_logits, shift_labels)<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="5-2-5-反向传播"><a href="#5-2-5-反向传播" class="headerlink" title="5.2.5 反向传播"></a>5.2.5 <strong>反向传播</strong></h4><ul>
+<li><p><strong>作用</strong>：计算梯度并更新模型参数。</p>
+</li>
+<li><p><strong>实现</strong>：</p>
+<ul>
+<li>使用反向传播算法计算损失函数对模型参数的梯度。</li>
+<li>通过优化器（如 AdamW）更新模型参数。</li>
+</ul>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">loss.backward()<br>optimizer.step()<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="5-2-6-更新模型参数"><a href="#5-2-6-更新模型参数" class="headerlink" title="5.2.6 更新模型参数"></a>5.2.6 <strong>更新模型参数</strong></h4><ul>
+<li><p><strong>作用</strong>：根据梯度更新模型参数。</p>
+</li>
+<li><p><strong>实现</strong>：</p>
+<ul>
+<li>使用优化器更新模型参数。</li>
+<li>更新后的模型参数用于下一轮训练。</li>
+</ul>
+</li>
+<li><p><strong>代码</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">optimizer.step()<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="5-2-7-输出-训练后的模型"><a href="#5-2-7-输出-训练后的模型" class="headerlink" title="5.2.7 输出: 训练后的模型"></a>5.2.7 <strong>输出: 训练后的模型</strong></h4><ul>
+<li><strong>输出</strong>：训练后的模型，可以用于推理任务。</li>
+</ul>
+<hr>
+<h3 id="5-3-总结"><a href="#5-3-总结" class="headerlink" title="5.3 总结"></a>5.3 <strong>总结</strong></h3><ul>
+<li><strong>模型核心模块的训练流程</strong>：<ol>
+<li><strong>Transformer 编码</strong>：对联合特征进行编码，生成隐藏状态。</li>
+<li><strong>生成文本输出</strong>：根据隐藏状态生成文本输出。</li>
+<li><strong>计算损失</strong>：计算模型输出与真实标签之间的损失。</li>
+<li><strong>反向传播</strong>：计算梯度并更新模型参数。</li>
+<li><strong>更新模型参数</strong>：根据梯度更新模型参数。</li>
+<li><strong>输出</strong>：训练后的模型。</li>
+</ol>
+</li>
+</ul>
+<p>文章合集：<a target="_blank" rel="noopener" href="https://github.com/chongzicbo/ReadWriteThink/tree/main">chongzicbo&#x2F;ReadWriteThink: 博学而笃志，切问而近思 (github.com)</a></p>
+<p>个人博客：<a href="https://chongzicbo.github.io/">程博仕</a></p>
+<p>微信公众号：</p>
+<p><img src="https://raw.githubusercontent.com/chongzicbo/images/main/picgo/%E4%BA%8C%E7%BB%B4%E7%A0%81.jpg" srcset="/img/loading.gif" lazyload alt="微信公众号"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" class="category-chain-item">人工智能</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/" class="category-chain-item">multi-modal</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81/" class="print-no-link">#多模态</a>
+      
+        <a href="/tags/llm/" class="print-no-link">#llm</a>
+      
+        <a href="/tags/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="print-no-link">#源码解析</a>
+      
+        <a href="/tags/MiniCPM/" class="print-no-link">#MiniCPM</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>MiniCPM-V多模态模型源码解析-02：模型训练详细流程</div>
+      <div>https://chongzicbo.github.io/2025/01/13/人工智能/multi-modal/源码解析：MiniCPM-V多模态模型源码解析-02：模型训练详细流程/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>程博</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>January 13, 2025</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/01/14/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9AMiniCPM-V%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-03%EF%BC%9A%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E8%AF%A6%E7%BB%86%E6%B5%81%E7%A8%8B/" title="MiniCPM-V多模态模型源码解析-03：模型推理详细流程">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">MiniCPM-V多模态模型源码解析-03：模型推理详细流程</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/01/13/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9AMiniCPM-V%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-01%EF%BC%9A%E6%95%B4%E4%BD%93%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84%E5%8F%8A%E6%A8%A1%E5%9D%97%E5%8A%9F%E8%83%BD/" title="MiniCPM-V多模态模型源码解析-01：整体代码结构及模块功能">
+                        <span class="hidden-mobile">MiniCPM-V多模态模型源码解析-01：整体代码结构及模块功能</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-left: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="人工智能"
+        id="heading-f068f0dad74789bee210163c40a4b50d" role="tab" data-toggle="collapse" href="#collapse-f068f0dad74789bee210163c40a4b50d"
+        aria-expanded="true"
+      >
+        人工智能
+        <span class="list-group-count">(14)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-f068f0dad74789bee210163c40a4b50d"
+           role="tabpanel" aria-labelledby="heading-f068f0dad74789bee210163c40a4b50d">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="computer-vision"
+        id="heading-a82f3db817c535a4bae230a7ce1aebdd" role="tab" data-toggle="collapse" href="#collapse-a82f3db817c535a4bae230a7ce1aebdd"
+        aria-expanded="false"
+      >
+        computer-vision
+        <span class="list-group-count">(3)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-a82f3db817c535a4bae230a7ce1aebdd"
+           role="tabpanel" aria-labelledby="heading-a82f3db817c535a4bae230a7ce1aebdd">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV010-YOLO%20V10%E8%AF%A6%E8%A7%A3/" title="YOLO V10 详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">YOLO V10 详解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV007-YOLO11%E8%AF%A6%E8%A7%A3/" title="YOLO11 详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">YOLO11 详解</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/computer-vision/CV008-%E8%AF%84%E4%BC%B0%20YOLO%20%EF%BC%88You%20Only%20Look%20Once%EF%BC%89%20%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%BC%94%E5%8F%98%EF%BC%9AYOLO11%20%E5%8F%8A%E5%85%B6%E5%89%8D%E8%BA%AB%E7%9A%84%E5%85%A8%E9%9D%A2%E5%9F%BA%E5%87%86%E7%A0%94%E7%A9%B6/" title="YOLO模型的全面综述"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">YOLO模型的全面综述</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="multi-modal"
+        id="heading-8bef24fd03b0b8fe8de0c18ea7f6c1fe" role="tab" data-toggle="collapse" href="#collapse-8bef24fd03b0b8fe8de0c18ea7f6c1fe"
+        aria-expanded="true"
+      >
+        multi-modal
+        <span class="list-group-count">(6)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-8bef24fd03b0b8fe8de0c18ea7f6c1fe"
+           role="tabpanel" aria-labelledby="heading-8bef24fd03b0b8fe8de0c18ea7f6c1fe">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2025/01/13/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9AMiniCPM-V%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-01%EF%BC%9A%E6%95%B4%E4%BD%93%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84%E5%8F%8A%E6%A8%A1%E5%9D%97%E5%8A%9F%E8%83%BD/" title="MiniCPM-V多模态模型源码解析-01：整体代码结构及模块功能"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">MiniCPM-V多模态模型源码解析-01：整体代码结构及模块功能</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/01/13/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9AMiniCPM-V%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-02%EF%BC%9A%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83%E8%AF%A6%E7%BB%86%E6%B5%81%E7%A8%8B/" title="MiniCPM-V多模态模型源码解析-02：模型训练详细流程"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">MiniCPM-V多模态模型源码解析-02：模型训练详细流程</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/01/14/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9AMiniCPM-V%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-03%EF%BC%9A%E6%A8%A1%E5%9E%8B%E6%8E%A8%E7%90%86%E8%AF%A6%E7%BB%86%E6%B5%81%E7%A8%8B/" title="MiniCPM-V多模态模型源码解析-03：模型推理详细流程"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">MiniCPM-V多模态模型源码解析-03：模型推理详细流程</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2025/01/14/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9AMiniCPM-V%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-04%EF%BC%9A%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97omnilmm.py%E8%AF%A6%E8%A7%A3/" title="MiniCPM-V多模态模型源码解析-04：核心模块omnilmm.py"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">MiniCPM-V多模态模型源码解析-04：核心模块omnilmm.py</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/20/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB14%EF%BC%9AMiniCPM%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90/" title="MiniCPM详解"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">MiniCPM详解</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="OCR"
+        id="heading-f529c51ee65a122778f148485732aee5" role="tab" data-toggle="collapse" href="#collapse-f529c51ee65a122778f148485732aee5"
+        aria-expanded="false"
+      >
+        OCR
+        <span class="list-group-count">(1)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-f529c51ee65a122778f148485732aee5"
+           role="tabpanel" aria-labelledby="heading-f529c51ee65a122778f148485732aee5">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/17/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/multi-modal/OCR/%E5%A4%9A%E6%A8%A1%E6%80%81003%EF%BC%9AOCR%E7%AE%97%E6%B3%95%E3%80%81%E6%A8%A1%E5%9E%8B%E7%BB%BC%E8%BF%B0/" title="OCR算法、模型综述"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">OCR算法、模型综述</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="nlp"
+        id="heading-4c5adbed16b4c9d16698f71cca4218cb" role="tab" data-toggle="collapse" href="#collapse-4c5adbed16b4c9d16698f71cca4218cb"
+        aria-expanded="false"
+      >
+        nlp
+        <span class="list-group-count">(5)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-4c5adbed16b4c9d16698f71cca4218cb"
+           role="tabpanel" aria-labelledby="heading-4c5adbed16b4c9d16698f71cca4218cb">
+        
+        
+          
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/07/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/NLP025-huggingface%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E9%9B%86%E5%92%8C%E6%A8%A1%E5%9E%8B%E4%B8%8B%E8%BD%BD%E5%AD%98%E5%82%A8%E7%9B%AE%E5%BD%95/" title="transformers自定义数据集"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">transformers自定义数据集</span>
+        </a>
+      
+    
+  </div>
+
+          
+  
+    
+    
+    
+    <div class="category-sub row nomargin-x">
+      <a class="category-subitem collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="llm"
+        id="heading-dae1be85dab3650eb56b87c4e3390387" role="tab" data-toggle="collapse" href="#collapse-dae1be85dab3650eb56b87c4e3390387"
+        aria-expanded="false"
+      >
+        llm
+        <span class="list-group-count">(4)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse " id="collapse-dae1be85dab3650eb56b87c4e3390387"
+           role="tabpanel" aria-labelledby="heading-dae1be85dab3650eb56b87c4e3390387">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/12/26/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-01%EF%BC%9A%E6%95%B4%E4%BD%93%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84%E5%8F%8A%E6%A8%A1%E5%9D%97%E5%8A%9F%E8%83%BD/" title="llama3源码解析-01：整体代码结构及模块功能"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">llama3源码解析-01：整体代码结构及模块功能</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/26/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-02%EF%BC%9Atokenizer%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/" title="llama3源码解析-02：tokenizer模块解析"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">llama3源码解析-02：tokenizer模块解析</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/30/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-03%EF%BC%9Amodel.py%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/" title="llama3源码解析-03：model.py模块解析"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">llama3源码解析-03：model.py模块解析</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2024/12/30/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/nlp/llm/%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%9Allama3%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90-04%EF%BC%9Ageneration.py%E6%A8%A1%E5%9D%97%E8%A7%A3%E6%9E%90/" title="llama3源码解析-04：generation.py模块解析"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">llama3源码解析-04：generation.py模块解析</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://github.com/chongzicbo" target="_blank" rel="nofollow noopener"><span>Github</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
